@@ -37,7 +37,8 @@
             android:layout_weight="0.1"
             android:text="@string/settings"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:fontFamily="@font/ystextmedium"/>
 
     </LinearLayout>
 
@@ -57,7 +58,8 @@
             android:text="@string/set_black_them"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings" />
+            android:textSize="@dimen/activity_settings"
+            android:fontFamily="@font/ystextregular"/>
 
 
     </LinearLayout>
@@ -81,7 +83,8 @@
             android:text="@string/set_share_app"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings" />
+            android:textSize="@dimen/activity_settings"
+            android:fontFamily="@font/ystextregular"/>
 
 
     </LinearLayout>
@@ -102,7 +105,8 @@
             android:text="@string/set_write_support"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings" />
+            android:textSize="@dimen/activity_settings"
+            android:fontFamily="@font/ystextregular"/>
 
 
     </LinearLayout>
@@ -124,7 +128,10 @@
             android:text="@string/set_confirm_reg"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings" />
+            android:textSize="@dimen/activity_settings"
+            android:fontFamily="@font/ystextregular"/>
+
+
 
     </LinearLayout>
 
