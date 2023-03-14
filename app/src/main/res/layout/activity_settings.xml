@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    android:padding="14dp">
+    android:padding="16dp"
+    android:weightSum="3">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +33,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="8dp"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:layout_weight="0.1"
@@ -55,7 +56,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|start"
             android:contentDescription="TODO"
-            android:paddingRight="10dp"
+            android:paddingRight="8dp"
             android:textAllCaps="false"
             android:text="@string/set_black_them"
             android:textColor="@color/black"
@@ -79,7 +80,7 @@
             android:drawableEnd="@drawable/share"
             android:gravity="center_vertical|start"
             android:maxLines="2"
-            android:paddingEnd="10dp"
+            android:paddingEnd="8dp"
             android:text="@string/set_share_app"
             android:textAllCaps="false"
             android:textColor="@color/black"
@@ -100,7 +101,7 @@
             android:layout_weight="1"
             android:drawableEnd="@drawable/support"
             android:gravity="center_vertical|start"
-            android:paddingEnd="10dp"
+            android:paddingEnd="8dp"
             android:text="@string/set_write_support"
             android:textAllCaps="false"
             android:textColor="@color/black"
@@ -121,18 +122,13 @@
             android:layout_height="match_parent"
             android:drawableEnd="@drawable/arrow_forward"
             android:gravity="center_vertical|start"
-            android:paddingEnd="10dp"
+            android:paddingEnd="8dp"
             android:text="@string/set_confirm_reg"
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="22sp" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.4" />
 
 
 </LinearLayout>
