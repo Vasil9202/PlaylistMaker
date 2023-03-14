@@ -12,29 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:layout_marginBottom="22dp">
+        android:layout_marginBottom="42dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_back"
-            android:layout_weight="0.9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:drawableEnd="@drawable/arrow_back"
-            android:gravity="start"
-            android:drawableTint="@color/black"
+            android:layout_weight="0.9"
             android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/arrow_back"
+            android:drawableTint="@color/black"
+            android:gravity="start"
             android:outlineProvider="none"
-
-/>
+            android:textColor="@color/black"
+            android:textSize="@dimen/activity_settings" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="28dp"
             android:layout_marginTop="5dp"
             android:layout_weight="0.1"
             android:text="@string/settings"
@@ -49,18 +47,17 @@
         android:layout_weight="0.9">
 
 
-
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/black_them"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical|start"
             android:contentDescription="TODO"
+            android:gravity="center_vertical|start"
             android:paddingRight="8dp"
-            android:textAllCaps="false"
             android:text="@string/set_black_them"
+            android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="@dimen/activity_settings" />
 
 
     </LinearLayout>
@@ -69,7 +66,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.9" >
+        android:layout_weight="0.9">
 
 
         <TextView
@@ -84,7 +81,7 @@
             android:text="@string/set_share_app"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="@dimen/activity_settings" />
 
 
     </LinearLayout>
@@ -92,7 +89,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.9" >
+        android:layout_weight="0.9">
 
         <TextView
             android:id="@+id/write_support"
@@ -105,7 +102,7 @@
             android:text="@string/set_write_support"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="@dimen/activity_settings" />
 
 
     </LinearLayout>
@@ -121,12 +118,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:drawableEnd="@drawable/arrow_forward"
+            android:layout_marginRight="8dp"
             android:gravity="center_vertical|start"
             android:paddingEnd="8dp"
             android:text="@string/set_confirm_reg"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="@dimen/activity_settings" />
 
     </LinearLayout>
 
