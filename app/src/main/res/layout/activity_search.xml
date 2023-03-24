@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/arrow_back"
+            android:drawableTint="@color/black"
+            android:gravity="start"
+            android:outlineProvider="none"
+            android:textColor="@color/black"
+            android:textSize="@dimen/FS16SP" />
+
+        <TextView
+            style="@style/MessageTextStyle"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.1"
+            android:fontFamily="@font/ystextmedium"
+            android:gravity="start"
+            android:text="@string/search"
+            android:textSize="@dimen/FS22SP" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_margin="8dp">
+
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/grey_shape"
+            android:drawableStart="@drawable/search"
+            android:drawableTint="@color/grey"
+            android:drawablePadding="8dp"
+            android:hint="Поиск"
+            android:textColorHint="#9B9B9B" />
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

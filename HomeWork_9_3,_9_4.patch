@@ -1,0 +1,97 @@
+Index: app/src/main/java/com/example/playlistmaker/SearchActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/playlistmaker/SearchActivity.kt b/app/src/main/java/com/example/playlistmaker/SearchActivity.kt
+--- a/app/src/main/java/com/example/playlistmaker/SearchActivity.kt	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
++++ b/app/src/main/java/com/example/playlistmaker/SearchActivity.kt	(revision db98afda047cfcb53f5fe12ccfc8e7b9da219922)
+@@ -5,11 +5,17 @@
+ import android.os.Bundle
+ import android.text.Editable
+ import android.text.TextWatcher
+-import android.view.View
+ import android.widget.Button
+ import android.widget.EditText
+ 
+ class SearchActivity : AppCompatActivity() {
++
++    companion object {
++        const val SEARCH_TEXT = "SEARCH_TEXT"
++    }
++
++    private lateinit var searchEditText: EditText
++
+     @SuppressLint("ClickableViewAccessibility", "UseCompatLoadingForDrawables")
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+@@ -20,22 +26,32 @@
+             finish()
+         }
+ 
+-        val searchEditText = findViewById<EditText>(R.id.search_edit_text)
++
++
++        searchEditText = findViewById<EditText>(R.id.search_edit_text)
+         val searchIcon = resources.getDrawable(R.drawable.search, null)
+-        searchIcon.setBounds(0, 0, searchIcon.intrinsicWidth, searchIcon.intrinsicHeight) // Set the bounds of the drawable
++        searchIcon.setBounds(
++            0,
++            0,
++            searchIcon.intrinsicWidth,
++            searchIcon.intrinsicHeight
++        )
+ 
+ 
+         if (searchEditText.text.isNullOrEmpty()) {
+             searchEditText.setCompoundDrawables(null, null, null, null)
+         }
+ 
++        searchEditText.setOnClickListener {
++            searchEditText.requestFocus()
++        }
++
+         searchEditText.addTextChangedListener(object : TextWatcher {
+             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+-                // Not used
++
+             }
+ 
+             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+-                // Show or hide the search icon depending on whether the searchEditText is empty or not
+                 if (s.isNullOrEmpty()) {
+                     searchEditText.setCompoundDrawables(null, null, null, null)
+                 } else {
+@@ -49,12 +65,28 @@
+         })
+ 
+         searchEditText.setOnTouchListener { view, event ->
+-            val drawable = searchEditText.compoundDrawables[0] // Get the left drawable (should be the search icon)
+-            if (!searchEditText.text.isNullOrEmpty() && event.x <= searchEditText.paddingLeft + drawable.intrinsicWidth) { // If the touch event is within the bounds of the search icon
++            val drawable =
++                searchEditText.compoundDrawables[0]
++            if (!searchEditText.text.isNullOrEmpty() && event.x <= searchEditText.paddingLeft + drawable.intrinsicWidth) {
+                 searchEditText.setText("")
+-                return@setOnTouchListener true // Consume the touch event so it doesn't interfere with typing in the EditText
++                return@setOnTouchListener true
+             }
+             false
+         }
++        if (savedInstanceState != null) {
++            val text = savedInstanceState.getString(SEARCH_TEXT)
++            searchEditText.setText(text)
++        }
++    }
++
++    override fun onSaveInstanceState(outState: Bundle) {
++        super.onSaveInstanceState(outState)
++        outState.putString(SEARCH_TEXT, searchEditText.text.toString())
++    }
++
++    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
++        super.onRestoreInstanceState(savedInstanceState)
++        val text = savedInstanceState.getString(SEARCH_TEXT)
++        searchEditText.setText(text)
+     }
+ }
+\ No newline at end of file
