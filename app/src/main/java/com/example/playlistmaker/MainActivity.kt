@@ -8,11 +8,16 @@ import android.widget.Button
 import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var searchButton: Button
+    private lateinit var mediaLibraryButton: Button
+    private lateinit var settingsButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val searchButton = findViewById<Button>(R.id.search_button)
+        searchButton = findViewById<Button>(R.id.search_button)
 
         val searchButtonClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -23,14 +28,14 @@ class MainActivity : AppCompatActivity() {
 
         searchButton.setOnClickListener(searchButtonClickListener)
 
-        val mediaLibraryButton = findViewById<Button>(R.id.media_button)
+        mediaLibraryButton = findViewById<Button>(R.id.media_button)
 
         mediaLibraryButton.setOnClickListener {
             val mediaLibraryIntent = Intent(this, MediaLibraryActivity::class.java)
             startActivity(mediaLibraryIntent)
         }
 
-        val settingsButton = findViewById<Button>(R.id.settings_button)
+        settingsButton = findViewById<Button>(R.id.settings_button)
 
         settingsButton.setOnClickListener {
             val settingsIntent = Intent(this, SettingsActivity::class.java)

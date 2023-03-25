@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -15,35 +16,28 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private lateinit var searchEditText: EditText
+    private lateinit var backButton: Button
+    private lateinit var searchIcon: Drawable
+    private lateinit var clearIcon: Drawable
 
     @SuppressLint("ClickableViewAccessibility", "UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val backButton = findViewById<Button>(R.id.button_back)
+        backButton = findViewById<Button>(R.id.button_back)
         backButton.setOnClickListener {
             finish()
         }
 
-
-
         searchEditText = findViewById<EditText>(R.id.search_edit_text)
-        val searchIcon = resources.getDrawable(R.drawable.search, null)
-        searchIcon.setBounds(
-            0,
-            0,
-            searchIcon.intrinsicWidth,
-            searchIcon.intrinsicHeight
-        )
 
+        searchIcon = resources.getDrawable(R.drawable.search, null)
+
+        clearIcon = resources.getDrawable(R.drawable.clear, null)
 
         if (searchEditText.text.isNullOrEmpty()) {
-            searchEditText.setCompoundDrawables(null, null, null, null)
-        }
-
-        searchEditText.setOnClickListener {
-            searchEditText.requestFocus()
+            searchEditText.setCompoundDrawablesWithIntrinsicBounds(searchIcon, null, null, null)
         }
 
         searchEditText.addTextChangedListener(object : TextWatcher {
@@ -53,9 +47,14 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
-                    searchEditText.setCompoundDrawables(null, null, null, null)
+                    searchEditText.setCompoundDrawablesWithIntrinsicBounds(searchIcon, null, null, null)
                 } else {
-                    searchEditText.setCompoundDrawables(searchIcon, null, null, null)
+                    searchEditText.setCompoundDrawablesWithIntrinsicBounds(
+                        searchIcon,
+                        null,
+                        clearIcon,
+                        null
+                    )
                 }
             }
 
@@ -67,7 +66,7 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.setOnTouchListener { view, event ->
             val drawable =
                 searchEditText.compoundDrawables[0]
-            if (!searchEditText.text.isNullOrEmpty() && event.x <= searchEditText.paddingLeft + drawable.intrinsicWidth) {
+            if (!searchEditText.text.isNullOrEmpty() && event.x >= searchEditText.width - searchEditText.paddingRight - drawable.intrinsicWidth) {
                 searchEditText.setText("")
                 return@setOnTouchListener true
             }

@@ -5,36 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_back"
-            android:layout_width="match_parent"
+            android:layout_width="38dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.9"
             android:background="@android:color/transparent"
-            android:drawableEnd="@drawable/arrow_back"
-            android:drawableTint="@color/black"
+            android:drawableTint="?attr/colorOnPrimary"
             android:gravity="start"
-            android:outlineProvider="none"
             android:textColor="@color/black"
-            android:textSize="@dimen/FS16SP" />
+            android:textSize="@dimen/FS16SP"
+            app:drawableEndCompat="@drawable/arrow_back" />
 
         <TextView
             style="@style/MessageTextStyle"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:layout_marginLeft="28dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="0.1"
             android:fontFamily="@font/ystextmedium"
-            android:gravity="start"
+            android:gravity="start|center"
             android:text="@string/search"
             android:textSize="@dimen/FS22SP" />
 
@@ -43,19 +42,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:layout_margin="8dp">
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
 
         <EditText
             android:id="@+id/search_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:background="@drawable/grey_shape"
             android:drawableStart="@drawable/search"
-            android:drawableTint="@color/grey"
+            android:drawableEnd="@drawable/clear"
+            android:drawableTint="?attr/colorPrimaryVariant"
+
             android:drawablePadding="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
             android:hint="Поиск"
-            android:textColorHint="#9B9B9B" />
+            android:textColorHint="?attr/colorPrimaryVariant" />
 
 
     </LinearLayout>
