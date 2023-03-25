@@ -1,0 +1,368 @@
+Index: .idea/deploymentTargetDropDown.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml
+--- a/.idea/deploymentTargetDropDown.xml	(revision 9ad32f9eb77ab289e4ce238d951bf2d4eec8e09e)
++++ b/.idea/deploymentTargetDropDown.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
+@@ -7,11 +7,11 @@
+         <deviceKey>
+           <Key>
+             <type value="VIRTUAL_DEVICE_PATH" />
+-            <value value="C:\Users\Vasiliy\.android\avd\Nexus_10_API_28.avd" />
++            <value value="C:\Users\Vasiliy\.android\avd\Pixel_C_API_28_2.avd" />
+           </Key>
+         </deviceKey>
+       </Target>
+     </targetSelectedWithDropDown>
+-    <timeTargetWasSelectedWithDropDown value="2023-03-14T02:24:56.803032700Z" />
++    <timeTargetWasSelectedWithDropDown value="2023-03-22T10:43:36.387820Z" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision 9ad32f9eb77ab289e4ce238d951bf2d4eec8e09e)
++++ b/app/src/main/res/layout/activity_main.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
+@@ -1,78 +1,39 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    android:background="@color/blue"
++    android:background="?attr/colorSecondaryVariant"
+     android:orientation="vertical"
+     android:padding="16dp">
+ 
+ 
+-        <TextView
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_gravity="start"
+-            android:text="@string/app_name"
+-            android:textColor="@color/white"
+-            android:textSize="20sp"
+-            android:fontFamily="@font/ystextmedium"/>
+-
++    <TextView
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_gravity="start"
++        android:fontFamily="@font/ystextmedium"
++        android:text="@string/app_name"
++        android:textColor="@color/white"
++        android:textSize="20sp" />
+ 
+     <Button
+         android:id="@+id/search_button"
+-        android:layout_width="match_parent"
+-        android:layout_height="0dp"
++        style="@style/MeinButtonStyle"
+         android:layout_marginTop="40dp"
+-        android:layout_weight="1"
+-        android:background="@drawable/rectangle"
+-        android:drawablePadding="8dp"
+-        android:scaleType="centerInside"
+         android:text="@string/search"
+-        android:textAllCaps="false"
+-        android:textColor="@color/black"
+-        android:textSize="@dimen/activity_main"
+-        app:icon="@drawable/search"
+-        app:iconGravity="textStart"
+-        app:iconPadding="8dp"
+-        app:iconTint="@color/black"
+-        android:fontFamily="@font/ystextmedium"/>
++        app:icon="@drawable/search" />
+ 
+     <Button
+-        android:layout_width="match_parent"
+         android:id="@+id/media_button"
+-        android:layout_height="0dp"
+-        android:layout_marginTop="16dp"
+-        android:layout_weight="1"
+-        android:background="@drawable/rectangle"
+-        android:drawablePadding="8dp"
+-        android:scaleType="centerInside"
++        style="@style/MeinButtonStyle"
+         android:text="@string/media"
+-        android:textColor="@color/black"
+-        android:textSize="@dimen/activity_main"
+-        app:icon="@drawable/library"
+-        app:iconGravity="textStart"
+-        app:iconPadding="8dp"
+-        app:iconTint="@color/black"
+-        android:textAllCaps="false"
+-        android:fontFamily="@font/ystextmedium"/>
++        app:icon="@drawable/library" />
+ 
+     <Button
+-        android:layout_width="match_parent"
+         android:id="@+id/settings_button"
+-        android:layout_height="0dp"
+-        android:layout_marginTop="16dp"
+-        android:layout_weight="1"
+-        android:background="@drawable/rectangle"
+-        android:drawablePadding="8dp"
+-        android:scaleType="centerInside"
++        style="@style/MeinButtonStyle"
+         android:text="@string/settings"
+-        android:textColor="@color/black"
+-        android:textSize="@dimen/activity_main"
+-        app:icon="@drawable/settings"
+-        app:iconGravity="textStart"
+-        app:iconPadding="8dp"
+-        app:iconTint="@color/black"
+-        android:textAllCaps="false"
+-        android:fontFamily="@font/ystextmedium"/>
++        app:icon="@drawable/settings" />
+ 
+ </LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/layout/activity_settings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_settings.xml b/app/src/main/res/layout/activity_settings.xml
+--- a/app/src/main/res/layout/activity_settings.xml	(revision 9ad32f9eb77ab289e4ce238d951bf2d4eec8e09e)
++++ b/app/src/main/res/layout/activity_settings.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
+@@ -3,7 +3,7 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    android:background="@color/white"
++    android:background="?attr/colorSecondary"
+     android:orientation="vertical"
+     android:padding="16dp"
+     android:weightSum="3">
+@@ -22,23 +22,21 @@
+             android:layout_weight="0.9"
+             android:background="@android:color/transparent"
+             android:drawableEnd="@drawable/arrow_back"
+-            android:drawableTint="@color/black"
++            android:drawableTint="?attr/colorPrimaryVariant"
+             android:gravity="start"
+             android:outlineProvider="none"
+             android:textColor="@color/black"
+-            android:textSize="@dimen/activity_settings" />
++            android:textSize="@dimen/FS16SP" />
+ 
+         <TextView
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:layout_gravity="center"
++            style="@style/MessageTextStyle"
+             android:layout_marginLeft="28dp"
+             android:layout_marginTop="5dp"
+             android:layout_weight="0.1"
++            android:fontFamily="@font/ystextmedium"
++            android:gravity="start"
+             android:text="@string/settings"
+-            android:textColor="@color/black"
+-            android:textSize="22sp"
+-            android:fontFamily="@font/ystextmedium"/>
++            android:textSize="@dimen/FS22SP" />
+ 
+     </LinearLayout>
+ 
+@@ -50,16 +48,8 @@
+ 
+         <androidx.appcompat.widget.SwitchCompat
+             android:id="@+id/black_them"
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:contentDescription="TODO"
+-            android:gravity="center_vertical|start"
+-            android:paddingRight="8dp"
+-            android:text="@string/set_black_them"
+-            android:textAllCaps="false"
+-            android:textColor="@color/black"
+-            android:textSize="@dimen/activity_settings"
+-            android:fontFamily="@font/ystextregular"/>
++            style="@style/MessageTextStyle"
++            android:text="@string/set_black_them" />
+ 
+ 
+     </LinearLayout>
+@@ -73,18 +63,9 @@
+ 
+         <TextView
+             android:id="@+id/share_app"
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:layout_weight="1"
++            style="@style/MessageTextStyle"
+             android:drawableEnd="@drawable/share"
+-            android:gravity="center_vertical|start"
+-            android:maxLines="2"
+-            android:paddingEnd="8dp"
+-            android:text="@string/set_share_app"
+-            android:textAllCaps="false"
+-            android:textColor="@color/black"
+-            android:textSize="@dimen/activity_settings"
+-            android:fontFamily="@font/ystextregular"/>
++            android:text="@string/set_share_app" />
+ 
+ 
+     </LinearLayout>
+@@ -96,17 +77,9 @@
+ 
+         <TextView
+             android:id="@+id/write_support"
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent"
+-            android:layout_weight="1"
++            style="@style/MessageTextStyle"
+             android:drawableEnd="@drawable/support"
+-            android:gravity="center_vertical|start"
+-            android:paddingEnd="8dp"
+-            android:text="@string/set_write_support"
+-            android:textAllCaps="false"
+-            android:textColor="@color/black"
+-            android:textSize="@dimen/activity_settings"
+-            android:fontFamily="@font/ystextregular"/>
++            android:text="@string/set_write_support" />
+ 
+ 
+     </LinearLayout>
+@@ -119,18 +92,9 @@
+ 
+         <TextView
+             android:id="@+id/user_agreement"
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent"
++            style="@style/MessageTextStyle"
+             android:drawableEnd="@drawable/arrow_forward"
+-            android:layout_marginRight="8dp"
+-            android:gravity="center_vertical|start"
+-            android:paddingEnd="8dp"
+-            android:text="@string/set_confirm_reg"
+-            android:textAllCaps="false"
+-            android:textColor="@color/black"
+-            android:textSize="@dimen/activity_settings"
+-            android:fontFamily="@font/ystextregular"/>
+-
++            android:text="@string/set_confirm_reg" />
+ 
+ 
+     </LinearLayout>
+Index: app/src/main/res/values-night/themes.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values-night/themes.xml b/app/src/main/res/values-night/themes.xml
+--- a/app/src/main/res/values-night/themes.xml	(revision 9ad32f9eb77ab289e4ce238d951bf2d4eec8e09e)
++++ b/app/src/main/res/values-night/themes.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
+@@ -2,13 +2,13 @@
+     <!-- Base application theme. -->
+     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+         <!-- Primary brand color. -->
+-        <item name="colorPrimary">@color/purple_200</item>
+-        <item name="colorPrimaryVariant">@color/purple_700</item>
+-        <item name="colorOnPrimary">@color/black</item>
++        <item name="colorPrimary">@color/white</item>
++        <item name="colorPrimaryVariant">@color/white</item>
++        <item name="colorOnPrimary">@color/white</item>
+         <!-- Secondary brand color. -->
+-        <item name="colorSecondary">@color/teal_200</item>
+-        <item name="colorSecondaryVariant">@color/teal_200</item>
+-        <item name="colorOnSecondary">@color/black</item>
++        <item name="colorSecondary">@color/black</item>
++        <item name="colorSecondaryVariant">@color/black</item>
++        <item name="colorOnSecondary">@color/white</item>
+         <!-- Status bar color. -->
+         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+         <!-- Customize your theme here. -->
+Index: app/src/main/res/values/dimens.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/dimens.xml b/app/src/main/res/values/dimens.xml
+--- a/app/src/main/res/values/dimens.xml	(revision 9ad32f9eb77ab289e4ce238d951bf2d4eec8e09e)
++++ b/app/src/main/res/values/dimens.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <resources>
+-    <dimen name="activity_main">22sp</dimen>
+-    <dimen name="activity_settings">16sp</dimen>
++    <dimen name="FS22SP">22sp</dimen>
++    <dimen name="FS16SP">16sp</dimen>
+ </resources>
+\ No newline at end of file
+Index: app/src/main/res/values/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/styles.xml b/app/src/main/res/values/styles.xml
+new file mode 100644
+--- /dev/null	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
++++ b/app/src/main/res/values/styles.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
+@@ -0,0 +1,33 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <style name="MessageTextStyle">
++        <item name="android:fontFamily">@font/ystextregular</item>
++        <item name="android:textColor">?attr/colorOnPrimary</item>
++        <item name="android:gravity">center_vertical|start</item>
++        <item name="android:textSize">@dimen/FS16SP</item>
++        <item name="android:layout_width">match_parent</item>
++        <item name="android:layout_height">match_parent</item>
++        <item name="android:layout_weight">1</item>
++        <item name="android:paddingEnd">8dp</item>
++        <item name="android:textAllCaps">false</item>
++        <item name="drawableTint">?attr/colorPrimaryVariant</item>
++
++    </style>
++    <style name="MeinButtonStyle" parent="Widget.MaterialComponents.Button">
++        <item name="android:textAllCaps">false</item>
++        <item name="android:textColor">@color/black</item>
++        <item name="android:textSize">@dimen/FS22SP</item>
++        <item name="android:fontFamily">@font/ystextmedium</item>
++        <item name="android:layout_width">match_parent</item>
++        <item name="android:layout_height">0dp</item>
++        <item name="android:layout_marginTop">16dp</item>
++        <item name="android:layout_weight">1</item>
++        <item name="iconGravity">textStart</item>
++        <item name="iconPadding">8dp</item>
++        <item name="iconTint">@color/black</item>
++        <item name="android:drawablePadding">8dp</item>
++        <item name="android:background">@drawable/rectangle</item>
++        <item name="android:scaleType">centerInside</item>
++    </style>
++
++</resources>
+\ No newline at end of file
+Index: app/src/main/res/values/themes.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/themes.xml b/app/src/main/res/values/themes.xml
+--- a/app/src/main/res/values/themes.xml	(revision 9ad32f9eb77ab289e4ce238d951bf2d4eec8e09e)
++++ b/app/src/main/res/values/themes.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
+@@ -5,11 +5,11 @@
+         <item name="android:windowNoTitle">true</item>
+         <!-- Primary brand color. -->
+         <item name="colorPrimary">@color/white</item>
+-        <item name="colorPrimaryVariant">@color/white</item>
+-        <item name="colorOnPrimary">@color/white</item>
++        <item name="colorPrimaryVariant">@color/grey</item>
++        <item name="colorOnPrimary">@color/black</item>
+         <!-- Secondary brand color. -->
+-        <item name="colorSecondary">@color/black</item>
+-        <item name="colorSecondaryVariant">@color/teal_700</item>
++        <item name="colorSecondary">@color/white</item>
++        <item name="colorSecondaryVariant">@color/blue</item> /
+         <item name="colorOnSecondary">@color/black</item>
+         <!-- Status bar color. -->
+         <item name="android:statusBarColor">?attr/colorSecondary</item>

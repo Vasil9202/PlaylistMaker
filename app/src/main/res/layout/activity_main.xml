@@ -1,78 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/blue"
+    android:background="?attr/colorSecondaryVariant"
     android:orientation="vertical"
     android:padding="16dp">
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/app_name"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:fontFamily="@font/ystextmedium"/>
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:fontFamily="@font/ystextmedium"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/search_button"
+        style="@style/MeinButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_marginTop="40dp"
-        android:layout_weight="1"
-        android:background="@drawable/rectangle"
-        android:drawablePadding="8dp"
-        android:scaleType="centerInside"
         android:text="@string/search"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/activity_main"
-        app:icon="@drawable/search"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/black"
-        android:fontFamily="@font/ystextmedium"/>
+        app:icon="@drawable/search" />
 
     <Button
-        android:layout_width="match_parent"
         android:id="@+id/media_button"
+        style="@style/MeinButtonStyle"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:background="@drawable/rectangle"
-        android:drawablePadding="8dp"
-        android:scaleType="centerInside"
+        android:layout_marginTop="16dp"
         android:text="@string/media"
-        android:textColor="@color/black"
-        android:textSize="@dimen/activity_main"
-        app:icon="@drawable/library"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/black"
-        android:textAllCaps="false"
-        android:fontFamily="@font/ystextmedium"/>
+        app:icon="@drawable/library" />
 
     <Button
-        android:layout_width="match_parent"
         android:id="@+id/settings_button"
+        style="@style/MeinButtonStyle"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:background="@drawable/rectangle"
-        android:drawablePadding="8dp"
-        android:scaleType="centerInside"
+        android:layout_marginTop="16dp"
         android:text="@string/settings"
-        android:textColor="@color/black"
-        android:textSize="@dimen/activity_main"
-        app:icon="@drawable/settings"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"
-        app:iconTint="@color/black"
-        android:textAllCaps="false"
-        android:fontFamily="@font/ystextmedium"/>
+        app:icon="@drawable/settings" />
 
 </LinearLayout>

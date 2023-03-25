@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical"
     android:padding="16dp"
     android:weightSum="3">
@@ -17,28 +17,26 @@
 
         <Button
             android:id="@+id/button_back"
-            android:layout_width="match_parent"
+            android:layout_width="38dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.9"
             android:background="@android:color/transparent"
-            android:drawableEnd="@drawable/arrow_back"
-            android:drawableTint="@color/black"
+            app:drawableEndCompat="@drawable/arrow_back"
+            android:drawableTint="?attr/colorOnPrimary"
             android:gravity="start"
             android:outlineProvider="none"
             android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings" />
+            android:textSize="@dimen/FS16SP" />
 
         <TextView
-            android:layout_width="match_parent"
+            style="@style/MessageTextStyle"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
             android:layout_marginLeft="28dp"
             android:layout_marginTop="5dp"
-            android:layout_weight="0.1"
+            android:fontFamily="@font/ystextmedium"
+            android:gravity="start"
             android:text="@string/settings"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:fontFamily="@font/ystextmedium"/>
+            android:textSize="@dimen/FS22SP" />
 
     </LinearLayout>
 
@@ -50,16 +48,13 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/black_them"
-            android:layout_width="match_parent"
+            style="@style/MessageTextStyle"
             android:layout_height="match_parent"
-            android:contentDescription="TODO"
-            android:gravity="center_vertical|start"
-            android:paddingRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:text="@string/set_black_them"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings"
-            android:fontFamily="@font/ystextregular"/>
+            app:thumbTint="@color/switch_thumb_selector"
+            app:trackTint="@color/switch_track_selector" />
 
 
     </LinearLayout>
@@ -73,18 +68,12 @@
 
         <TextView
             android:id="@+id/share_app"
-            android:layout_width="match_parent"
+            style="@style/MessageTextStyle"
             android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:layout_weight="1"
-            android:drawableEnd="@drawable/share"
-            android:gravity="center_vertical|start"
-            android:maxLines="2"
-            android:paddingEnd="8dp"
-            android:text="@string/set_share_app"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings"
-            android:fontFamily="@font/ystextregular"/>
+            app:drawableEndCompat="@drawable/share"
+            android:text="@string/set_share_app" />
 
 
     </LinearLayout>
@@ -96,17 +85,12 @@
 
         <TextView
             android:id="@+id/write_support"
-            android:layout_width="match_parent"
+            style="@style/MessageTextStyle"
             android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:layout_weight="1"
-            android:drawableEnd="@drawable/support"
-            android:gravity="center_vertical|start"
-            android:paddingEnd="8dp"
-            android:text="@string/set_write_support"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings"
-            android:fontFamily="@font/ystextregular"/>
+            app:drawableEndCompat="@drawable/support"
+            android:text="@string/set_write_support" />
 
 
     </LinearLayout>
@@ -119,18 +103,12 @@
 
         <TextView
             android:id="@+id/user_agreement"
-            android:layout_width="match_parent"
+            style="@style/MessageTextStyle"
             android:layout_height="match_parent"
-            android:drawableEnd="@drawable/arrow_forward"
-            android:layout_marginRight="8dp"
-            android:gravity="center_vertical|start"
-            android:paddingEnd="8dp"
-            android:text="@string/set_confirm_reg"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="@dimen/activity_settings"
-            android:fontFamily="@font/ystextregular"/>
-
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            app:drawableEndCompat="@drawable/arrow_forward"
+            android:text="@string/set_confirm_reg" />
 
 
     </LinearLayout>
