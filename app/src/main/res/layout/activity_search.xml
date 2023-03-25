@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_back"
+            android:layout_width="38dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableTint="?attr/colorOnPrimary"
+            android:gravity="start"
+            android:textColor="@color/black"
+            android:textSize="@dimen/FS16SP"
+            app:drawableEndCompat="@drawable/arrow_back" />
+
+        <TextView
+            style="@style/MessageTextStyle"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="28dp"
+            android:fontFamily="@font/ystextmedium"
+            android:gravity="start|center"
+            android:text="@string/search"
+            android:textSize="@dimen/FS22SP" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/grey_shape"
+            android:drawableStart="@drawable/search"
+            android:drawableEnd="@drawable/clear"
+            android:drawableTint="?attr/colorPrimaryVariant"
+
+            android:drawablePadding="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:hint="Поиск"
+            android:textColorHint="?attr/colorPrimaryVariant" />
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

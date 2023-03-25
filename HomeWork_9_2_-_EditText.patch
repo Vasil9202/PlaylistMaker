@@ -1,0 +1,287 @@
+Index: .idea/deploymentTargetDropDown.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml
+--- a/.idea/deploymentTargetDropDown.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
++++ b/.idea/deploymentTargetDropDown.xml	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
+@@ -7,11 +7,11 @@
+         <deviceKey>
+           <Key>
+             <type value="VIRTUAL_DEVICE_PATH" />
+-            <value value="C:\Users\Vasiliy\.android\avd\Pixel_C_API_28_2.avd" />
++            <value value="C:\Users\Vasiliy\.android\avd\Nexus_10_API_28.avd" />
+           </Key>
+         </deviceKey>
+       </Target>
+     </targetSelectedWithDropDown>
+-    <timeTargetWasSelectedWithDropDown value="2023-03-22T10:43:36.387820Z" />
++    <timeTargetWasSelectedWithDropDown value="2023-03-23T10:04:53.641644300Z" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: app/src/main/java/com/example/playlistmaker/SearchActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/playlistmaker/SearchActivity.kt b/app/src/main/java/com/example/playlistmaker/SearchActivity.kt
+--- a/app/src/main/java/com/example/playlistmaker/SearchActivity.kt	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
++++ b/app/src/main/java/com/example/playlistmaker/SearchActivity.kt	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
+@@ -1,11 +1,60 @@
+ package com.example.playlistmaker
+ 
++import android.annotation.SuppressLint
+ import androidx.appcompat.app.AppCompatActivity
+ import android.os.Bundle
++import android.text.Editable
++import android.text.TextWatcher
++import android.view.View
++import android.widget.Button
++import android.widget.EditText
+ 
+ class SearchActivity : AppCompatActivity() {
++    @SuppressLint("ClickableViewAccessibility", "UseCompatLoadingForDrawables")
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContentView(R.layout.activity_search)
++
++        val backButton = findViewById<Button>(R.id.button_back)
++        backButton.setOnClickListener {
++            finish()
++        }
++
++        val searchEditText = findViewById<EditText>(R.id.search_edit_text)
++        val searchIcon = resources.getDrawable(R.drawable.search, null)
++        searchIcon.setBounds(0, 0, searchIcon.intrinsicWidth, searchIcon.intrinsicHeight) // Set the bounds of the drawable
++
++
++        if (searchEditText.text.isNullOrEmpty()) {
++            searchEditText.setCompoundDrawables(null, null, null, null)
++        }
++
++        searchEditText.addTextChangedListener(object : TextWatcher {
++            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
++                // Not used
++            }
++
++            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
++                // Show or hide the search icon depending on whether the searchEditText is empty or not
++                if (s.isNullOrEmpty()) {
++                    searchEditText.setCompoundDrawables(null, null, null, null)
++                } else {
++                    searchEditText.setCompoundDrawables(searchIcon, null, null, null)
++                }
++            }
++
++            override fun afterTextChanged(s: Editable?) {
++                // Not used
++            }
++        })
++
++        searchEditText.setOnTouchListener { view, event ->
++            val drawable = searchEditText.compoundDrawables[0] // Get the left drawable (should be the search icon)
++            if (!searchEditText.text.isNullOrEmpty() && event.x <= searchEditText.paddingLeft + drawable.intrinsicWidth) { // If the touch event is within the bounds of the search icon
++                searchEditText.setText("")
++                return@setOnTouchListener true // Consume the touch event so it doesn't interfere with typing in the EditText
++            }
++            false
++        }
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/playlistmaker/SettingsActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/playlistmaker/SettingsActivity.kt b/app/src/main/java/com/example/playlistmaker/SettingsActivity.kt
+--- a/app/src/main/java/com/example/playlistmaker/SettingsActivity.kt	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
++++ b/app/src/main/java/com/example/playlistmaker/SettingsActivity.kt	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
+@@ -2,9 +2,11 @@
+ 
+ import android.content.Intent
+ import android.content.IntentSender.OnFinished
++import android.net.Uri
+ import androidx.appcompat.app.AppCompatActivity
+ import android.os.Bundle
+ import android.widget.Button
++import android.widget.TextView
+ 
+ class SettingsActivity : AppCompatActivity() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+@@ -12,10 +14,39 @@
+         setContentView(R.layout.activity_settings)
+ 
+         val backButton = findViewById<Button>(R.id.button_back)
+-
+         backButton.setOnClickListener {
+             finish()
+         }
+ 
++        val shareButton = findViewById<TextView>(R.id.share_app)
++        shareButton.setOnClickListener {
++            val intent = Intent(Intent.ACTION_SEND)
++                intent.type = "text"
++                intent.putExtra(Intent.EXTRA_SUBJECT, "Курс Android-разработчик от Яндекс Практикума")
++                intent.putExtra(
++                    Intent.EXTRA_TEXT,"https://practicum.yandex.ru/profile/android-developer/")
++                startActivity(Intent.createChooser(intent, "Отправить ссылку через"))
++
++        }
++
++        val writeSupportButton = findViewById<TextView>(R.id.write_support)
++        writeSupportButton.setOnClickListener {
++            val shareIntent = Intent(Intent.ACTION_SENDTO)
++            shareIntent.data = Uri.parse("mailto:")
++            shareIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("vasil9202@yandex.ru"))
++            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Сообщение разработчикам и разработчицам приложения Playlist Maker")
++            shareIntent.putExtra(Intent.EXTRA_TEXT, "Спасибо разработчикам и разработчицам за крутое приложение!")
++            startActivity(shareIntent)
++        }
++
++        val userAgreementButton = findViewById<TextView>(R.id.user_agreement)
++        userAgreementButton.setOnClickListener {
++            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://yandex.ru/legal/practicum_offer/"))
++            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
++            startActivity(intent)
++        }
++
++
++
+     }
+ }
+\ No newline at end of file
+Index: app/src/main/res/drawable/grey_shape.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/grey_shape.xml b/app/src/main/res/drawable/grey_shape.xml
+new file mode 100644
+--- /dev/null	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
++++ b/app/src/main/res/drawable/grey_shape.xml	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++    <shape xmlns:android="http://schemas.android.com/apk/res/android"
++        android:shape="rectangle">
++        <solid android:color="#E6E8EB" />
++        <corners android:radius="8dp" />
++    </shape>
+Index: app/src/main/res/layout/activity_search.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_search.xml b/app/src/main/res/layout/activity_search.xml
+--- a/app/src/main/res/layout/activity_search.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
++++ b/app/src/main/res/layout/activity_search.xml	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
+@@ -1,9 +1,65 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
++    android:id="@+id/container"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+-    tools:context=".SearchActivity">
++    android:background="?attr/colorSecondary"
++    android:orientation="vertical"
++    android:padding="16dp">
++
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="14dp"
++        android:layout_marginBottom="16dp"
++        android:orientation="horizontal">
++
++        <Button
++            android:id="@+id/button_back"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:layout_weight="0.9"
++            android:background="@android:color/transparent"
++            android:drawableEnd="@drawable/arrow_back"
++            android:drawableTint="@color/black"
++            android:gravity="start"
++            android:outlineProvider="none"
++            android:textColor="@color/black"
++            android:textSize="@dimen/FS16SP" />
++
++        <TextView
++            style="@style/MessageTextStyle"
++            android:layout_marginLeft="28dp"
++            android:layout_marginTop="5dp"
++            android:layout_weight="0.1"
++            android:fontFamily="@font/ystextmedium"
++            android:gravity="start"
++            android:text="@string/search"
++            android:textSize="@dimen/FS22SP" />
++
++    </LinearLayout>
++
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:layout_height="36dp"
++        android:layout_margin="8dp">
++
++
++        <EditText
++            android:id="@+id/search_edit_text"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:background="@drawable/grey_shape"
++            android:drawableStart="@drawable/search"
++            android:drawableTint="@color/grey"
++            android:drawablePadding="8dp"
++            android:hint="Поиск"
++            android:textColorHint="#9B9B9B" />
++
++
++    </LinearLayout>
++
++
+ 
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
++</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/res/values-night/themes.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values-night/themes.xml b/app/src/main/res/values-night/themes.xml
+--- a/app/src/main/res/values-night/themes.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
++++ b/app/src/main/res/values-night/themes.xml	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
+@@ -10,7 +10,7 @@
+         <item name="colorSecondaryVariant">@color/black</item>
+         <item name="colorOnSecondary">@color/white</item>
+         <!-- Status bar color. -->
+-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
++        <item name="android:statusBarColor">?attr/colorSecondary</item>
+         <!-- Customize your theme here. -->
+     </style>
+ </resources>
+\ No newline at end of file
+Index: app/src/main/res/values/themes.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/themes.xml b/app/src/main/res/values/themes.xml
+--- a/app/src/main/res/values/themes.xml	(revision 89e95ef8070a962ee5ed7dc151db7c7a92d4db9e)
++++ b/app/src/main/res/values/themes.xml	(revision 3bc4ee074cf3049ed011b3bc6bb255598b355628)
+@@ -12,7 +12,7 @@
+         <item name="colorSecondaryVariant">@color/blue</item> /
+         <item name="colorOnSecondary">@color/black</item>
+         <!-- Status bar color. -->
+-        <item name="android:statusBarColor">?attr/colorSecondary</item>
++        <item name="android:statusBarColor">?attr/colorOnPrimary</item>
+         <!-- Customize your theme here. -->
+     </style>
+ </resources>
+\ No newline at end of file
