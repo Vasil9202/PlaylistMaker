@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="61dp"
+    >
+
+    <ImageView
+        android:id="@+id/artworkUrl100"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="13dp"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/not_found" />
+
+    <TextView
+        android:id="@+id/trackName"
+        style="@style/trackViewFirstStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginTop="14dp"
+        android:layout_toEndOf="@+id/artworkUrl100"
+        android:layout_marginStart="8dp"
+        android:text="Smells Like Teen Spirit"
+        />
+
+
+    <TextView
+        android:id="@+id/artistName"
+        style="@style/trackViewSecondStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="13dp"
+        android:layout_marginTop="1dp"
+        android:layout_toEndOf="@+id/artworkUrl100"
+        android:layout_below="@+id/trackName"
+        android:layout_marginStart="8dp"
+        android:drawablePadding="5dp"
+        android:text="Nirvana"
+        app:drawableRightCompat="@drawable/ellipse"
+        app:drawableTint="?attr/colorSecondaryContainer" />
+
+    <TextView
+        android:id="@+id/trackTime"
+        style="@style/trackViewSecondStyle"
+        android:layout_width="64dp"
+        android:layout_height="13dp"
+        android:layout_marginTop="1dp"
+        android:layout_toEndOf="@+id/artistName"
+        android:layout_below="@+id/trackName"
+        android:layout_marginStart="5dp"
+        android:text="5:00" />
+
+    <ImageButton
+        android:layout_width="8dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="24dp"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/arrow_forward"
+        app:tint="?attr/colorSecondaryContainer" />
+</RelativeLayout>
