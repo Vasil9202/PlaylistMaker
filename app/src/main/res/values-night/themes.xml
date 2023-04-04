@@ -13,6 +13,8 @@
         <item name="android:statusBarColor">?attr/colorSecondary</item>
         <!-- Customize your theme here. -->
         <item name="colorSecondaryContainer">@color/white</item>
+        <item name="colorBackgroundFloating">@color/black</item>
+
 
     </style>
 </resources>

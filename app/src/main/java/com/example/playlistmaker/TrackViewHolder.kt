@@ -24,7 +24,9 @@ class TrackViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
         Glide.with(itemView)
             .load(model.artworkUrl100)
             .centerCrop()
-            .transform(RoundedCorners(10))
+            .transform(RoundedCorners(
+                itemView.resources.getDimensionPixelSize(R.dimen.DP2)))
+            .placeholder(R.drawable.placeholder)
             .into(artworkUrl100View)
         trackNameView.text = model.trackName
         artistNameView.text = model.artistName
