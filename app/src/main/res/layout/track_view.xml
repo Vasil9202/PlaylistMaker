@@ -20,14 +20,14 @@
         android:id="@+id/trackName"
         style="@style/trackViewFirstStyle"
         android:layout_width="wrap_content"
-        android:layout_height="19dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:layout_toEndOf="@+id/artworkUrl100"
         android:layout_marginStart="8dp"
         android:text="Smells Like Teen Spirit"
         android:ellipsize="end"
         android:layout_toStartOf="@+id/forward"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         />
 
 
@@ -38,7 +38,7 @@
         android:gravity="left"
         android:layout_below="@id/trackName"
         android:layout_toStartOf="@id/forward"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="1dp">
 
@@ -72,9 +72,12 @@
         android:id="@+id/forward"
         android:layout_width="@dimen/DP24"
         android:layout_height="@dimen/DP24"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="@dimen/DP24"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="19dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:src="@drawable/arrow_forward2"
         app:tint="?attr/colorSecondaryContainer"
         android:backgroundTint="?attr/colorBackgroundFloating"/>
