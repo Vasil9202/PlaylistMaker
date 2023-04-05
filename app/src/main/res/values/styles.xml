@@ -22,4 +22,18 @@
         <item name="android:scaleType">centerInside</item>
     </style>
 
+    <style name="trackViewFirstStyle">
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">@dimen/FS16SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="trackViewSecondStyle">
+        <item name="android:textColor">?attr/colorSecondaryContainer</item>
+        <item name="android:textSize">@dimen/FS11SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
 </resources>

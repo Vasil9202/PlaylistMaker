@@ -2,4 +2,9 @@
 <resources>
     <dimen name="FS22SP">22sp</dimen>
     <dimen name="FS16SP">16sp</dimen>
+    <dimen name="FS11SP">11sp</dimen>
+    <dimen name="DP2">2dp</dimen>
+    <dimen name="DP45">45dp</dimen>
+    <dimen name="DP8">8dp</dimen>
+    <dimen name="DP24">24dp</dimen>
 </resources>
