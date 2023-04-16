@@ -17,4 +17,6 @@
     <string name="android_dev_page">https://practicum.yandex.ru/profile/android-developer/</string>
     <string name="send_link_via">Отправить ссылку через</string>
     <string name="offer_page">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="find_nothing">Ничего не нашлось</string>
+    <string name="net_error">Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
 </resources>
