@@ -31,7 +31,7 @@
             style="@style/MessageTextStyle"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
             android:fontFamily="@font/ystextmedium"
             android:gravity="start|center"
             android:text="@string/search"
@@ -57,18 +57,95 @@
             android:drawablePadding="8dp"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
-            android:hint="Поиск"
-            android:textColorHint="?attr/colorPrimaryVariant" />
+            android:hint="@string/search"
+            android:textColorHint="?attr/colorPrimaryVariant"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="24dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/trackList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="24dp"
             />
+
+        <ImageView
+            android:id="@+id/find_nothing_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="86dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginEnd="120dp"
+            android:layout_gravity="center_horizontal"
+            android:theme="@style/errorImage"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/find_nothing_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/find_nothing"
+            android:layout_marginTop="220dp"
+            android:textSize="19sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/ystextmedium"
+            android:layout_marginStart="@dimen/DP24"
+            android:layout_marginEnd="@dimen/DP24"
+            android:layout_gravity="center_horizontal|top"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/net_error_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="86dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginEnd="120dp"
+            android:layout_gravity="center_horizontal"
+            android:theme="@style/netErrorImage"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/net_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/net_error"
+            android:layout_marginTop="220dp"
+            android:textSize="19sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/ystextmedium"
+            android:layout_marginStart="@dimen/DP24"
+            android:layout_marginEnd="@dimen/DP24"
+            android:gravity="center_horizontal|top"
+            android:visibility="gone"
+            />
+
+        <ImageButton
+            android:id="@+id/update_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="134dp"
+            android:layout_marginEnd="134dp"
+            android:layout_marginTop="334dp"
+            android:background="?attr/colorSecondary"
+            android:theme="@style/updateButton"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+
+
+            />
+
+    </FrameLayout>
 
 
 
