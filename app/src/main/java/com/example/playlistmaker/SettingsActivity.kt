@@ -1,11 +1,15 @@
 package com.example.playlistmaker
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
+
+
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -13,10 +17,23 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var shareButton: TextView
     private lateinit var writeSupportButton: TextView
     private lateinit var userAgreementButton: TextView
+    private lateinit var themeSwitcher: SwitchCompat
 
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        themeSwitcher = findViewById<SwitchCompat>(R.id.themeSwitcher)
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+        }
+        val sharedPrefs = getSharedPreferences(THEME_MODE, MODE_PRIVATE)
+        if(sharedPrefs.getBoolean(THEME_MODE, DARK_THEME)){
+            themeSwitcher.setChecked(true)
+        }
+
 
         backButton = findViewById<Button>(R.id.button_back)
         backButton.setOnClickListener {

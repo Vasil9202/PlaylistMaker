@@ -47,7 +47,7 @@
 
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/black_them"
+            android:id="@+id/themeSwitcher"
             style="@style/MessageTextStyle"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
