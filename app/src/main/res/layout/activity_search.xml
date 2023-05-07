@@ -70,6 +70,21 @@
         android:layout_height="match_parent"
         android:layout_marginTop="24dp">
 
+        <TextView
+            android:id="@+id/search_history"
+            style="@style/MessageTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/your_search"
+            android:textSize="@dimen/FS19SP"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/ystextmedium"
+            android:visibility="gone"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/trackList"
             android:layout_width="match_parent"
@@ -141,8 +156,19 @@
             android:theme="@style/updateButton"
             android:layout_gravity="center_horizontal"
             android:visibility="gone"
+            />
 
-
+        <ImageButton
+            android:id="@+id/search_history_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="106dp"
+            android:layout_marginEnd="106dp"
+            android:layout_marginBottom="20dp"
+            android:background="?attr/colorSecondary"
+            android:src="@drawable/clear_history"
+            android:layout_gravity="bottom|center_horizontal"
+            android:visibility="gone"
             />
 
     </FrameLayout>
