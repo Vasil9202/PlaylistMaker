@@ -31,7 +31,9 @@ class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
     }
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var historyRecyclerView: RecyclerView
     private lateinit var trackAdapter: TrackAdapter
+    private lateinit var historyTrackAdapter: TrackHistoryAdapter
     private lateinit var searchEditText: EditText
     private lateinit var backButton: Button
     private lateinit var searchIcon: Drawable
@@ -94,14 +96,23 @@ class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
 
         recyclerView = findViewById<RecyclerView>(R.id.trackList)
 
+        historyRecyclerView = findViewById<RecyclerView>(R.id.historyTrackList)
 
 
+        historyTrackAdapter = TrackHistoryAdapter(emptyList(), this)
+        historyRecyclerView.adapter = historyTrackAdapter
+        historyRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        trackAdapter = TrackAdapter(emptyList(), this)
+        recyclerView.adapter = trackAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         clearHistoryButton.setOnClickListener {
             clearHistoryButton.visibility = View.GONE
+            historyRecyclerView.visibility = View.GONE
+            historyText.visibility = View.GONE
             val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
             share.edit().clear().apply()
-            setHistoryRecyclerView()
         }
 
 
@@ -116,7 +127,6 @@ class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
             } else {
                 historyText.visibility = View.GONE
                 setRecyclerView()
-
             }
         }
 
@@ -126,8 +136,12 @@ class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (searchEditText.hasFocus() && s?.isEmpty() == true) {
+                    val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)                         //Get list from sharedPreference
+                    val sharedPreferences: TrackPreferences = TrackPreferences()
+                    val historyList: List<Track> = sharedPreferences.read(share).toList()
+                    if(historyList.isNotEmpty()){
                     historyText.visibility = View.VISIBLE
-                    setHistoryRecyclerView()
+                    setHistoryRecyclerView()}
                 } else {
                     historyText.visibility = View.GONE
                     setRecyclerView()
@@ -254,60 +268,40 @@ class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
     }
 
     fun setHistoryRecyclerView() {
-        val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
+        val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)                         //Get list from sharedPreference
         val sharedPreferences: TrackPreferences = TrackPreferences()
         val historyList: List<Track> = sharedPreferences.read(share).toList()
-        val historyTrackAdapter = TrackHistoryAdapter(historyList, this)
+        historyTrackAdapter.updateData(historyList)
         if(historyList.isEmpty())
             historyText.visibility = View.GONE
-        val margin30dp = resources.getDimensionPixelSize(R.dimen.DP68)
-
-        val marginBottom = resources.getDimensionPixelSize(R.dimen.DP85)
         val marginTop = resources.getDimensionPixelSize(R.dimen.DP85)
-
-        (recyclerView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, margin30dp, 0, marginBottom)
-        recyclerView.adapter = historyTrackAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
         val clearHistoryLayoutParams = clearHistoryButton.layoutParams as ViewGroup.MarginLayoutParams
-        val lastItemPosition = recyclerView.adapter?.itemCount?.minus(1) ?: 0
-        if (lastItemPosition >= 0) {
-
+        val lastItemPosition = historyRecyclerView.adapter?.itemCount?.minus(1) ?: 0
+        if (lastItemPosition >= 0) {                                                            //Check find track list
             clearHistoryButton.visibility = View.VISIBLE
-            recyclerView.post {
-                val lastItemView = recyclerView.layoutManager?.findViewByPosition(lastItemPosition)
+            historyRecyclerView.post {                                                                 //Changing clearButton position
+                val lastItemView = historyRecyclerView.layoutManager?.findViewByPosition(lastItemPosition)
                 val layoutParams = clearHistoryButton.layoutParams as FrameLayout.LayoutParams
                 if(lastItemView != null){
-                    (recyclerView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, margin30dp, 0, 0)
-                    recyclerView.adapter = historyTrackAdapter
-                    recyclerView.layoutManager = LinearLayoutManager(this)
                     layoutParams.gravity = Gravity.CENTER or Gravity.TOP
                     clearHistoryLayoutParams.topMargin = lastItemView.bottom + marginTop
                     clearHistoryButton.layoutParams = layoutParams
                 }else{
-                    (recyclerView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, margin30dp, 0, marginBottom)
-                    recyclerView.adapter = historyTrackAdapter
-                    recyclerView.layoutManager = LinearLayoutManager(this)
                     layoutParams.gravity = Gravity.CENTER or Gravity.BOTTOM
                     clearHistoryButton.layoutParams = layoutParams
                 }
             }
-
         }
-
-
-
+        recyclerView.visibility = View.GONE
+        historyRecyclerView.visibility = View.VISIBLE
     }
 
     fun setRecyclerView() {
-        trackAdapter = TrackAdapter(tracks, this)
-        (recyclerView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
-        recyclerView.adapter = trackAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        clearHistoryButton.visibility = View.GONE
         tracks.clear()
         trackAdapter.updateData(tracks)
-
+        clearHistoryButton.visibility = View.GONE
+        historyRecyclerView.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
     }
 
     override fun onBackPressed() {

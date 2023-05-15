@@ -89,6 +89,16 @@
             android:id="@+id/trackList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyTrackList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="68dp"
+            android:layout_marginBottom="@dimen/DP85"
+            android:visibility="visible"
             />
 
         <ImageView
