@@ -12,4 +12,19 @@
         <item name="android:src">@drawable/update_bt_dk</item>
     </style>
 
+    <style name="collectionImage">
+        <item name="android:src">@drawable/collection_night</item>
+    </style>
+
+    <style name="playImage">
+        <item name="android:src">@drawable/play_night</item>
+    </style>
+
+    <style name="likeImage">
+        <item name="android:src">@drawable/like_night</item>
+    </style>
+
+    <style name="arrow_back">
+        <item name="android:src">@drawable/arrow_back3_night</item>
+    </style>
 </resources>

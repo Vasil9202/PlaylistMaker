@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/time"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSecondary">
+
+    <ImageButton
+        android:id="@+id/button_back"
+        style="@style/arrow_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="?attr/colorSecondary"/>
+
+    <ImageView
+        android:id="@+id/placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="82dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/album"
+        app:layout_constraintBottom_toTopOf="@+id/track_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/track_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/DP24"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="@font/ystextmedium"
+        android:text="Yesterday (Remastered 2009)"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="@dimen/FS22SP"
+        app:layout_constraintBottom_toTopOf="@+id/group"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/placeholder" />
+
+    <TextView
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/DP24"
+        android:layout_marginBottom="38dp"
+        android:fontFamily="@font/ystextmedium"
+        android:text="The Beatles"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="@dimen/FS14SP"
+        app:layout_constraintBottom_toTopOf="@+id/play_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/track_name" />
+
+    <ImageButton
+        android:id="@+id/collection"
+        style="@style/collectionImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="29dp"
+
+        android:layout_marginStart="24dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/current_time"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/play_button"
+        style="@style/playImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:background="@android:color/transparent"
+        android:drawableTint="?attr/colorOnPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/current_time"
+        app:layout_constraintEnd_toStartOf="@+id/like_button"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/collection" />
+
+    <ImageButton
+        android:id="@+id/like_button"
+        style="@style/likeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="29dp"
+        android:background="@android:color/transparent"
+        android:drawableTint="?attr/colorOnPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/current_time"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/current_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ystextmedium"
+        android:layout_marginBottom="30dp"
+        android:text="0:30"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/track_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/duration"
+        style="@style/playerActivityText"
+        android:text="@string/duration"
+        app:layout_constraintBottom_toTopOf="@+id/album"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/album"
+        style="@style/playerActivityText"
+        android:text="@string/album"
+        app:layout_constraintBottom_toTopOf="@+id/year"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/year"
+        style="@style/playerActivityText"
+        android:text="@string/year"
+        app:layout_constraintBottom_toTopOf="@+id/genre"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/genre"
+        style="@style/playerActivityText"
+        android:text="@string/genre"
+        app:layout_constraintBottom_toTopOf="@+id/country"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <TextView
+        android:id="@+id/country"
+        style="@style/playerActivityText"
+        android:text="@string/country"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <TextView
+        android:id="@+id/track_time"
+        style="@style/playerActivityText_2"
+        android:layout_marginEnd="@dimen/FS16SP"
+        android:text="5:35"
+        app:layout_constraintBottom_toTopOf="@+id/track_album"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/track_album"
+        style="@style/playerActivityText_2"
+        android:text="Yesterday (Remastered 2009)"
+        app:layout_constraintBottom_toTopOf="@+id/track_year"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/track_year"
+        style="@style/playerActivityText_2"
+        android:text="1965"
+        app:layout_constraintBottom_toTopOf="@+id/track_genre"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <TextView
+        android:id="@+id/track_genre"
+        style="@style/playerActivityText_2"
+        android:text="Rock"
+        app:layout_constraintBottom_toTopOf="@+id/track_country"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <TextView
+        android:id="@+id/track_country"
+        style="@style/playerActivityText_2"
+        android:text="Великобритания"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

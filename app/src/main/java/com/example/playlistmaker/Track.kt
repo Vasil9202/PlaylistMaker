@@ -7,7 +7,13 @@ import java.util.*
 
 const val TRACK_KEY = "track_key"
 
-data class Track(val trackName: String, val artistName: String, val trackTimeMillis: String, val trackTime: String, val artworkUrl100: String)
+data class Track(val trackName: String, val artistName: String, val trackTimeMillis: String, val artworkUrl100: String,
+                 val collectionName: String, val releaseDate: String, val primaryGenreName: String, val country: String){
+
+    fun getTrackTimeMin() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
+    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
+
+}
 
 class TrackPreferences {
 
@@ -23,4 +29,6 @@ class TrackPreferences {
             .putString(TRACK_KEY, json)
             .apply()
     }
+
+
 }
