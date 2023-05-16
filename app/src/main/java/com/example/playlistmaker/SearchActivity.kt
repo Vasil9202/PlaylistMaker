@@ -2,17 +2,17 @@ package com.example.playlistmaker
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -21,13 +21,19 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SearchActivity : AppCompatActivity() {
+const val SEARCH_HISTORY = "search_history"
+
+
+class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
     }
+
     private lateinit var recyclerView: RecyclerView
+    private lateinit var historyRecyclerView: RecyclerView
     private lateinit var trackAdapter: TrackAdapter
+    private lateinit var historyTrackAdapter: TrackHistoryAdapter
     private lateinit var searchEditText: EditText
     private lateinit var backButton: Button
     private lateinit var searchIcon: Drawable
@@ -37,10 +43,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var netErrorImg: ImageView
     private lateinit var netErrorText: TextView
     private lateinit var updateButton: ImageButton
+    private lateinit var clearHistoryButton: ImageButton
+    private lateinit var historyText: TextView
     private val iTunes = "https://itunes.apple.com"
     private val tracks = ArrayList<Track>()
-
-
 
 
     private val retrofit = Retrofit.Builder()
@@ -51,8 +57,8 @@ class SearchActivity : AppCompatActivity() {
     private val iTunesService = retrofit.create(TrackApiService::class.java)
 
 
-
-    @SuppressLint("ClickableViewAccessibility", "UseCompatLoadingForDrawables",
+    @SuppressLint(
+        "ClickableViewAccessibility", "UseCompatLoadingForDrawables",
         "NotifyDataSetChanged", "MissingInflatedId"
     )
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,16 +90,63 @@ class SearchActivity : AppCompatActivity() {
 
         findNothingText.visibility = View.GONE
 
+        clearHistoryButton = findViewById(R.id.search_history_clear)
+
+        historyText = findViewById(R.id.search_history)
+
+        recyclerView = findViewById<RecyclerView>(R.id.trackList)
+
+        historyRecyclerView = findViewById<RecyclerView>(R.id.historyTrackList)
+
+
+        historyTrackAdapter = TrackHistoryAdapter(emptyList(), this)
+        historyRecyclerView.adapter = historyTrackAdapter
+        historyRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        trackAdapter = TrackAdapter(emptyList(), this)
+        recyclerView.adapter = trackAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        clearHistoryButton.setOnClickListener {
+            clearHistoryButton.visibility = View.GONE
+            historyRecyclerView.visibility = View.GONE
+            historyText.visibility = View.GONE
+            val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
+            share.edit().clear().apply()
+        }
+
+
         if (searchEditText.text.isNullOrEmpty()) {
             searchEditText.setCompoundDrawablesWithIntrinsicBounds(searchIcon, null, null, null)
         }
 
+        searchEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && searchEditText.text.isEmpty()) {
+                historyText.visibility = View.VISIBLE
+                setHistoryRecyclerView()
+            } else {
+                historyText.visibility = View.GONE
+                setRecyclerView()
+            }
+        }
+
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (searchEditText.hasFocus() && s?.isEmpty() == true) {
+                    val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)                         //Get list from sharedPreference
+                    val sharedPreferences: TrackPreferences = TrackPreferences()
+                    val historyList: List<Track> = sharedPreferences.read(share).toList()
+                    if(historyList.isNotEmpty()){
+                    historyText.visibility = View.VISIBLE
+                    setHistoryRecyclerView()}
+                } else {
+                    historyText.visibility = View.GONE
+                    setRecyclerView()
+                }
+
                 if (s.isNullOrEmpty()) {
                     searchEditText.setCompoundDrawablesWithIntrinsicBounds(
                         searchIcon,
@@ -134,10 +187,11 @@ class SearchActivity : AppCompatActivity() {
             searchEditText.setText(text)
         }
 
-        recyclerView  = findViewById<RecyclerView>(R.id.trackList)
-        trackAdapter = TrackAdapter(tracks)
-        recyclerView.adapter = trackAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+
+
+
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -158,46 +212,104 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.setText(text)
     }
 
-    fun search(){
+    fun search() {
         findNothingImg.visibility = View.GONE
         findNothingText.visibility = View.GONE
         netErrorImg.visibility = View.GONE
         netErrorText.visibility = View.GONE
         updateButton.visibility = View.GONE
-        iTunesService.search(searchEditText.text.toString()).enqueue(object : Callback<TrackResponse>{
-            override fun onResponse(
-                call: Call<TrackResponse>,
-                response: Response<TrackResponse>
-            ) {
-                if (response.code() == 200) {
-                    tracks.clear()
-                    if (response.body()?.results?.isNotEmpty() == true) {
-                        tracks.addAll(response.body()?.results!!)
-                        trackAdapter.updateData(tracks)
-                    }
-                    else{
+        iTunesService.search(searchEditText.text.toString())
+            .enqueue(object : Callback<TrackResponse> {
+                override fun onResponse(
+                    call: Call<TrackResponse>,
+                    response: Response<TrackResponse>
+                ) {
+                    if (response.code() == 200) {
+                        tracks.clear()
+                        if (response.body()?.results?.isNotEmpty() == true) {
+                            tracks.addAll(response.body()?.results!!)
+                            trackAdapter.updateData(tracks)
+                        } else {
+                            tracks.clear()
+                            trackAdapter.updateData(tracks)
+                            findNothingImg.visibility = View.VISIBLE
+                            findNothingText.visibility = View.VISIBLE
+                        }
+                    } else {
                         tracks.clear()
                         trackAdapter.updateData(tracks)
-                        findNothingImg.visibility = View.VISIBLE
-                        findNothingText.visibility = View.VISIBLE
+                        netErrorImg.visibility = View.VISIBLE
+                        netErrorText.visibility = View.VISIBLE
+                        updateButton.visibility = View.VISIBLE
+
                     }
                 }
-                else {
+
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                     tracks.clear()
                     trackAdapter.updateData(tracks)
                     netErrorImg.visibility = View.VISIBLE
                     netErrorText.visibility = View.VISIBLE
                     updateButton.visibility = View.VISIBLE
+                }
+            })
+    }
 
+    override fun onItemClick(position: Int) {
+        val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
+        val sharedPreferences: TrackPreferences = TrackPreferences()
+        val historyTrackList: ArrayList<Track> = ArrayList(sharedPreferences.read(share).toList())
+        historyTrackList.remove(tracks[position])
+        historyTrackList.add(0, tracks[position])
+        if (historyTrackList.size > 10) {
+            historyTrackList.removeAt(10)
+        }
+        sharedPreferences.write(share, historyTrackList.toTypedArray())
+    }
+
+    fun setHistoryRecyclerView() {
+        val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)                         //Get list from sharedPreference
+        val sharedPreferences: TrackPreferences = TrackPreferences()
+        val historyList: List<Track> = sharedPreferences.read(share).toList()
+        historyTrackAdapter.updateData(historyList)
+        if(historyList.isEmpty())
+            historyText.visibility = View.GONE
+        val marginTop = resources.getDimensionPixelSize(R.dimen.DP85)
+        val clearHistoryLayoutParams = clearHistoryButton.layoutParams as ViewGroup.MarginLayoutParams
+        val lastItemPosition = historyRecyclerView.adapter?.itemCount?.minus(1) ?: 0
+        if (lastItemPosition >= 0) {                                                            //Check find track list
+            clearHistoryButton.visibility = View.VISIBLE
+            historyRecyclerView.post {                                                                 //Changing clearButton position
+                val lastItemView = historyRecyclerView.layoutManager?.findViewByPosition(lastItemPosition)
+                val layoutParams = clearHistoryButton.layoutParams as FrameLayout.LayoutParams
+                if(lastItemView != null){
+                    layoutParams.gravity = Gravity.CENTER or Gravity.TOP
+                    clearHistoryLayoutParams.topMargin = lastItemView.bottom + marginTop
+                    clearHistoryButton.layoutParams = layoutParams
+                }else{
+                    layoutParams.gravity = Gravity.CENTER or Gravity.BOTTOM
+                    clearHistoryButton.layoutParams = layoutParams
                 }
             }
+        }
+        recyclerView.visibility = View.GONE
+        historyRecyclerView.visibility = View.VISIBLE
+    }
 
-            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                tracks.clear()
-                trackAdapter.updateData(tracks)
-                netErrorImg.visibility = View.VISIBLE
-                netErrorText.visibility = View.VISIBLE
-                updateButton.visibility = View.VISIBLE}
-        })
+    fun setRecyclerView() {
+        tracks.clear()
+        trackAdapter.updateData(tracks)
+        clearHistoryButton.visibility = View.GONE
+        historyRecyclerView.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    }
+
+    override fun onBackPressed() {
+        if (searchEditText.hasFocus()) {
+            searchEditText.clearFocus()
+        }
+        else {
+            super.onBackPressed()
+        }
     }
 }
