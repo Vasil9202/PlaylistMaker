@@ -11,5 +11,4 @@
     <style name="updateButton">
         <item name="android:src">@drawable/update_bt_dk</item>
     </style>
-
 </resources>

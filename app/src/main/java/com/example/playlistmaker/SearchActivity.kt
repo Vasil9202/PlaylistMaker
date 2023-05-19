@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +24,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val SEARCH_HISTORY = "search_history"
 
+const val TRACK = "Track"
 
-class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
+class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
@@ -99,13 +101,41 @@ class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
         historyRecyclerView = findViewById<RecyclerView>(R.id.historyTrackList)
 
 
-        historyTrackAdapter = TrackHistoryAdapter(emptyList(), this)
+        historyTrackAdapter = TrackHistoryAdapter(emptyList())
         historyRecyclerView.adapter = historyTrackAdapter
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
+        historyTrackAdapter.onItemClick = {track ->
+            val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
+            val sharedPreferences: TrackPreferences = TrackPreferences()
+            val historyTrackList: ArrayList<Track> = ArrayList(sharedPreferences.read(share).toList())
+            historyTrackList.remove(track)
+            historyTrackList.add(0, track)
+            if (historyTrackList.size > 10) {
+                historyTrackList.removeAt(10)
+            }
+            sharedPreferences.write(share, historyTrackList.toTypedArray())
+            val intent = Intent(this, PlayerActivity::class.java)
+            intent.putExtra(TRACK,track)
+            startActivity(intent)
+        }
 
-        trackAdapter = TrackAdapter(emptyList(), this)
+        trackAdapter = TrackAdapter(emptyList())
         recyclerView.adapter = trackAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+        trackAdapter.onItemClick = {track ->
+            val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
+            val sharedPreferences: TrackPreferences = TrackPreferences()
+            val historyTrackList: ArrayList<Track> = ArrayList(sharedPreferences.read(share).toList())
+            historyTrackList.remove(track)
+            historyTrackList.add(0, track)
+            if (historyTrackList.size > 10) {
+                historyTrackList.removeAt(10)
+            }
+            sharedPreferences.write(share, historyTrackList.toTypedArray())
+            val intent = Intent(this, PlayerActivity::class.java)
+            intent.putExtra("Track",track)
+            startActivity(intent)
+        }
 
         clearHistoryButton.setOnClickListener {
             clearHistoryButton.visibility = View.GONE
@@ -255,17 +285,7 @@ class SearchActivity : AppCompatActivity(), TrackRecyclerViewInterface {
             })
     }
 
-    override fun onItemClick(position: Int) {
-        val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
-        val sharedPreferences: TrackPreferences = TrackPreferences()
-        val historyTrackList: ArrayList<Track> = ArrayList(sharedPreferences.read(share).toList())
-        historyTrackList.remove(tracks[position])
-        historyTrackList.add(0, tracks[position])
-        if (historyTrackList.size > 10) {
-            historyTrackList.removeAt(10)
-        }
-        sharedPreferences.write(share, historyTrackList.toTypedArray())
-    }
+
 
     fun setHistoryRecyclerView() {
         val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)                         //Get list from sharedPreference

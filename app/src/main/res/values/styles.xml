@@ -48,7 +48,23 @@
         <item name="android:src">@drawable/update_bt</item>
     </style>
 
+    <style name="playerActivityText">
+        <item name="android:textSize">@dimen/FS13SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/FS16DP</item>
+        <item name="android:layout_marginBottom">@dimen/FS17DP</item>
+    </style>
 
-
-
+    <style name="playerActivityText_2">
+        <item name="android:textSize">@dimen/FS13SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/FS16DP</item>
+        <item name="android:layout_marginBottom">@dimen/FS17DP</item>
+    </style>
 </resources>
