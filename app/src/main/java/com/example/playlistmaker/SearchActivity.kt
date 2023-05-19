@@ -24,6 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val SEARCH_HISTORY = "search_history"
 
+const val TRACK = "Track"
 
 class SearchActivity : AppCompatActivity() {
 
@@ -114,7 +115,7 @@ class SearchActivity : AppCompatActivity() {
             }
             sharedPreferences.write(share, historyTrackList.toTypedArray())
             val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra("Track",track)
+            intent.putExtra(TRACK,track)
             startActivity(intent)
         }
 

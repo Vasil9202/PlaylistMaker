@@ -42,9 +42,7 @@ class PlayerActivity : AppCompatActivity() {
         primaryGenreNameView = findViewById(R.id.track_genre)
         countryView = findViewById(R.id.track_country)
 
-        val track :Track? = intent.getParcelableExtra("Track")
-        val releaseDate = intent.getStringExtra("releaseDate")
-
+        val track :Track? = intent.getParcelableExtra(TRACK)
 
         backButton = findViewById<ImageButton>(R.id.button_back)
         backButton.setOnClickListener {
