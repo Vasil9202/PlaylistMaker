@@ -114,14 +114,7 @@ class SearchActivity : AppCompatActivity() {
             }
             sharedPreferences.write(share, historyTrackList.toTypedArray())
             val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra("trackName", track.trackName)
-            intent.putExtra("artistName", track.artistName)
-            intent.putExtra("coverArtwork", track.getCoverArtwork())
-            intent.putExtra("trackTime", track.getTrackTimeMin())
-            intent.putExtra("country", track.country)
-            intent.putExtra("collectionName", track.collectionName)
-            intent.putExtra("primaryGenreName", track.primaryGenreName)
-            intent.putExtra("releaseDate", track.releaseDate)
+            intent.putExtra("Track",track)
             startActivity(intent)
         }
 
@@ -139,14 +132,7 @@ class SearchActivity : AppCompatActivity() {
             }
             sharedPreferences.write(share, historyTrackList.toTypedArray())
             val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra("trackName", track.trackName)
-            intent.putExtra("artistName", track.artistName)
-            intent.putExtra("coverArtwork", track.getCoverArtwork())
-            intent.putExtra("trackTime", track.getTrackTimeMin())
-            intent.putExtra("country", track.country)
-            intent.putExtra("collectionName", track.collectionName)
-            intent.putExtra("primaryGenreName", track.primaryGenreName)
-            intent.putExtra("releaseDate", track.releaseDate)
+            intent.putExtra("Track",track)
             startActivity(intent)
         }
 

@@ -67,27 +67,4 @@
         <item name="android:layout_marginEnd">@dimen/FS16DP</item>
         <item name="android:layout_marginBottom">@dimen/FS17DP</item>
     </style>
-
-    <style name="collectionImage">
-        <item name="android:src">@drawable/collection</item>
-    </style>
-
-    <style name="playImage">
-        <item name="android:src">@drawable/play</item>
-    </style>
-
-    <style name="likeImage">
-        <item name="android:src">@drawable/like</item>
-    </style>
-
-    <style name="arrow_back">
-        <item name="android:src">@drawable/arrow_back3</item>
-    </style>
-
-
-
-
-
-
-
 </resources>

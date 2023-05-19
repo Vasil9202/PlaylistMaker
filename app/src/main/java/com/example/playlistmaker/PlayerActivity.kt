@@ -42,14 +42,9 @@ class PlayerActivity : AppCompatActivity() {
         primaryGenreNameView = findViewById(R.id.track_genre)
         countryView = findViewById(R.id.track_country)
 
-        val trackName = intent.getStringExtra("trackName")
-        val artistName = intent.getStringExtra("artistName")
-        val trackTime = intent.getStringExtra("trackTime")
-        val coverArtwork = intent.getStringExtra("coverArtwork")
-        val collectionName = intent.getStringExtra("collectionName")
+        val track :Track? = intent.getParcelableExtra("Track")
         val releaseDate = intent.getStringExtra("releaseDate")
-        val primaryGenreName = intent.getStringExtra("primaryGenreName")
-        val country = intent.getStringExtra("country")
+
 
         backButton = findViewById<ImageButton>(R.id.button_back)
         backButton.setOnClickListener {
@@ -57,19 +52,19 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         Glide.with(this)
-            .load(coverArtwork)
+            .load(track?.getCoverArtwork())
             .centerCrop()
-            .transform(RoundedCorners(artworkUrl512View.resources.getDimensionPixelSize(R.dimen.DP8)))
+            .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.DP8)))
             .placeholder(R.drawable.cover)
             .into(artworkUrl512View)
 
-        trackNameView.text = trackName
-        artistNameView.text = artistName
-        trackTimeView.text = trackTime
-        collectionNameView.text = collectionName
-        releaseDateView.text = releaseDate?.substring(0,4)
-        primaryGenreNameView.text = primaryGenreName
-        countryView.text = country
+        trackNameView.text = track?.trackName
+        artistNameView.text = track?.artistName
+        trackTimeView.text = track?.getTrackTimeMin()
+        collectionNameView.text = track?.collectionName
+        releaseDateView.text = track?.getReleaseYear()
+        primaryGenreNameView.text = track?.primaryGenreName
+        countryView.text = track?.country
         trackCurrentTimeView.text = "00:00"
 
 
