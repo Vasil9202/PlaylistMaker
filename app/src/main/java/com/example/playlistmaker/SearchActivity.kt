@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -30,6 +32,10 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+
+
     }
 
     private lateinit var recyclerView: RecyclerView
@@ -47,8 +53,15 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var updateButton: ImageButton
     private lateinit var clearHistoryButton: ImageButton
     private lateinit var historyText: TextView
+    private lateinit var progressBar: ProgressBar
+
     private val iTunes = "https://itunes.apple.com"
     private val tracks = ArrayList<Track>()
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { if(!searchEditText.text.toString().isNullOrEmpty())search()}
+    private var isClickAllowed = true
+
+
 
 
     private val retrofit = Retrofit.Builder()
@@ -100,11 +113,14 @@ class SearchActivity : AppCompatActivity() {
 
         historyRecyclerView = findViewById<RecyclerView>(R.id.historyTrackList)
 
+        progressBar = findViewById(R.id.progressBar)
+
 
         historyTrackAdapter = TrackHistoryAdapter(emptyList())
         historyRecyclerView.adapter = historyTrackAdapter
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
         historyTrackAdapter.onItemClick = {track ->
+            if(clickDebounce()){
             val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
             val sharedPreferences: TrackPreferences = TrackPreferences()
             val historyTrackList: ArrayList<Track> = ArrayList(sharedPreferences.read(share).toList())
@@ -117,12 +133,13 @@ class SearchActivity : AppCompatActivity() {
             val intent = Intent(this, PlayerActivity::class.java)
             intent.putExtra(TRACK,track)
             startActivity(intent)
-        }
+        }}
 
         trackAdapter = TrackAdapter(emptyList())
         recyclerView.adapter = trackAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         trackAdapter.onItemClick = {track ->
+            if(clickDebounce()){
             val share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
             val sharedPreferences: TrackPreferences = TrackPreferences()
             val historyTrackList: ArrayList<Track> = ArrayList(sharedPreferences.read(share).toList())
@@ -135,7 +152,7 @@ class SearchActivity : AppCompatActivity() {
             val intent = Intent(this, PlayerActivity::class.java)
             intent.putExtra("Track",track)
             startActivity(intent)
-        }
+        }}
 
         clearHistoryButton.setOnClickListener {
             clearHistoryButton.visibility = View.GONE
@@ -173,6 +190,7 @@ class SearchActivity : AppCompatActivity() {
                     historyText.visibility = View.VISIBLE
                     setHistoryRecyclerView()}
                 } else {
+                    searchDebounce()
                     historyText.visibility = View.GONE
                     setRecyclerView()
                 }
@@ -243,6 +261,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun search() {
+        progressBar.visibility = View.VISIBLE
         findNothingImg.visibility = View.GONE
         findNothingText.visibility = View.GONE
         netErrorImg.visibility = View.GONE
@@ -254,6 +273,7 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
+                    progressBar.visibility = View.GONE
                     if (response.code() == 200) {
                         tracks.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
@@ -332,4 +352,20 @@ class SearchActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+
 }
