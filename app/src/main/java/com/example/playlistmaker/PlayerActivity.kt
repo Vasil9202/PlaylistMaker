@@ -1,19 +1,18 @@
 package com.example.playlistmaker
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.widget.Button
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
+
 
     private lateinit var artworkUrl512View: ImageView
     private lateinit var trackNameView: TextView
@@ -25,13 +24,87 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var primaryGenreNameView: TextView
     private lateinit var countryView: TextView
     private lateinit var backButton: ImageButton
-
+    private lateinit var playButton: ImageButton
+    private var previewURL: String? = null
+    private var track: Track? = null
+    private var playerState = STATE_DEFAULT
+    private var mediaPlayer = MediaPlayer()
+    private var mainThreadHandler: Handler? = null
+    private var isPlaying: Boolean = false
+    private lateinit var runnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
+        track = intent.getParcelableExtra(TRACK)
+        viewInitialization()
 
+        backButton.setOnClickListener {
+            finish()
+        }
+
+        downloadData()
+
+        preparePlayer()
+        playButton.setOnClickListener {
+            playbackControl()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun preparePlayer() {
+        mediaPlayer.setDataSource(previewURL)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playButton.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            mainThreadHandler?.removeCallbacks(runnable)
+            trackCurrentTimeView.text = DEFAULT_TRACK_TIME_POSITION
+            playButton.setImageResource(R.drawable.play);
+            playerState = STATE_PREPARED
+        }
+    }
+
+    private fun startPlayer() {
+        isPlaying = true
+        playButton.setImageResource(R.drawable.pause);
+        mediaPlayer.start()
+        playerState = STATE_PLAYING
+        mainThreadHandler?.post(runnable)
+    }
+
+    private fun pausePlayer() {
+        isPlaying = false
+        playButton.setImageResource(R.drawable.play);
+        mediaPlayer.pause()
+        playerState = STATE_PAUSED
+    }
+
+    private fun viewInitialization(){
         artworkUrl512View = findViewById(R.id.placeholder)
         trackNameView = findViewById(R.id.track_name)
         artistNameView = findViewById(R.id.group)
@@ -41,14 +114,20 @@ class PlayerActivity : AppCompatActivity() {
         releaseDateView = findViewById(R.id.track_year)
         primaryGenreNameView = findViewById(R.id.track_genre)
         countryView = findViewById(R.id.track_country)
-
-        val track :Track? = intent.getParcelableExtra(TRACK)
-
-        backButton = findViewById<ImageButton>(R.id.button_back)
-        backButton.setOnClickListener {
-            finish()
+        playButton = findViewById(R.id.play_button)
+        mainThreadHandler = Handler(Looper.getMainLooper())
+        backButton = findViewById(R.id.button_back)
+        previewURL = track?.previewUrl
+        runnable = Runnable {
+            if (isPlaying) {
+                val seconds = mediaPlayer.currentPosition / ONE_SECOND_IN_MILL
+                trackCurrentTimeView.text = String.format("%d:%02d", seconds / ONE_MINUTE_IN_SEC, seconds % ONE_MINUTE_IN_SEC)
+                mainThreadHandler?.postDelayed(runnable, DELAY)
+            }
         }
+    }
 
+    private fun downloadData(){
         Glide.with(this)
             .load(track?.getCoverArtwork())
             .centerCrop()
@@ -63,8 +142,17 @@ class PlayerActivity : AppCompatActivity() {
         releaseDateView.text = track?.getReleaseYear()
         primaryGenreNameView.text = track?.primaryGenreName
         countryView.text = track?.country
-        trackCurrentTimeView.text = "00:00"
+        trackCurrentTimeView.text = DEFAULT_TRACK_TIME_POSITION
+    }
 
-
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val DELAY = 300L
+        private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
+        private const val ONE_SECOND_IN_MILL = 1000
+        private const val ONE_MINUTE_IN_SEC = 60
     }
 }

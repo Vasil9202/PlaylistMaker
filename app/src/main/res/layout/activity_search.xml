@@ -36,7 +36,6 @@
             android:gravity="start|center"
             android:text="@string/search"
             android:textSize="@dimen/FS22SP" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -44,7 +43,6 @@
         android:layout_height="36dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
-
 
         <EditText
             android:id="@+id/search_edit_text"
@@ -61,14 +59,21 @@
             android:textColorHint="?attr/colorPrimaryVariant"
             android:imeOptions="actionDone"
             android:singleLine="true"/>
-
-
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="24dp">
+
+        <ProgressBar android:id="@+id/progressBar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="124dp"
+            android:layout_marginStart="158dp"
+            android:layout_marginEnd="158dp"
+            android:indeterminateTint="@color/blue"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/search_history"
