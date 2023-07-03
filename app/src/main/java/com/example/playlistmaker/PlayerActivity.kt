@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,19 +24,18 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var countryView: TextView
     private lateinit var backButton: ImageButton
     private lateinit var playButton: ImageButton
-    private var previewURL: String? = null
-    private var track: Track? = null
-    private var playerState = STATE_DEFAULT
-    private var mediaPlayer = MediaPlayer()
-    private var mainThreadHandler: Handler? = null
-    private var isPlaying: Boolean = false
+    private lateinit var mainThreadHandler: Handler
+    private lateinit var track: Track
     private lateinit var runnable: Runnable
+    private var playerState = STATE_DEFAULT
+    private val interact = Creator.providePlayerInteractor()
+    private var isPlaying: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        track = intent.getParcelableExtra(TRACK)
+        track = intent.getParcelableExtra(TRACK)!!
         viewInitialization()
 
         backButton.setOnClickListener {
@@ -59,10 +57,11 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        interact.release()
     }
 
     private fun playbackControl() {
+
         when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
@@ -72,35 +71,37 @@ class PlayerActivity : AppCompatActivity() {
                 startPlayer()
             }
         }
+
+
     }
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(previewURL)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playerState = STATE_PREPARED
+        interact.preparePlayer(track.previewUrl){
+                playButton.isEnabled = true
+                playerState = STATE_PREPARED
         }
-        mediaPlayer.setOnCompletionListener {
-            mainThreadHandler?.removeCallbacks(runnable)
-            trackCurrentTimeView.text = DEFAULT_TRACK_TIME_POSITION
-            playButton.setImageResource(R.drawable.play);
-            playerState = STATE_PREPARED
+        interact.preparePlayer {
+                mainThreadHandler.removeCallbacks(runnable)
+                trackCurrentTimeView.text = DEFAULT_TRACK_TIME_POSITION
+                playButton.setImageResource(R.drawable.play);
+                playerState = STATE_PREPARED
         }
-    }
+        }
+
+
 
     private fun startPlayer() {
         isPlaying = true
         playButton.setImageResource(R.drawable.pause);
-        mediaPlayer.start()
+        interact.startPlayer()
         playerState = STATE_PLAYING
-        mainThreadHandler?.post(runnable)
+        mainThreadHandler.post(runnable)
     }
 
     private fun pausePlayer() {
         isPlaying = false
         playButton.setImageResource(R.drawable.play);
-        mediaPlayer.pause()
+        interact.pausePlayer()
         playerState = STATE_PAUSED
     }
 
@@ -117,31 +118,30 @@ class PlayerActivity : AppCompatActivity() {
         playButton = findViewById(R.id.play_button)
         mainThreadHandler = Handler(Looper.getMainLooper())
         backButton = findViewById(R.id.button_back)
-        previewURL = track?.previewUrl
         runnable = Runnable {
             if (isPlaying) {
-                val seconds = mediaPlayer.currentPosition / ONE_SECOND_IN_MILL
+                val seconds = interact.getCurrentPosition() / ONE_SECOND_IN_MILL
                 trackCurrentTimeView.text = String.format("%d:%02d", seconds / ONE_MINUTE_IN_SEC, seconds % ONE_MINUTE_IN_SEC)
-                mainThreadHandler?.postDelayed(runnable, DELAY)
+                mainThreadHandler.postDelayed(runnable, DELAY)
             }
         }
     }
 
     private fun downloadData(){
         Glide.with(this)
-            .load(track?.getCoverArtwork())
+            .load(track.getCoverArtwork())
             .centerCrop()
             .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.DP8)))
             .placeholder(R.drawable.cover)
             .into(artworkUrl512View)
 
-        trackNameView.text = track?.trackName
-        artistNameView.text = track?.artistName
-        trackTimeView.text = track?.getTrackTimeMin()
-        collectionNameView.text = track?.collectionName
-        releaseDateView.text = track?.getReleaseYear()
-        primaryGenreNameView.text = track?.primaryGenreName
-        countryView.text = track?.country
+        trackNameView.text = track.trackName
+        artistNameView.text = track.artistName
+        trackTimeView.text = track.getTrackTimeMin()
+        collectionNameView.text = track.collectionName
+        releaseDateView.text = track.getReleaseYear()
+        primaryGenreNameView.text = track.primaryGenreName
+        countryView.text = track.country
         trackCurrentTimeView.text = DEFAULT_TRACK_TIME_POSITION
     }
 
