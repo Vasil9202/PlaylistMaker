@@ -1,8 +1,6 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.domain.model
 
-import android.content.SharedPreferences
 import android.os.Parcelable
-import com.google.gson.Gson
 import kotlinx.parcelize.Parcelize
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -16,6 +16,10 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.api.TrackApiService
+import com.example.playlistmaker.data.TrackResponse
 import com.example.playlistmaker.data.TrackPreferences
 import retrofit2.Call
 import retrofit2.Callback

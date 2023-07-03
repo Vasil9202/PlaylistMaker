@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 
 const val TRACK_KEY = "track_key"
