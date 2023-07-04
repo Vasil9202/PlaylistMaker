@@ -1,9 +1,8 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -15,9 +14,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.api.TrackApiService
+import com.example.playlistmaker.data.TrackResponse
+import com.example.playlistmaker.data.TrackPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

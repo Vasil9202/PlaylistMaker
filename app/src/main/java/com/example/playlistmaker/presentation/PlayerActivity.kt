@@ -1,6 +1,5 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +9,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.model.Track
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -25,19 +27,16 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var countryView: TextView
     private lateinit var backButton: ImageButton
     private lateinit var playButton: ImageButton
-    private var previewURL: String? = null
-    private var track: Track? = null
-    private var playerState = STATE_DEFAULT
-    private var mediaPlayer = MediaPlayer()
-    private var mainThreadHandler: Handler? = null
-    private var isPlaying: Boolean = false
-    private lateinit var runnable: Runnable
+    private lateinit var track: Track
+
+    private val interact = Creator.providePlayerInteractor()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        track = intent.getParcelableExtra(TRACK)
+        track = intent.getParcelableExtra(TRACK)!!
         viewInitialization()
 
         backButton.setOnClickListener {
@@ -54,55 +53,33 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
-    }
+        playButton.setImageResource(R.drawable.play);
+        interact.pausePlayer()    }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        interact.release()
     }
 
     private fun playbackControl() {
-        when (playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
+        val setPlayButton = Pair({
+            playButton.setImageResource(R.drawable.play);
+        }, {
+            playButton.setImageResource(R.drawable.pause);
+        })
+        interact.playBackControl(setPlayButton)
 
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
     }
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(previewURL)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playerState = STATE_PREPARED
+        interact.preparePlayer(track.previewUrl){
+                playButton.isEnabled = true
         }
-        mediaPlayer.setOnCompletionListener {
-            mainThreadHandler?.removeCallbacks(runnable)
-            trackCurrentTimeView.text = DEFAULT_TRACK_TIME_POSITION
-            playButton.setImageResource(R.drawable.play);
-            playerState = STATE_PREPARED
+        interact.preparePlayer {
+                trackCurrentTimeView.text = DEFAULT_TRACK_TIME_POSITION
+                playButton.setImageResource(R.drawable.play);
         }
-    }
-
-    private fun startPlayer() {
-        isPlaying = true
-        playButton.setImageResource(R.drawable.pause);
-        mediaPlayer.start()
-        playerState = STATE_PLAYING
-        mainThreadHandler?.post(runnable)
-    }
-
-    private fun pausePlayer() {
-        isPlaying = false
-        playButton.setImageResource(R.drawable.play);
-        mediaPlayer.pause()
-        playerState = STATE_PAUSED
-    }
+        }
 
     private fun viewInitialization(){
         artworkUrl512View = findViewById(R.id.placeholder)
@@ -115,42 +92,32 @@ class PlayerActivity : AppCompatActivity() {
         primaryGenreNameView = findViewById(R.id.track_genre)
         countryView = findViewById(R.id.track_country)
         playButton = findViewById(R.id.play_button)
-        mainThreadHandler = Handler(Looper.getMainLooper())
         backButton = findViewById(R.id.button_back)
-        previewURL = track?.previewUrl
-        runnable = Runnable {
-            if (isPlaying) {
-                val seconds = mediaPlayer.currentPosition / ONE_SECOND_IN_MILL
-                trackCurrentTimeView.text = String.format("%d:%02d", seconds / ONE_MINUTE_IN_SEC, seconds % ONE_MINUTE_IN_SEC)
-                mainThreadHandler?.postDelayed(runnable, DELAY)
-            }
+        interact.trackTimeRunnable {
+            val seconds = interact.getCurrentPosition() / ONE_SECOND_IN_MILL
+            trackCurrentTimeView.text = String.format("%d:%02d", seconds / ONE_MINUTE_IN_SEC, seconds % ONE_MINUTE_IN_SEC)
         }
     }
 
     private fun downloadData(){
         Glide.with(this)
-            .load(track?.getCoverArtwork())
+            .load(track.getCoverArtwork())
             .centerCrop()
             .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.DP8)))
             .placeholder(R.drawable.cover)
             .into(artworkUrl512View)
 
-        trackNameView.text = track?.trackName
-        artistNameView.text = track?.artistName
-        trackTimeView.text = track?.getTrackTimeMin()
-        collectionNameView.text = track?.collectionName
-        releaseDateView.text = track?.getReleaseYear()
-        primaryGenreNameView.text = track?.primaryGenreName
-        countryView.text = track?.country
+        trackNameView.text = track.trackName
+        artistNameView.text = track.artistName
+        trackTimeView.text = track.getTrackTimeMin()
+        collectionNameView.text = track.collectionName
+        releaseDateView.text = track.getReleaseYear()
+        primaryGenreNameView.text = track.primaryGenreName
+        countryView.text = track.country
         trackCurrentTimeView.text = DEFAULT_TRACK_TIME_POSITION
     }
 
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val DELAY = 300L
         private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
         private const val ONE_SECOND_IN_MILL = 1000
         private const val ONE_MINUTE_IN_SEC = 60
