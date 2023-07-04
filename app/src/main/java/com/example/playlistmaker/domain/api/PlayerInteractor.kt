@@ -14,5 +14,10 @@ interface PlayerInteractor {
 
     fun release()
 
+    fun playBackControl(setPlayButton:Pair<() -> Unit, () -> Unit>)
+
+    fun trackTimeRunnable(setTimeView: () -> Unit)
+
+
 
 }

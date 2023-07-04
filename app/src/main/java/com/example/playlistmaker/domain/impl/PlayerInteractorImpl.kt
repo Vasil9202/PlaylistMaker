@@ -28,8 +28,18 @@ class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerIn
         return repository.getCurrentPosition()
     }
 
+
+
     override fun release() {
         repository.release()
+    }
+
+    override fun playBackControl(setPlayButton:Pair<() -> Unit, () -> Unit>) {
+        repository.playBackControl(setPlayButton)
+    }
+
+    override fun trackTimeRunnable(setTimeView: () -> Unit) {
+        repository.trackTimeRunnable(setTimeView)
     }
 
     companion object {

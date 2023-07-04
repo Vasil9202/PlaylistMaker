@@ -16,4 +16,7 @@ interface PlayerRepository {
 
     fun pausePlayer()
 
+    fun playBackControl(setPlayButton:Pair<() -> Unit, () -> Unit>)
+    fun trackTimeRunnable(setTimeView: () -> Unit)
+
 }
