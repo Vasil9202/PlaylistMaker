@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="errorImage">
+        <item name="android:src">@drawable/error_dk</item>
+    </style>
+
+    <style name="netErrorImage">
+        <item name="android:src">@drawable/net_error_dk</item>
+    </style>
+
+    <style name="updateButton">
+        <item name="android:src">@drawable/update_bt_dk</item>
+    </style>
+</resources>

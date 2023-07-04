@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MessageTextStyle">
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:textSize">@dimen/FS16SP</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:textAllCaps">false</item>
+
+    </style>
+    <style name="MeinButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/FS22SP</item>
+        <item name="android:fontFamily">@font/ystextmedium</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">8dp</item>
+        <item name="iconTint">@color/black</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:background">@drawable/rectangle</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="trackViewFirstStyle">
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">@dimen/FS16SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="trackViewSecondStyle">
+        <item name="android:textColor">?attr/colorSecondaryContainer</item>
+        <item name="android:textSize">@dimen/FS11SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="errorImage">
+        <item name="android:src">@drawable/error_lt</item>
+    </style>
+
+    <style name="netErrorImage">
+        <item name="android:src">@drawable/net_error_lt</item>
+    </style>
+
+    <style name="updateButton">
+        <item name="android:src">@drawable/update_bt</item>
+    </style>
+
+    <style name="playerActivityText">
+        <item name="android:textSize">@dimen/FS13SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/FS16DP</item>
+        <item name="android:layout_marginBottom">@dimen/FS17DP</item>
+    </style>
+
+    <style name="playerActivityText_2">
+        <item name="android:textSize">@dimen/FS13SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/FS16DP</item>
+        <item name="android:layout_marginBottom">@dimen/FS17DP</item>
+    </style>
+</resources>

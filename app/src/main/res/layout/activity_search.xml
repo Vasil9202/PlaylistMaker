@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_back"
+            android:layout_width="38dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableTint="?attr/colorOnPrimary"
+            android:gravity="start"
+            android:textColor="@color/black"
+            android:textSize="@dimen/FS16SP"
+            app:drawableEndCompat="@drawable/arrow_back" />
+
+        <TextView
+            style="@style/MessageTextStyle"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginStart="28dp"
+            android:fontFamily="@font/ystextmedium"
+            android:gravity="start|center"
+            android:text="@string/search"
+            android:textSize="@dimen/FS22SP" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/grey_shape"
+            android:drawableStart="@drawable/search"
+            android:drawableEnd="@drawable/clear"
+            android:drawableTint="?attr/colorPrimaryVariant"
+            android:drawablePadding="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:hint="@string/search"
+            android:textColorHint="?attr/colorPrimaryVariant"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="24dp">
+
+        <ProgressBar android:id="@+id/progressBar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="124dp"
+            android:layout_marginStart="158dp"
+            android:layout_marginEnd="158dp"
+            android:indeterminateTint="@color/blue"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/search_history"
+            style="@style/MessageTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/your_search"
+            android:textSize="@dimen/FS19SP"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/ystextmedium"
+            android:visibility="gone"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/trackList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyTrackList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="68dp"
+            android:layout_marginBottom="@dimen/DP85"
+            android:visibility="visible"
+            />
+
+        <ImageView
+            android:id="@+id/find_nothing_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="86dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginEnd="120dp"
+            android:layout_gravity="center_horizontal"
+            android:theme="@style/errorImage"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/find_nothing_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/find_nothing"
+            android:layout_marginTop="220dp"
+            android:textSize="19sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/ystextmedium"
+            android:layout_marginStart="@dimen/DP24"
+            android:layout_marginEnd="@dimen/DP24"
+            android:layout_gravity="center_horizontal|top"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/net_error_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="86dp"
+            android:layout_marginStart="120dp"
+            android:layout_marginEnd="120dp"
+            android:layout_gravity="center_horizontal"
+            android:theme="@style/netErrorImage"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/net_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/net_error"
+            android:layout_marginTop="220dp"
+            android:textSize="19sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/ystextmedium"
+            android:layout_marginStart="@dimen/DP24"
+            android:layout_marginEnd="@dimen/DP24"
+            android:gravity="center_horizontal|top"
+            android:visibility="gone"
+            />
+
+        <ImageButton
+            android:id="@+id/update_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="134dp"
+            android:layout_marginEnd="134dp"
+            android:layout_marginTop="334dp"
+            android:background="?attr/colorSecondary"
+            android:theme="@style/updateButton"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            />
+
+        <ImageButton
+            android:id="@+id/search_history_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="106dp"
+            android:layout_marginEnd="106dp"
+            android:layout_marginBottom="20dp"
+            android:background="?attr/colorSecondary"
+            android:src="@drawable/clear_history"
+            android:layout_gravity="bottom|center_horizontal"
+            android:visibility="gone"
+            />
+
+    </FrameLayout>
+
+
+
+</LinearLayout>
