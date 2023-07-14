@@ -50,8 +50,6 @@ class SearchActivity : ComponentActivity() {
     }
 
     private lateinit var searchEditText: EditText
-    private lateinit var searchIcon: Drawable
-    private lateinit var clearIcon: Drawable
     private lateinit var viewModel: TracksSearchViewModel
     private lateinit var textWatcher: TextWatcher
     private lateinit var share: SharedPreferences
@@ -117,36 +115,26 @@ class SearchActivity : ComponentActivity() {
 
 
         searchEditText = findViewById<EditText>(R.id.search_edit_text)
-        searchIcon = resources.getDrawable(R.drawable.search, null)
-        clearIcon = resources.getDrawable(R.drawable.clear, null)
 
         binding.trackHistoryRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.trackHistoryRecyclerView.adapter = historyAdapter
         binding.trackRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.trackRecyclerView.adapter = adapter
 
-
-
-
-
-        if (searchEditText.text.isNullOrEmpty()) {
-            searchEditText.setCompoundDrawablesWithIntrinsicBounds(searchIcon, null, null, null)
-        }
-
         searchEditText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && searchEditText.text.isEmpty() && historyList.isNotEmpty()) {
+            if (hasFocus && searchEditText.text.isEmpty()) {
                 setHistoryRecyclerView()
             } else {
                 setRecyclerView()
             }
         }
-//
+
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (searchEditText.hasFocus() && s?.isEmpty() == true && historyList.isNotEmpty()) {
+                if (searchEditText.hasFocus() && s?.isEmpty() == true) {
                         setHistoryRecyclerView()
                 } else {
                     viewModel.searchDebounce(
@@ -157,19 +145,9 @@ class SearchActivity : ComponentActivity() {
                 }
 
                 if (s.isNullOrEmpty()) {
-                    searchEditText.setCompoundDrawablesWithIntrinsicBounds(
-                        searchIcon,
-                        null,
-                        null,
-                        null
-                    )
+                    binding.clearSearchImage.visibility = View.GONE
                 } else {
-                    searchEditText.setCompoundDrawablesWithIntrinsicBounds(
-                        searchIcon,
-                        null,
-                        clearIcon,
-                        null
-                    )
+                    binding.clearSearchImage.visibility = View.VISIBLE
                 }
             }
 
@@ -179,17 +157,6 @@ class SearchActivity : ComponentActivity() {
 
         textWatcher.let { searchEditText.addTextChangedListener(it) }
 
-
-
-        searchEditText.setOnTouchListener { view, event ->
-            val drawable =
-                searchEditText.compoundDrawables[0]
-            if (!searchEditText.text.isNullOrEmpty() && event.x >= searchEditText.width - searchEditText.paddingRight - drawable.intrinsicWidth) {
-                searchEditText.setText("")
-                return@setOnTouchListener true
-            }
-            false
-        }
         if (savedInstanceState != null) {
             val text = savedInstanceState.getString(SEARCH_TEXT)
             searchEditText.setText(text)
@@ -205,7 +172,6 @@ class SearchActivity : ComponentActivity() {
         viewModel.observeState().observe(this) {
             render(it)
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -222,12 +188,11 @@ class SearchActivity : ComponentActivity() {
 
     fun setHistoryRecyclerView() {
         binding.trackRecyclerView.visibility = View.GONE
-        binding.trackHistoryRecyclerView.visibility = View.VISIBLE
-        binding.historyText.visibility = View.VISIBLE
-        historyList.clear()
-        historyList.addAll(sharedPreferences.read(share).toList())
+        if(sharedPreferences.read(share).toList().isNotEmpty()){
+            binding.trackHistoryRecyclerView.visibility = View.VISIBLE
+            binding.historyText.visibility = View.VISIBLE
         historyAdapter.tracks.clear()
-        historyAdapter.tracks.addAll(historyList)
+        historyAdapter.tracks.addAll(sharedPreferences.read(share).toList())
         historyAdapter.notifyDataSetChanged()
         //val historyList: List<Track> = sharedPreferences.read(share).toList()
         //historyTrackAdapter.updateData(historyList)
@@ -249,6 +214,7 @@ class SearchActivity : ComponentActivity() {
                 }
             }
         }
+        }
     }
 
 
@@ -260,6 +226,7 @@ class SearchActivity : ComponentActivity() {
         //trackAdapter.updateData(tracks)
         binding.historyClearButton.visibility = View.GONE
         binding.trackHistoryRecyclerView.visibility = View.GONE
+        binding.historyText.visibility = View.GONE
 
         //binding.trackRecyclerView.visibility = View.VISIBLE
     }
@@ -272,14 +239,6 @@ class SearchActivity : ComponentActivity() {
             super.onBackPressed()
         }
     }
-
-    /*
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
-
-     */
 
     private fun clickDebounce() : Boolean {
         val current = isClickAllowed
@@ -342,10 +301,12 @@ class SearchActivity : ComponentActivity() {
             binding.trackHistoryRecyclerView.visibility = View.GONE
             binding.historyText.visibility = View.GONE
         }
-        binding.buttonBack.visibility = View.VISIBLE
         binding.buttonBack.setOnClickListener {
             finish()
         }
+        binding.clearSearchImage.setOnClickListener { searchEditText.setText("")
+        setHistoryRecyclerView()}
+
 
     }
 }
