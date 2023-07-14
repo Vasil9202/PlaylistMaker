@@ -3,9 +3,7 @@ package com.example.playlistmaker.data
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.PlayerRepository
-import com.example.playlistmaker.presentation.PlayerActivity
 
 
 class PlayerRepositoryImpl() : PlayerRepository {

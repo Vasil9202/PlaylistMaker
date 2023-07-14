@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import com.example.playlistmaker.R
+import com.example.playlistmaker.ui.search.activity.SearchActivity
 
 class MainActivity : AppCompatActivity() {
 

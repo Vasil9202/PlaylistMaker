@@ -1,7 +1,7 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker.data.search
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.search.model.Track
 import com.google.gson.Gson
 
 const val TRACK_KEY = "track_key"
@@ -13,7 +13,6 @@ class TrackPreferences() : TrackStorage {
         return Gson().fromJson(json, Array<Track>::class.java)
     }
 
-    // запись
     override fun write(sharedPreferences: SharedPreferences, track: Array<Track>) {
         val json = Gson().toJson(track)
         sharedPreferences.edit()

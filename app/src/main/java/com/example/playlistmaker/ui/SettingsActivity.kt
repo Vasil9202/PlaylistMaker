@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -12,6 +12,8 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.DARK_THEME
 import com.example.playlistmaker.R
 import com.example.playlistmaker.THEME_MODE
+import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -21,12 +23,15 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var writeSupportButton: TextView
     private lateinit var userAgreementButton: TextView
     private lateinit var themeSwitcher: SwitchCompat
+    private lateinit var binding: ActivitySettingsBinding
 
 
-    @SuppressLint("MissingInflatedId")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         themeSwitcher = findViewById<SwitchCompat>(R.id.themeSwitcher)
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
@@ -38,8 +43,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        backButton = findViewById<Button>(R.id.button_back)
-        backButton.setOnClickListener {
+        binding.buttonBack.setOnClickListener {
             finish()
         }
 
