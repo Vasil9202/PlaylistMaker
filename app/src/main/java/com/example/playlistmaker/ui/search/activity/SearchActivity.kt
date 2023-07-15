@@ -38,11 +38,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val SEARCH_HISTORY = "search_history"
 
 const val TRACK = "Track"
 
-class SearchActivity : ComponentActivity() {
+class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
@@ -52,24 +51,14 @@ class SearchActivity : ComponentActivity() {
     private lateinit var searchEditText: EditText
     private lateinit var viewModel: TracksSearchViewModel
     private lateinit var textWatcher: TextWatcher
-    private lateinit var share: SharedPreferences
-    private lateinit var sharedPreferences: TrackPreferences
     private lateinit var binding: ActivitySearchBinding
-    private val historyList: ArrayList<Track> = ArrayList()
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
     private val adapter = TrackAdapter(
         object : ItemClickListener {
             override fun onTrackClick(track: Track) {
                 if (clickDebounce()) {
-                    historyList.clear()
-                    historyList.addAll(sharedPreferences.read(share).toList())
-                    historyList.remove(track)
-                    historyList.add(0, track)
-                    if (historyList.size > 10) {
-                        historyList.removeAt(10)
-                    }
-                    sharedPreferences.write(share, historyList.toTypedArray())
+                    viewModel.addTrackToHistory(track)
                     val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
                     intent.putExtra(TRACK, track)
                     startActivity(intent)
@@ -78,19 +67,11 @@ class SearchActivity : ComponentActivity() {
         }
     )
 
-    private val historyAdapter = TrackAdapter(
+    private val historyAdapter = TrackHistoryAdapter(
         object : ItemClickListener {
             override fun onTrackClick(track: Track) {
                 if (clickDebounce()) {
-                    historyList.clear()
-                    historyList.addAll(sharedPreferences.read(share).toList())
-                    historyList.remove(track)
-                    historyList.add(0, track)
-                    if (historyList.size > 10) {
-                        historyList.removeAt(10)
-                    }
-                    share.edit().clear().apply()
-                    sharedPreferences.write(share, historyList.toTypedArray())
+                    viewModel.addTrackToHistory(track)
                     val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
                     intent.putExtra(TRACK, track)
                     startActivity(intent)
@@ -101,31 +82,26 @@ class SearchActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
 
         viewModel = ViewModelProvider(this, TracksSearchViewModel.getViewModelFactory())[TracksSearchViewModel::class.java]
-        share = getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
-        sharedPreferences = TrackPreferences()
-        historyList.clear()
-        historyList.addAll(sharedPreferences.read(share).toList())
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel.historyVisibility.observe(this) { isVisible ->
+            binding.historyClearButton.visibility = if (isVisible) View.VISIBLE else View.GONE
+            binding.trackHistoryRecyclerView.visibility = if (isVisible) View.VISIBLE else View.GONE
+            binding.historyText.visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+
         setupOnLickListeners()
-
-
-        searchEditText = findViewById<EditText>(R.id.search_edit_text)
-
+        searchEditText = binding.searchEditText
         binding.trackHistoryRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.trackHistoryRecyclerView.adapter = historyAdapter
         binding.trackRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.trackRecyclerView.adapter = adapter
-
         searchEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && searchEditText.text.isEmpty()) {
                 setHistoryRecyclerView()
-            } else {
-                setRecyclerView()
             }
         }
 
@@ -137,11 +113,7 @@ class SearchActivity : ComponentActivity() {
                 if (searchEditText.hasFocus() && s?.isEmpty() == true) {
                         setHistoryRecyclerView()
                 } else {
-                    viewModel.searchDebounce(
-                        changedText = s?.toString() ?: ""
-                    )
-                    binding.historyText.visibility = View.GONE
-                    setRecyclerView()
+                    viewModel.searchDebounce(changedText = s?.toString() ?: "")
                 }
 
                 if (s.isNullOrEmpty()) {
@@ -168,7 +140,7 @@ class SearchActivity : ComponentActivity() {
             }
             false
         }
-//
+
         viewModel.observeState().observe(this) {
             render(it)
         }
@@ -188,14 +160,12 @@ class SearchActivity : ComponentActivity() {
 
     fun setHistoryRecyclerView() {
         binding.trackRecyclerView.visibility = View.GONE
-        if(sharedPreferences.read(share).toList().isNotEmpty()){
+        if(viewModel.getSearchHistoryStorageList().toList().isNotEmpty()){
             binding.trackHistoryRecyclerView.visibility = View.VISIBLE
             binding.historyText.visibility = View.VISIBLE
         historyAdapter.tracks.clear()
-        historyAdapter.tracks.addAll(sharedPreferences.read(share).toList())
+        historyAdapter.tracks.addAll(viewModel.getSearchHistoryStorageList().toList())
         historyAdapter.notifyDataSetChanged()
-        //val historyList: List<Track> = sharedPreferences.read(share).toList()
-        //historyTrackAdapter.updateData(historyList)
         val marginTop = resources.getDimensionPixelSize(R.dimen.DP85)
         val clearHistoryLayoutParams = binding.historyClearButton.layoutParams as ViewGroup.MarginLayoutParams
         val lastItemPosition = binding.trackHistoryRecyclerView.adapter?.itemCount?.minus(1) ?: 0
@@ -217,19 +187,6 @@ class SearchActivity : ComponentActivity() {
         }
     }
 
-
-
-    fun setRecyclerView() {
-        //trackAdapter.tracks.clear()
-        //trackAdapter.notifyDataSetChanged()
-        //tracks.clear()
-        //trackAdapter.updateData(tracks)
-        binding.historyClearButton.visibility = View.GONE
-        binding.trackHistoryRecyclerView.visibility = View.GONE
-        binding.historyText.visibility = View.GONE
-
-        //binding.trackRecyclerView.visibility = View.VISIBLE
-    }
 
     override fun onBackPressed() {
         if (searchEditText.hasFocus()) {
@@ -260,13 +217,14 @@ class SearchActivity : ComponentActivity() {
     }
 
     private fun showLoading() {
+        binding.historyClearButton.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
         binding.findNothingImg.visibility = View.GONE
         binding.findNothingText.visibility = View.GONE
         binding.netErrorImg.visibility = View.GONE
         binding.netErrorText.visibility = View.GONE
         binding.updateBt.visibility = View.GONE
-        //binding.trackRecyclerView.visibility = View.GONE
+        binding.trackRecyclerView.visibility = View.GONE
         binding.trackHistoryRecyclerView.visibility = View.GONE
         binding.historyText.visibility = View.GONE
     }
@@ -290,23 +248,13 @@ class SearchActivity : ComponentActivity() {
         adapter.tracks.addAll(contentTracks)
         adapter.notifyDataSetChanged()
         binding.trackRecyclerView.visibility = View.VISIBLE
-        //trackAdapter.updateData(tracks)
     }
 
     private fun setupOnLickListeners(){
         binding.updateBt.setOnClickListener {viewModel.searchDebounce()}
-        binding.historyClearButton.setOnClickListener {
-            share.edit().clear().apply()
-            binding.historyClearButton.visibility = View.GONE
-            binding.trackHistoryRecyclerView.visibility = View.GONE
-            binding.historyText.visibility = View.GONE
-        }
-        binding.buttonBack.setOnClickListener {
-            finish()
-        }
+        binding.historyClearButton.setOnClickListener {viewModel.historyClearClick()}
+        binding.buttonBack.setOnClickListener {finish()}
         binding.clearSearchImage.setOnClickListener { searchEditText.setText("")
         setHistoryRecyclerView()}
-
-
     }
 }

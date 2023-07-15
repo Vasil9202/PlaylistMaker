@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui.search.view_model
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -18,11 +20,16 @@ import com.example.playlistmaker.ui.search.TracksState
 import com.example.playlistmaker.util.Creator
 
 
-class TracksSearchViewModel(application: Application) : AndroidViewModel(application) {
+class TracksSearchViewModel(
+    application: Application
+) : AndroidViewModel(application) {
+
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
+        const val SEARCH_HISTORY = "search_history"
+
 
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -32,12 +39,16 @@ class TracksSearchViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private val tracksInteractor = Creator.provideTracksInteractor(getApplication())
+
     private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<TracksState>()
     fun observeState(): LiveData<TracksState> = stateLiveData
 
     private var latestSearchText: String? = null
+
+    val historyVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
+
 
     override fun onCleared() {
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
@@ -109,5 +120,26 @@ class TracksSearchViewModel(application: Application) : AndroidViewModel(applica
 
     private fun renderState(state: TracksState) {
         stateLiveData.postValue(state)
+    }
+
+    fun historyClearClick(){
+        Creator.clearSearchHistoryStorage(getApplication())
+        historyVisibility.postValue(false)
+    }
+
+    fun addTrackToHistory(track: Track){
+        val historyList = ArrayList<Track>()
+        historyList.clear()
+        historyList.addAll(Creator.getSearchHistoryStorage(getApplication()))
+        historyList.remove(track)
+        historyList.add(0, track)
+        if (historyList.size > 10) {
+            historyList.removeAt(10)
+        }
+        Creator.setSearchHistoryStorage(getApplication(), historyList)
+    }
+
+    fun getSearchHistoryStorageList(): List<Track> {
+        return Creator.getSearchHistoryStorage(getApplication())
     }
 }

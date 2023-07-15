@@ -1,45 +1,33 @@
-package com.example.playlistmaker.ui
+package com.example.playlistmaker.ui.settings.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.widget.SwitchCompat
-import com.example.playlistmaker.App
-import com.example.playlistmaker.DARK_THEME
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
-import com.example.playlistmaker.THEME_MODE
-import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var backButton: Button
-    private lateinit var shareButton: TextView
-    private lateinit var writeSupportButton: TextView
-    private lateinit var userAgreementButton: TextView
-    private lateinit var themeSwitcher: SwitchCompat
     private lateinit var binding: ActivitySettingsBinding
-
-
+    private lateinit var viewModel:SettingsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel = ViewModelProvider(this, SettingsViewModel.getViewModelFactory())[SettingsViewModel::class.java]
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        themeSwitcher = findViewById<SwitchCompat>(R.id.themeSwitcher)
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as App).switchTheme(checked)
+        viewModel.darkModeEnable.observe(this) { isEnable ->
+            binding.themeSwitcher.isChecked = isEnable
         }
-        val sharedPrefs = getSharedPreferences(THEME_MODE, MODE_PRIVATE)
-        if(sharedPrefs.getBoolean(THEME_MODE, DARK_THEME)){
-            themeSwitcher.setChecked(true)
+
+        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            viewModel.themeChange(checked)
         }
 
 
@@ -47,19 +35,16 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        shareButton = findViewById<TextView>(R.id.share_app)
-        shareButton.setOnClickListener {
+        binding.shareApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "text/plain"
                 intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.android_course))
                 intent.putExtra(
                     Intent.EXTRA_TEXT,getString(R.string.android_dev_page))
                 startActivity(Intent.createChooser(intent, getString(R.string.send_link_via)))
-
         }
 
-        writeSupportButton = findViewById<TextView>(R.id.write_support)
-        writeSupportButton.setOnClickListener {
+        binding.writeSupport.setOnClickListener {
             Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:")
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.sup_email)))
@@ -67,11 +52,9 @@ class SettingsActivity : AppCompatActivity() {
                 putExtra(Intent.EXTRA_TEXT, getString(R.string.sup_email_def_message))
                 startActivity(this)
             }
-
         }
 
-        userAgreementButton = findViewById<TextView>(R.id.user_agreement)
-        userAgreementButton.setOnClickListener {
+        binding.userAgreement.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.offer_page)))
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)

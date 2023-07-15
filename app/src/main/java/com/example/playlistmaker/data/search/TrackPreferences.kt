@@ -6,7 +6,17 @@ import com.google.gson.Gson
 
 const val TRACK_KEY = "track_key"
 
-class TrackPreferences() : TrackStorage {
+class TrackPreferences private constructor() : TrackStorage {
+    companion object {
+
+        @Volatile
+        private var instance: TrackPreferences? = null
+
+        fun getInstance() =
+            instance ?: synchronized(this) {
+                instance ?: TrackPreferences().also { instance = it }
+            }
+    }
 
     override fun read(sharedPreferences: SharedPreferences): Array<Track> {
         val json = sharedPreferences.getString(TRACK_KEY, null) ?: return emptyArray()
@@ -18,5 +28,9 @@ class TrackPreferences() : TrackStorage {
         sharedPreferences.edit()
             .putString(TRACK_KEY, json)
             .apply()
+    }
+
+    fun clear(sharedPreferences: SharedPreferences) {
+        sharedPreferences.edit().clear().apply()
     }
 }
