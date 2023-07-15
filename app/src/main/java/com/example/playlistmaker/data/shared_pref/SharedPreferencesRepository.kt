@@ -5,7 +5,10 @@ import com.example.playlistmaker.domain.model.Track
 
 interface SharedPreferencesRepository {
 
-    fun write(sharedPreferences: SharedPreferences, track: Array<Track>)
+    fun write( track: List<Track>)
 
-    fun read(sharedPreferences: SharedPreferences): Array<Track>
+    fun read(): List<Track>
+
+    fun clear()
 }
+

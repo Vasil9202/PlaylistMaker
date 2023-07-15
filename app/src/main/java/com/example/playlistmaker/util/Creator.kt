@@ -4,10 +4,10 @@ import android.content.Context
 import com.example.playlistmaker.data.player.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.search.TracksRepository
-import com.example.playlistmaker.domain.shared_pref.impl.SharedPreferencesInteractorImpl
 import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.data.player.PlayerRepository
+import com.example.playlistmaker.data.shared_pref.impl.SharedPreferencesRepositoryImpl
 import com.example.playlistmaker.domain.player.impl.PlayerInteractorImpl
 import com.example.playlistmaker.domain.search.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.search.TracksInteractor
@@ -35,15 +35,15 @@ object Creator {
     }
 
     fun getSearchHistoryStorage(context: Context) : List<Track>{
-        return SharedPreferencesInteractorImpl(context).getSearchHistoryStorage()
+        return SharedPreferencesRepositoryImpl(context).read()
     }
 
     fun setSearchHistoryStorage(context: Context, historyList: List<Track>) {
-        SharedPreferencesInteractorImpl(context).setSearchHistoryStorage(historyList)
+        SharedPreferencesRepositoryImpl(context).write(historyList)
     }
 
     fun clearSearchHistoryStorage(context: Context){
-        SharedPreferencesInteractorImpl(context).clearSearchHistoryStorage()
+        SharedPreferencesRepositoryImpl(context).clear()
     }
 
 }

@@ -1,37 +1,30 @@
 package com.example.playlistmaker.data.shared_pref.impl
 
-import android.content.SharedPreferences
+import android.content.Context
 import com.example.playlistmaker.data.shared_pref.SharedPreferencesRepository
 import com.example.playlistmaker.domain.model.Track
 import com.google.gson.Gson
 
 const val TRACK_KEY = "track_key"
+const val SEARCH_HISTORY = "history_search"
 
-class TrackPreferences private constructor() : SharedPreferencesRepository {
-    companion object {
+class SharedPreferencesRepositoryImpl (context: Context) : SharedPreferencesRepository {
 
-        @Volatile
-        private var instance: TrackPreferences? = null
+    private val sharedPreferences = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
 
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: TrackPreferences().also { instance = it }
-            }
+    override fun read(): List<Track> {
+        val json = sharedPreferences.getString(TRACK_KEY, null) ?: return emptyList()
+        return Gson().fromJson(json, Array<Track>::class.java).toList()
     }
 
-    override fun read(sharedPreferences: SharedPreferences): Array<Track> {
-        val json = sharedPreferences.getString(TRACK_KEY, null) ?: return emptyArray()
-        return Gson().fromJson(json, Array<Track>::class.java)
-    }
-
-    override fun write(sharedPreferences: SharedPreferences, track: Array<Track>) {
+    override fun write(track: List<Track>) {
         val json = Gson().toJson(track)
         sharedPreferences.edit()
             .putString(TRACK_KEY, json)
             .apply()
     }
 
-    fun clear(sharedPreferences: SharedPreferences) {
+    override fun clear() {
         sharedPreferences.edit().clear().apply()
     }
 }
