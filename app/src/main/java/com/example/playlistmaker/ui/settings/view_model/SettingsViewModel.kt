@@ -1,16 +1,12 @@
 package com.example.playlistmaker.ui.settings.view_model
 
 import android.app.Application
-import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.App
-import com.example.playlistmaker.ui.search.view_model.TracksSearchViewModel
-import com.example.playlistmaker.util.Creator
+import com.example.playlistmaker.util.App
 
 class SettingsViewModel(application: Application
 ) : AndroidViewModel(application) {

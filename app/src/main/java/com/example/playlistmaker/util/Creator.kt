@@ -1,21 +1,17 @@
 package com.example.playlistmaker.util
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.activity.ComponentActivity
-import com.example.playlistmaker.data.PlayerRepositoryImpl
-import com.example.playlistmaker.data.network.RetrofitNetworkClient
-import com.example.playlistmaker.data.search.TRACK_KEY
-import com.example.playlistmaker.data.search.TrackPreferences
+import com.example.playlistmaker.data.player.impl.PlayerRepositoryImpl
+import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.search.TracksRepository
-import com.example.playlistmaker.data.search.impl.SharedPreferencesRepositoryImpl
+import com.example.playlistmaker.domain.shared_pref.impl.SharedPreferencesInteractorImpl
 import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
-import com.example.playlistmaker.domain.api.PlayerInteractor
-import com.example.playlistmaker.domain.api.PlayerRepository
-import com.example.playlistmaker.domain.impl.PlayerInteractorImpl
-import com.example.playlistmaker.domain.impl.TracksInteractorImpl
+import com.example.playlistmaker.domain.player.PlayerInteractor
+import com.example.playlistmaker.data.player.PlayerRepository
+import com.example.playlistmaker.domain.player.impl.PlayerInteractorImpl
+import com.example.playlistmaker.domain.search.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.search.TracksInteractor
-import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.domain.model.Track
 
 
 
@@ -39,15 +35,15 @@ object Creator {
     }
 
     fun getSearchHistoryStorage(context: Context) : List<Track>{
-        return SharedPreferencesRepositoryImpl(context).getSearchHistoryStorage()
+        return SharedPreferencesInteractorImpl(context).getSearchHistoryStorage()
     }
 
     fun setSearchHistoryStorage(context: Context, historyList: List<Track>) {
-        SharedPreferencesRepositoryImpl(context).setSearchHistoryStorage(historyList)
+        SharedPreferencesInteractorImpl(context).setSearchHistoryStorage(historyList)
     }
 
     fun clearSearchHistoryStorage(context: Context){
-        SharedPreferencesRepositoryImpl(context).clearSearchHistoryStorage()
+        SharedPreferencesInteractorImpl(context).clearSearchHistoryStorage()
     }
 
 }

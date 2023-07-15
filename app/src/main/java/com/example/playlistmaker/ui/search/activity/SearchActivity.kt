@@ -1,42 +1,28 @@
 package com.example.playlistmaker.ui.search.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.SharedPreferences
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.search.model.Track
-import com.example.playlistmaker.domain.api.TrackApiService
-import com.example.playlistmaker.data.search.TrackResponse
-import com.example.playlistmaker.data.search.TrackPreferences
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.ui.PlayerActivity
+import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.ItemClickListener
 import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.ui.search.TrackHistoryAdapter
 import com.example.playlistmaker.ui.search.TracksState
 import com.example.playlistmaker.ui.search.view_model.TracksSearchViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 const val TRACK = "Track"

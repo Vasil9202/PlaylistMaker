@@ -1,10 +1,10 @@
 package com.example.playlistmaker.data.search.impl
 
-import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.search.network.NetworkClient
 import com.example.playlistmaker.data.search.TracksRepository
-import com.example.playlistmaker.data.dto.TrackSearchRequest
-import com.example.playlistmaker.data.dto.TrackSearchResponse
-import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.data.search.dto.TrackSearchRequest
+import com.example.playlistmaker.data.search.dto.TrackSearchResponse
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.Resource
 import java.text.SimpleDateFormat
 import java.util.Locale
