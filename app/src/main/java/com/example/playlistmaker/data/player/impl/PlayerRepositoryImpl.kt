@@ -3,7 +3,7 @@ package com.example.playlistmaker.data.player.impl
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import com.example.playlistmaker.data.player.PlayerRepository
+import com.example.playlistmaker.domain.player.PlayerRepository
 
 
 class PlayerRepositoryImpl() : PlayerRepository {
@@ -24,7 +24,7 @@ class PlayerRepositoryImpl() : PlayerRepository {
         }
     }
 
-    override fun preparePlayer() {
+    override fun completePlayer() {
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
             mainThreadHandler.removeCallbacks(runnable)

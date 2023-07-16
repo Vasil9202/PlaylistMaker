@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.settings.view_model
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
@@ -20,7 +21,9 @@ class SettingsViewModel(application: Application
         }
     }
 
-    val darkModeEnable: MutableLiveData<Boolean> = MutableLiveData(isDarkThemeEnabled())
+    val darkModeEnable = MutableLiveData(isDarkThemeEnabled())
+
+    fun isDarkModeEnable(): LiveData<Boolean> = darkModeEnable
 
     fun themeChange(checked: Boolean){
         (getApplication() as App).switchTheme(checked)

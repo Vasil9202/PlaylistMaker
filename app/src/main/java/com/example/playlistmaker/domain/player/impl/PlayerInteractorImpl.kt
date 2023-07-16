@@ -1,7 +1,7 @@
 package com.example.playlistmaker.domain.player.impl
 
 import com.example.playlistmaker.domain.player.PlayerInteractor
-import com.example.playlistmaker.data.player.PlayerRepository
+import com.example.playlistmaker.domain.player.PlayerRepository
 
 class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerInteractor {
 
@@ -9,8 +9,8 @@ class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerIn
         repository.preparePlayer(trackURL)
     }
 
-    override fun preparePlayer() {
-        repository.preparePlayer()
+    override fun completePlayer() {
+        repository.completePlayer()
     }
 
     override fun startPlayer() {

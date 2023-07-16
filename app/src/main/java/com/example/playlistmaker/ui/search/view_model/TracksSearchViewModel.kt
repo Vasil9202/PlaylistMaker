@@ -1,8 +1,6 @@
 package com.example.playlistmaker.ui.search.view_model
 
 import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -14,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.shared_pref.impl.SharedPreferencesRepositoryImpl
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.search.TracksState
@@ -38,7 +37,9 @@ class TracksSearchViewModel(
         }
     }
 
-    private val tracksInteractor = Creator.provideTracksInteractor(getApplication())
+    private val tracksInteractor: TracksInteractor = Creator.provideTracksInteractor(application)
+
+    private val sharedPreference = SharedPreferencesRepositoryImpl(application)
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -54,19 +55,15 @@ class TracksSearchViewModel(
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 
-    fun searchDebounce(changedText: String = "forwardSearch") {
-        var searchText = changedText
-        if(changedText.equals("forwardSearch") && latestSearchText != null){
-        searchText = latestSearchText!!
-        }
-        if (latestSearchText == changedText) {
+    fun searchDebounce(changedText: String?) {
+        if (changedText == null || latestSearchText == changedText) {
             return
         }
 
         this.latestSearchText = changedText
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
 
-        val searchRunnable = Runnable { searchRequest(searchText) }
+        val searchRunnable = Runnable { searchRequest(changedText) }
 
         val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
         handler.postAtTime(
@@ -123,23 +120,23 @@ class TracksSearchViewModel(
     }
 
     fun historyClearClick(){
-        Creator.clearSearchHistoryStorage(getApplication())
+        sharedPreference.clear()
         historyVisibility.postValue(false)
     }
 
     fun addTrackToHistory(track: Track){
         val historyList = ArrayList<Track>()
         historyList.clear()
-        historyList.addAll(Creator.getSearchHistoryStorage(getApplication()))
+        historyList.addAll(sharedPreference.read())
         historyList.remove(track)
         historyList.add(0, track)
         if (historyList.size > 10) {
             historyList.removeAt(10)
         }
-        Creator.setSearchHistoryStorage(getApplication(), historyList)
+        sharedPreference.write(historyList)
     }
 
     fun getSearchHistoryStorageList(): List<Track> {
-        return Creator.getSearchHistoryStorage(getApplication())
+        return sharedPreference.read()
     }
 }

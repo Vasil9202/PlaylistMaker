@@ -24,21 +24,22 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.preparePlayer.observe(this){finish ->
+        viewModel.getPreparePlayer().observe(this){finish ->
             binding.playButton.isEnabled = true
-            binding.currentTime.text = DEFAULT_TRACK_TIME_POSITION
             binding.playButton.setImageResource(R.drawable.play);
         }
-        viewModel.playerButtonIsPlay.observe(this){ isPlay ->
+        viewModel.getplayerButtonIsPlay().observe(this){ isPlay ->
             if(isPlay) binding.playButton.setImageResource(R.drawable.play)
             else binding.playButton.setImageResource(R.drawable.pause)
         }
 
-        viewModel.currentTrackTimePosition.observe(this){currentTrackTimePosition ->
+        viewModel.getcurrentTrackTimePosition().observe(this){currentTrackTimePosition ->
             binding.currentTime.text = currentTrackTimePosition
         }
 
-        track = intent.getParcelableExtra(TRACK)!!
+
+        track = intent.getParcelableExtra(TRACK) ?: Track("","","","",
+            "","","","","")
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -79,10 +80,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.trackYear.text = track.getReleaseYear()
         binding.trackGenre.text = track.primaryGenreName
         binding.trackCountry.text = track.country
-        binding.currentTime.text = DEFAULT_TRACK_TIME_POSITION
     }
 
-    companion object {
-        private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
-    }
+
 }

@@ -22,7 +22,7 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.darkModeEnable.observe(this) { isEnable ->
+        viewModel.isDarkModeEnable().observe(this) { isEnable ->
             binding.themeSwitcher.isChecked = isEnable
         }
 

@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
@@ -74,9 +76,9 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel.historyVisibility.observe(this) { isVisible ->
-            binding.historyClearButton.visibility = if (isVisible) View.VISIBLE else View.GONE
-            binding.trackHistoryRecyclerView.visibility = if (isVisible) View.VISIBLE else View.GONE
-            binding.historyText.visibility = if (isVisible) View.VISIBLE else View.GONE
+            binding.historyClearButton.isVisible = isVisible
+            binding.trackHistoryRecyclerView.isVisible = isVisible
+            binding.historyText.isVisible = isVisible
         }
 
         setupOnLickListeners()
@@ -91,29 +93,18 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (searchEditText.hasFocus() && s?.isEmpty() == true) {
-                        setHistoryRecyclerView()
-                } else {
-                    viewModel.searchDebounce(changedText = s?.toString() ?: "")
-                }
+        searchEditText.doAfterTextChanged {
+            if (searchEditText.hasFocus() && searchEditText.text.toString()?.isEmpty() == true) {
+            setHistoryRecyclerView()
+                binding.clearSearchImage.visibility = View.GONE
 
-                if (s.isNullOrEmpty()) {
-                    binding.clearSearchImage.visibility = View.GONE
-                } else {
-                    binding.clearSearchImage.visibility = View.VISIBLE
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
+            } else {
+            viewModel.searchDebounce(searchEditText.text.toString())
+                binding.clearSearchImage.visibility = View.VISIBLE
             }
         }
 
-        textWatcher.let { searchEditText.addTextChangedListener(it) }
 
         if (savedInstanceState != null) {
             val text = savedInstanceState.getString(SEARCH_TEXT)
@@ -122,7 +113,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.searchDebounce()
+                viewModel.searchDebounce(searchEditText.text.toString())
             }
             false
         }
@@ -237,7 +228,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupOnLickListeners(){
-        binding.updateBt.setOnClickListener {viewModel.searchDebounce()}
+        binding.updateBt.setOnClickListener {viewModel.searchDebounce(searchEditText.text.toString())}
         binding.historyClearButton.setOnClickListener {viewModel.historyClearClick()}
         binding.buttonBack.setOnClickListener {finish()}
         binding.clearSearchImage.setOnClickListener { searchEditText.setText("")

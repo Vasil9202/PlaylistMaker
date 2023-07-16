@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.player.view_model
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
@@ -14,11 +15,11 @@ class PlayerActivityViewModel(application: Application
 
     private val interact = Creator.providePlayerInteractor()
 
-    val preparePlayer: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val preparePlayer = MutableLiveData(false)
 
-    val playerButtonIsPlay: MutableLiveData<Boolean> = MutableLiveData(true)
+    private val playerButtonIsPlay = MutableLiveData(true)
 
-    val currentTrackTimePosition: MutableLiveData<String> = MutableLiveData()
+    private val currentTrackTimePosition = MutableLiveData(DEFAULT_TRACK_TIME_POSITION)
 
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
@@ -28,19 +29,26 @@ class PlayerActivityViewModel(application: Application
         }
         private const val ONE_SECOND_IN_MILL = 1000
         private const val ONE_MINUTE_IN_SEC = 60
+        private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
     }
 
+    fun getPreparePlayer(): LiveData<Boolean> = preparePlayer
 
      fun preparePlayer(track: Track) {
          interact.preparePlayer(track.previewUrl)
-         interact.preparePlayer()
+         interact.completePlayer()
          preparePlayer.postValue(true)
     }
 
-     fun playbackControl() {
+    fun getplayerButtonIsPlay(): LiveData<Boolean> = playerButtonIsPlay
+
+    fun playbackControl() {
         interact.playBackControl()
-         playerButtonIsPlay.postValue(!playerButtonIsPlay.value!!)
+        if(playerButtonIsPlay.value != null){
+         playerButtonIsPlay.postValue(!playerButtonIsPlay.value!!)}
     }
+
+    fun getcurrentTrackTimePosition(): LiveData<String> = currentTrackTimePosition
 
     fun setTrackTimeRunnable(){
         interact.trackTimeRunnable {

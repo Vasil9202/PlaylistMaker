@@ -4,7 +4,7 @@ interface PlayerInteractor {
 
     fun preparePlayer(trackURL: String)
 
-    fun preparePlayer()
+    fun completePlayer()
 
     fun startPlayer()
 

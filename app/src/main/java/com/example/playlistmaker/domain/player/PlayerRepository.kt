@@ -1,12 +1,10 @@
-package com.example.playlistmaker.data.player
-
-import android.media.MediaPlayer
+package com.example.playlistmaker.domain.player
 
 interface PlayerRepository {
 
     fun preparePlayer(expression: String)
 
-    fun preparePlayer()
+    fun completePlayer()
 
     fun getCurrentPosition() : Int
 
