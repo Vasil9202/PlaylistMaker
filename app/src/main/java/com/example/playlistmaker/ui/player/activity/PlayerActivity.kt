@@ -20,7 +20,9 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, PlayerActivityViewModel.getViewModelFactory())[PlayerActivityViewModel::class.java]
+        viewModel = ViewModelProvider(this)[PlayerActivityViewModel::class.java]
+
+
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

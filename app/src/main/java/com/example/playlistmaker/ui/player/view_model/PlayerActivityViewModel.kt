@@ -1,17 +1,12 @@
 package com.example.playlistmaker.ui.player.view_model
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.Creator
 
-class PlayerActivityViewModel(application: Application
-) : AndroidViewModel(application) {
+class PlayerActivityViewModel : ViewModel() {
 
     private val interact = Creator.providePlayerInteractor()
 
@@ -21,34 +16,21 @@ class PlayerActivityViewModel(application: Application
 
     private val currentTrackTimePosition = MutableLiveData(DEFAULT_TRACK_TIME_POSITION)
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerActivityViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-            }
-        }
-        private const val ONE_SECOND_IN_MILL = 1000
-        private const val ONE_MINUTE_IN_SEC = 60
-        private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
-    }
-
     fun getPreparePlayer(): LiveData<Boolean> = preparePlayer
+    fun getplayerButtonIsPlay(): LiveData<Boolean> = playerButtonIsPlay
+    fun getcurrentTrackTimePosition(): LiveData<String> = currentTrackTimePosition
 
-     fun preparePlayer(track: Track) {
+    fun preparePlayer(track: Track) {
          interact.preparePlayer(track.previewUrl)
          interact.completePlayer()
          preparePlayer.postValue(true)
     }
-
-    fun getplayerButtonIsPlay(): LiveData<Boolean> = playerButtonIsPlay
 
     fun playbackControl() {
         interact.playBackControl()
         if(playerButtonIsPlay.value != null){
          playerButtonIsPlay.postValue(!playerButtonIsPlay.value!!)}
     }
-
-    fun getcurrentTrackTimePosition(): LiveData<String> = currentTrackTimePosition
 
     fun setTrackTimeRunnable(){
         interact.trackTimeRunnable {
@@ -64,7 +46,9 @@ class PlayerActivityViewModel(application: Application
     fun releasePlayer(){
         interact.release()
     }
-
-
-
+    companion object {
+        private const val ONE_SECOND_IN_MILL = 1000
+        private const val ONE_MINUTE_IN_SEC = 60
+        private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
+    }
 }

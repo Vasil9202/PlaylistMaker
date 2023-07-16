@@ -27,7 +27,6 @@ class TracksSearchViewModel(
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-        const val SEARCH_HISTORY = "search_history"
 
 
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
