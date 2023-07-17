@@ -21,7 +21,7 @@ class SettingsViewModel(application: Application
         }
     }
 
-    val darkModeEnable = MutableLiveData(isDarkThemeEnabled())
+    private val darkModeEnable = MutableLiveData(isDarkThemeEnabled())
 
     fun isDarkModeEnable(): LiveData<Boolean> = darkModeEnable
 

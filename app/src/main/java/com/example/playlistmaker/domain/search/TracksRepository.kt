@@ -5,4 +5,5 @@ import com.example.playlistmaker.util.Resource
 
 interface TracksRepository {
     fun searchTracks(expression: String): Resource<List<Track>>
+
 }

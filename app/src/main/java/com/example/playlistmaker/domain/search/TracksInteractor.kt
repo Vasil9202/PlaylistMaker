@@ -8,4 +8,10 @@ interface TracksInteractor {
     interface TracksConsumer {
         fun consume(foundTracks: List<Track>?, errorMessage: String?)
     }
+
+    fun writeStorage(track: List<Track>)
+
+    fun readStorage(): List<Track>
+
+    fun clear()
 }

@@ -12,12 +12,12 @@ class SharedPreferencesRepositoryImpl (context: Context) : SharedPreferencesRepo
 
     private val sharedPreferences = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
 
-    override fun read(): List<Track> {
+    override fun readStorage(): List<Track> {
         val json = sharedPreferences.getString(TRACK_KEY, null) ?: return emptyList()
         return Gson().fromJson(json, Array<Track>::class.java).toList()
     }
 
-    override fun write(track: List<Track>) {
+    override fun writeStorage(track: List<Track>) {
         val json = Gson().toJson(track)
         sharedPreferences.edit()
             .putString(TRACK_KEY, json)

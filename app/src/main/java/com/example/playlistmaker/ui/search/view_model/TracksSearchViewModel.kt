@@ -20,7 +20,7 @@ import com.example.playlistmaker.util.Creator
 
 
 class TracksSearchViewModel(
-    application: Application
+    application: Application, private val tracksInteractor: TracksInteractor
 ) : AndroidViewModel(application) {
 
 
@@ -28,17 +28,17 @@ class TracksSearchViewModel(
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
 
-
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                TracksSearchViewModel(this[APPLICATION_KEY] as Application)
+                val tracksInteractor: TracksInteractor = Creator.provideTracksInteractor(this[APPLICATION_KEY] as Application)
+                TracksSearchViewModel(this[APPLICATION_KEY] as Application,tracksInteractor)
             }
         }
+
+
     }
 
-    private val tracksInteractor: TracksInteractor = Creator.provideTracksInteractor(application)
 
-    private val sharedPreference = SharedPreferencesRepositoryImpl(application)
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -46,6 +46,9 @@ class TracksSearchViewModel(
     fun observeState(): LiveData<TracksState> = stateLiveData
 
     private var latestSearchText: String? = null
+
+
+
 
     val historyVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -119,23 +122,23 @@ class TracksSearchViewModel(
     }
 
     fun historyClearClick(){
-        sharedPreference.clear()
+        tracksInteractor.clear()
         historyVisibility.postValue(false)
     }
 
     fun addTrackToHistory(track: Track){
         val historyList = ArrayList<Track>()
         historyList.clear()
-        historyList.addAll(sharedPreference.read())
+        historyList.addAll(tracksInteractor.readStorage())
         historyList.remove(track)
         historyList.add(0, track)
         if (historyList.size > 10) {
             historyList.removeAt(10)
         }
-        sharedPreference.write(historyList)
+        tracksInteractor.writeStorage(historyList)
     }
 
     fun getSearchHistoryStorageList(): List<Track> {
-        return sharedPreference.read()
+        return tracksInteractor.readStorage()
     }
 }
