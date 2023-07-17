@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.shared_pref.impl.SharedPreferencesRepositoryImpl
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.search.TracksState

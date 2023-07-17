@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
