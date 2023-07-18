@@ -38,7 +38,7 @@
             android:textSize="@dimen/FS22SP" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginStart="16dp"
@@ -50,7 +50,6 @@
             android:layout_height="36dp"
             android:background="@drawable/grey_shape"
             android:drawableStart="@drawable/search"
-            android:drawableEnd="@drawable/clear"
             android:drawableTint="?attr/colorPrimaryVariant"
             android:drawablePadding="8dp"
             android:paddingEnd="16dp"
@@ -59,7 +58,16 @@
             android:textColorHint="?attr/colorPrimaryVariant"
             android:imeOptions="actionDone"
             android:singleLine="true"/>
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/clear_search_image"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:src="@drawable/clear"
+            android:padding="8dp"
+            android:visibility="gone"/>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -72,11 +80,12 @@
             android:layout_marginTop="124dp"
             android:layout_marginStart="158dp"
             android:layout_marginEnd="158dp"
+            android:layout_gravity="center_horizontal"
             android:indeterminateTint="@color/blue"
             android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/search_history"
+            android:id="@+id/history_text"
             style="@style/MessageTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,14 +100,14 @@
             />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/trackList"
+            android:id="@+id/track_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
             />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/historyTrackList"
+            android:id="@+id/track_history_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="68dp"
@@ -174,7 +183,7 @@
             />
 
         <ImageButton
-            android:id="@+id/search_history_clear"
+            android:id="@+id/history_clear_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="106dp"

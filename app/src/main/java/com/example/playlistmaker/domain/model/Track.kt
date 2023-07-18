@@ -9,7 +9,7 @@ import java.util.*
 data class Track(
     val trackName: String,
     val artistName: String,
-    val trackTimeMillis: String,
+    val trackTimeMin: String,
     val artworkUrl100: String,
     val collectionName: String,
     val releaseDate: String,
@@ -18,7 +18,6 @@ data class Track(
     val previewUrl: String
 ) : Parcelable{
 
-    fun getTrackTimeMin() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
     fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
     //Release date in iTunes in “yyyy MM dd” format
     fun getReleaseYear(): String{
