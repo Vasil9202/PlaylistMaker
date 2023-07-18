@@ -7,6 +7,7 @@ import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
@@ -18,23 +19,13 @@ import com.example.playlistmaker.ui.search.TracksState
 import com.example.playlistmaker.util.Creator
 
 
-class TracksSearchViewModel(
-    application: Application, private val tracksInteractor: TracksInteractor
-) : AndroidViewModel(application) {
+class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
+) : ViewModel() {
 
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val tracksInteractor: TracksInteractor = Creator.provideTracksInteractor(this[APPLICATION_KEY] as Application)
-                TracksSearchViewModel(this[APPLICATION_KEY] as Application,tracksInteractor)
-            }
-        }
-
-
     }
 
 
@@ -89,7 +80,7 @@ class TracksSearchViewModel(
                         errorMessage != null -> {
                             renderState(
                                 TracksState.Error(
-                                    errorMessage = getApplication<Application>().getString(R.string.net_error)
+                                    errorMessage = R.string.net_error.toString()
                                 )
                             )
                         }
@@ -97,7 +88,7 @@ class TracksSearchViewModel(
                         movies.isEmpty() -> {
                             renderState(
                                 TracksState.Empty(
-                                    message = getApplication<Application>().getString(R.string.find_nothing),
+                                    message = R.string.find_nothing.toString(),
                                 )
                             )
                         }
