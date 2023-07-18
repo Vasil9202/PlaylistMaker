@@ -17,8 +17,8 @@ class PlayerActivityViewModel : ViewModel() {
     private val currentTrackTimePosition = MutableLiveData(DEFAULT_TRACK_TIME_POSITION)
 
     fun getPreparePlayer(): LiveData<Boolean> = preparePlayer
-    fun getplayerButtonIsPlay(): LiveData<Boolean> = playerButtonIsPlay
-    fun getcurrentTrackTimePosition(): LiveData<String> = currentTrackTimePosition
+    fun getPlayerButtonIsPlay(): LiveData<Boolean> = playerButtonIsPlay
+    fun getCurrentTrackTimePosition(): LiveData<String> = currentTrackTimePosition
 
     fun preparePlayer(track: Track) {
          interact.preparePlayer(track.previewUrl)

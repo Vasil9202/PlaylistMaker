@@ -27,15 +27,15 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel.getPreparePlayer().observe(this){finish ->
-            binding.playButton.isEnabled = true
+            binding.playButton.isEnabled = finish
             binding.playButton.setImageResource(R.drawable.play);
         }
-        viewModel.getplayerButtonIsPlay().observe(this){ isPlay ->
+        viewModel.getPlayerButtonIsPlay().observe(this){ isPlay ->
             if(isPlay) binding.playButton.setImageResource(R.drawable.play)
             else binding.playButton.setImageResource(R.drawable.pause)
         }
 
-        viewModel.getcurrentTrackTimePosition().observe(this){currentTrackTimePosition ->
+        viewModel.getCurrentTrackTimePosition().observe(this){ currentTrackTimePosition ->
             binding.currentTime.text = currentTrackTimePosition
         }
 
