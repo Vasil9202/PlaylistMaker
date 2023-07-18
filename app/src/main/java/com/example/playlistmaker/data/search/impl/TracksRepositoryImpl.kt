@@ -1,16 +1,22 @@
 package com.example.playlistmaker.data.search.impl
 
+import android.content.Context
 import com.example.playlistmaker.data.search.network.NetworkClient
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import com.example.playlistmaker.data.search.dto.TrackSearchResponse
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.util.Resource
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) :
+const val TRACK_KEY = "track_key"
+const val SEARCH_HISTORY = "history_search"
+class TracksRepositoryImpl(private val networkClient: NetworkClient, context: Context) :
     TracksRepository {
+
+    private val sharedPreferences = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
 
     override fun searchTracks(expression: String): Resource<List<Track>> {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
@@ -36,5 +42,22 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) :
                 Resource.Error("Ошибка сервера")
             }
         }
+    }
+
+
+    override fun readStorage(): List<Track> {
+        val json = sharedPreferences.getString(TRACK_KEY, null) ?: return emptyList()
+        return Gson().fromJson(json, Array<Track>::class.java).toList()
+    }
+
+    override fun writeStorage(track: List<Track>) {
+        val json = Gson().toJson(track)
+        sharedPreferences.edit()
+            .putString(TRACK_KEY, json)
+            .apply()
+    }
+
+    override fun clear() {
+        sharedPreferences.edit().clear().apply()
     }
 }
