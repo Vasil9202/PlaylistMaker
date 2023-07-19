@@ -1,12 +1,11 @@
 package com.example.playlistmaker.data.search.impl
 
-import android.content.Context
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.search.network.NetworkClient
-import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import com.example.playlistmaker.data.search.dto.TrackSearchResponse
+import com.example.playlistmaker.data.search.network.NetworkClient
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.util.Resource
 import com.google.gson.Gson
 import java.text.SimpleDateFormat

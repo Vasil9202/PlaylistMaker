@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerInteractor
-import com.example.playlistmaker.util.Creator
 
 class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewModel() {
 
