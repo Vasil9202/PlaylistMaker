@@ -48,6 +48,11 @@
         <item name="android:src">@drawable/update_bt</item>
     </style>
 
+    <style name="media_tab">
+        <item name="android:textSize">@dimen/FS16SP</item>
+
+    </style>
+
     <style name="playerActivityText">
         <item name="android:textSize">@dimen/FS13SP</item>
         <item name="android:fontFamily">@font/ystextregular</item>
