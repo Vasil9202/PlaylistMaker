@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.util.Creator
+import com.example.playlistmaker.domain.player.PlayerInteractor
 
-class PlayerActivityViewModel : ViewModel() {
+class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewModel() {
 
-    private val interact = Creator.providePlayerInteractor()
 
     private val preparePlayer = MutableLiveData(false)
 

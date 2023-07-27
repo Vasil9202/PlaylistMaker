@@ -18,12 +18,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.di.dataModule
+import com.example.playlistmaker.di.interactorModule
+import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.ItemClickListener
 import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.ui.search.TrackHistoryAdapter
 import com.example.playlistmaker.ui.search.TracksState
 import com.example.playlistmaker.ui.search.view_model.TracksSearchViewModel
+import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.context.startKoin
 
 
 const val TRACK = "Track"
@@ -36,8 +43,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private lateinit var searchEditText: EditText
-    private lateinit var viewModel: TracksSearchViewModel
-    private lateinit var textWatcher: TextWatcher
+    private val viewModel by viewModel<TracksSearchViewModel>()
     private lateinit var binding: ActivitySearchBinding
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
@@ -70,7 +76,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this, TracksSearchViewModel.getViewModelFactory())[TracksSearchViewModel::class.java]
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

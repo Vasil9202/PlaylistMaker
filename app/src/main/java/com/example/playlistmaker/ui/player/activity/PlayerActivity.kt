@@ -7,20 +7,27 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.di.dataModule
+import com.example.playlistmaker.di.interactorModule
+import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerActivityViewModel
 import com.example.playlistmaker.ui.search.activity.TRACK
+import com.example.playlistmaker.ui.search.view_model.TracksSearchViewModel
+import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.context.startKoin
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var track: Track
     private lateinit var binding: ActivityPlayerBinding
-    private lateinit var viewModel: PlayerActivityViewModel
+    private val viewModel by viewModel<PlayerActivityViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[PlayerActivityViewModel::class.java]
 
 
         binding = ActivityPlayerBinding.inflate(layoutInflater)
