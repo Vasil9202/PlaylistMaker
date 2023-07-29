@@ -31,7 +31,7 @@ class App : Application() {
         }
     }
 
-    fun isDarkThemeEnable():Boolean = darkTheme
+    fun isDarkThemeEnable():Boolean = sharedPrefs.getBoolean(THEME_MODE, DARK_THEME)
     fun switchTheme(checked: Boolean){
         sharedPrefs.edit().putBoolean(THEME_MODE, checked).apply()
         AppCompatDelegate.setDefaultNightMode(

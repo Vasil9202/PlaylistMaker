@@ -31,4 +31,8 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="featured_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="empty_media_lib">Ваша медиатека пуста</string>
+    <string name="no_one_playlist_created">Вы не создали \nни одного плейлиста</string>
 </resources>

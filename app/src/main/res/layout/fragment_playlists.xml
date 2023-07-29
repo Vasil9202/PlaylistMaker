@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/track_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/DP24"
+        android:src="@drawable/new_playlist_button"
+        android:background="@android:color/transparent"
+        android:layout_gravity="center_horizontal"/>
+
+    <ImageView
+        android:id="@+id/find_nothing_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="106dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginEnd="120dp"
+        android:layout_gravity="center_horizontal"
+        android:theme="@style/errorImage"
+        android:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/find_nothing_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_one_playlist_created"
+        android:layout_marginTop="242dp"
+        android:textSize="19sp"
+        android:textColor="?attr/colorOnPrimary"
+        android:fontFamily="@font/ystextmedium"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="@dimen/DP24"
+        android:layout_marginEnd="@dimen/DP24"
+        android:layout_gravity="center_horizontal|top"
+        android:visibility="visible"
+        android:lineSpacingMultiplier="1"
+        />
+</FrameLayout>
