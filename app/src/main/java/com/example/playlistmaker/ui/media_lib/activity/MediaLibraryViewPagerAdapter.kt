@@ -8,8 +8,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class MediaLibraryViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle,
                                               private val featuredTracks: String, private val playlists: String) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
+    private val itemCount = 2
     override fun getItemCount(): Int {
-        return 2
+        return itemCount
     }
 
     override fun createFragment(position: Int): Fragment {

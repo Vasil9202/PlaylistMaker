@@ -25,10 +25,10 @@ class MediaLibraryActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.viewPager.adapter = MediaLibraryViewPagerAdapter(supportFragmentManager,
+        binding.mediaLibViewPager.adapter = MediaLibraryViewPagerAdapter(supportFragmentManager,
             lifecycle, featuredTracks, playlists)
 
-        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+        tabMediator = TabLayoutMediator(binding.mediaLibTab, binding.mediaLibViewPager) { tab, position ->
             when(position) {
                 0 -> tab.text = getString(R.string.featured_tracks)
                 1 -> tab.text = getString(R.string.playlists)

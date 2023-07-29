@@ -6,27 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentFeaturedTracksBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class FeaturedTracksFragment : Fragment() {
 
     companion object {
-        private const val FUETURED_TRACKS = "featured_tracks"
+        private const val FEATURED_TRACKS = "featured_tracks"
 
         fun newInstance(featuredTracks: String) = FeaturedTracksFragment().apply {
             arguments = Bundle().apply {
-                putString(FUETURED_TRACKS, featuredTracks)
+                putString(FEATURED_TRACKS, featuredTracks)
             }
         }
     }
 
-    private lateinit var binding: FragmentFeaturedTracksBinding
+    private var binding: FragmentFeaturedTracksBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = FragmentFeaturedTracksBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,7 +33,7 @@ class FeaturedTracksFragment : Fragment() {
     }
 
     private fun emptyFeatureTracks() {
-        binding.apply {
+        binding?.apply {
             trackRecyclerView.visibility = View.GONE
             emptyMediaLib.visibility = View.VISIBLE
             findNothingImg.visibility = View.VISIBLE
