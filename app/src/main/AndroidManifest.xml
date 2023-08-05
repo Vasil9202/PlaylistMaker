@@ -26,7 +26,7 @@
             android:name=".ui.search.activity.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.settings.activity.SettingsActivity"
+            android:name=".ui.settings.activity.SettingsFragment"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
