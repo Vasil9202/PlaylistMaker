@@ -9,40 +9,27 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="24dp"
+        android:layout_height="56dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_back"
-            android:layout_width="38dp"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableTint="?attr/colorOnPrimary"
-            android:gravity="start"
-            android:textColor="@color/black"
-            android:textSize="@dimen/FS16SP"
-            app:drawableEndCompat="@drawable/arrow_back" />
 
         <TextView
             style="@style/MessageTextStyle"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_marginStart="28dp"
             android:fontFamily="@font/ystextmedium"
-            android:gravity="start|center"
             android:text="@string/search"
             android:textSize="@dimen/FS22SP" />
+
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
+        android:layout_height="52dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/search_edit_text"
@@ -67,7 +54,7 @@
             android:src="@drawable/clear"
             android:padding="8dp"
             android:visibility="gone"/>
-    </FrameLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
