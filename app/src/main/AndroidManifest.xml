@@ -20,7 +20,7 @@
             android:label="@string/title_activity_player"
             android:theme="@style/Theme.PlaylistMaker" />
         <activity
-            android:name=".ui.media_lib.activity.MediaLibraryActivity"
+            android:name=".ui.media_lib.activity.MediaLibraryFragment"
             android:exported="false" />
         <activity
             android:name=".ui.search.activity.SearchActivity"

@@ -9,20 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="56dp">
 
-        <ImageButton
-            android:id="@+id/button_back"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/arrow_back3"
-            android:background="?attr/colorSecondary"
-            android:gravity="center"
-            android:layout_weight="0.6"/>
 
         <TextView
             style="@style/MessageTextStyle"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_marginStart="7dp"
+            android:layout_marginStart="12dp"
             android:fontFamily="@font/ystextmedium"
             android:gravity="start|center"
             android:text="@string/media"
