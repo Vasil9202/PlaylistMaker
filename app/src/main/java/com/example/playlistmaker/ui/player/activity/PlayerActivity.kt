@@ -2,22 +2,14 @@ package com.example.playlistmaker.ui.player.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.di.dataModule
-import com.example.playlistmaker.di.interactorModule
-import com.example.playlistmaker.di.repositoryModule
-import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerActivityViewModel
-import com.example.playlistmaker.ui.search.activity.TRACK
-import com.example.playlistmaker.ui.search.view_model.TracksSearchViewModel
-import org.koin.android.ext.koin.androidContext
+import com.example.playlistmaker.ui.search.fragment.TRACK
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.startKoin
 
 class PlayerActivity : AppCompatActivity() {
 

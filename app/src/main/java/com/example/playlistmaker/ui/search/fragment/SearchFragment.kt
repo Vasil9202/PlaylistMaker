@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search.activity
+package com.example.playlistmaker.ui.search.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,15 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.*
+import android.widget.EditText
+import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.ItemClickListener
 import com.example.playlistmaker.ui.search.TrackAdapter
@@ -29,7 +29,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val TRACK = "Track"
 
-class SearchActivity : Fragment() {
+class SearchFragment : Fragment() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
@@ -45,13 +45,10 @@ class SearchActivity : Fragment() {
         object : ItemClickListener {
             override fun onTrackClick(track: Track) {
                 if (clickDebounce()) {
-                    /*
                     viewModel.addTrackToHistory(track)
-                    val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+                    val intent = Intent(requireContext(), PlayerActivity::class.java)
                     intent.putExtra(TRACK, track)
                     startActivity(intent)
-
-                     */
                 }
             }
         }
@@ -61,13 +58,10 @@ class SearchActivity : Fragment() {
         object : ItemClickListener {
             override fun onTrackClick(track: Track) {
                 if (clickDebounce()) {
-                    /*
                     viewModel.addTrackToHistory(track)
-                    val intent = Intent(this@SearchActivity, PlayerActivity::class.java)
+                    val intent = Intent(requireContext(), PlayerActivity::class.java)
                     intent.putExtra(TRACK, track)
                     startActivity(intent)
-
-                     */
                 }
             }
         }

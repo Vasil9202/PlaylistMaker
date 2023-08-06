@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.media_lib.activity
+package com.example.playlistmaker.ui.media_lib.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,8 +35,8 @@ class MediaLibraryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val featuredTracks = requireArguments().getString(ARGS_FEATURED_TRACKS) ?: ""
-        val playlists = requireArguments().getString(ARGS_PLAYLISTS) ?: ""
+        val featuredTracks = ""
+        val playlists = ""
 
         binding.mediaLibViewPager.adapter = MediaLibraryViewPagerAdapter(childFragmentManager,
             lifecycle, featuredTracks, playlists)

@@ -5,7 +5,8 @@
     android:id="@+id/time"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSecondary">
+    android:background="?attr/colorSecondary"
+    tools:context="com.example.playlistmaker.ui.player.activity.PlayerActivity">
 
     <ImageButton
         android:id="@+id/button_back"

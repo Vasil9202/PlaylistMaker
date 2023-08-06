@@ -20,13 +20,13 @@
             android:label="@string/title_activity_player"
             android:theme="@style/Theme.PlaylistMaker" />
         <activity
-            android:name=".ui.media_lib.activity.MediaLibraryFragment"
+            android:name=".ui.media_lib.fragment.MediaLibraryFragment"
             android:exported="false" />
         <activity
-            android:name=".ui.search.activity.SearchActivity"
+            android:name=".ui.search.fragment.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.settings.activity.SettingsFragment"
+            android:name=".ui.settings.fragment.SettingsFragment"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
