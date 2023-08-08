@@ -20,10 +20,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-            androidContext(this@App)
-            modules(dataModule, repositoryModule, interactorModule, viewModelModule)
-        }
+
         sharedPrefs = getSharedPreferences(THEME_MODE, MODE_PRIVATE)
         darkTheme = sharedPrefs.getBoolean(THEME_MODE, DARK_THEME)
         if(darkTheme){

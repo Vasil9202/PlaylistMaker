@@ -10,14 +10,11 @@
         android:name="com.example.playlistmaker.ui.search.fragment.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
+
         <action
             android:id="@+id/action_searchFragment_to_playerActivity"
             app:destination="@id/playerActivity" />
     </fragment>
-    <activity
-        android:id="@+id/playerActivity"
-        android:name="com.example.playlistmaker.ui.player.activity.PlayerActivity"
-        android:label="PlayerActivity" />
     <fragment
         android:id="@+id/mediaLibraryFragment"
         android:name="com.example.playlistmaker.ui.media_lib.fragment.MediaLibraryFragment"
@@ -28,4 +25,14 @@
         android:name="com.example.playlistmaker.ui.settings.fragment.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <activity
+        android:id="@+id/playerActivity"
+        android:name="com.example.playlistmaker.ui.player.activity.PlayerActivity"
+        android:label="activity_player"
+        tools:layout="@layout/activity_player" >
+        <argument
+            android:name="trackArg"
+            app:argType="com.example.playlistmaker.domain.model.Track"
+            app:nullable="true" />
+    </activity>
 </navigation>

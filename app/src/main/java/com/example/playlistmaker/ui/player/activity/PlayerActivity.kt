@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.player.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -16,6 +17,8 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var track: Track
     private lateinit var binding: ActivityPlayerBinding
     private val viewModel by viewModel<PlayerActivityViewModel>()
+    private val args: PlayerActivityArgs by navArgs()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +41,7 @@ class PlayerActivity : AppCompatActivity() {
             binding.currentTime.text = currentTrackTimePosition
         }
 
-
-        track = intent.getParcelableExtra(TRACK) ?: Track("","","","",
+        track= args.trackArg ?: Track("","","","",
             "","","","","")
 
         binding.buttonBack.setOnClickListener {

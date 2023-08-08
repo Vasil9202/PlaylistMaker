@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
@@ -45,10 +46,15 @@ class SearchFragment : Fragment() {
         object : ItemClickListener {
             override fun onTrackClick(track: Track) {
                 if (clickDebounce()) {
+                    val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
+                    findNavController().navigate(action)
+                    /*
                     viewModel.addTrackToHistory(track)
                     val intent = Intent(requireContext(), PlayerActivity::class.java)
                     intent.putExtra(TRACK, track)
                     startActivity(intent)
+
+                     */
                 }
             }
         }
@@ -58,10 +64,15 @@ class SearchFragment : Fragment() {
         object : ItemClickListener {
             override fun onTrackClick(track: Track) {
                 if (clickDebounce()) {
+                    val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
+                    findNavController().navigate(action)
+                    /*
                     viewModel.addTrackToHistory(track)
                     val intent = Intent(requireContext(), PlayerActivity::class.java)
                     intent.putExtra(TRACK, track)
                     startActivity(intent)
+
+                     */
                 }
             }
         }
