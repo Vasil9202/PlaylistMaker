@@ -20,11 +20,6 @@ val dataModule = module {
             .create(ITunesApiService::class.java)
     }
 
-    single {
-        androidContext()
-            .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
-    }
-
 
     single<NetworkClient> {
         RetrofitNetworkClient(get(), androidContext())

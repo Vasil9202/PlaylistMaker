@@ -3,6 +3,8 @@ package com.example.playlistmaker.di
 import android.content.Context
 import com.example.playlistmaker.data.player.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
+import com.example.playlistmaker.data.search.storage.TrackStorage
+import com.example.playlistmaker.data.search.storage.sharedprefs.TrackStorageImpl
 import com.example.playlistmaker.domain.player.PlayerRepository
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.google.gson.Gson
@@ -20,7 +22,11 @@ val repositoryModule = module {
 
 
     single<TracksRepository> {
-        TracksRepositoryImpl(get(),get(),get())
+        TracksRepositoryImpl(get(),get())
+    }
+
+    single<TrackStorage> {
+        TrackStorageImpl(get(),get())
     }
 
 
