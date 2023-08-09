@@ -6,17 +6,18 @@ import android.os.Looper
 import com.example.playlistmaker.domain.player.PlayerRepository
 
 
-class PlayerRepositoryImpl() : PlayerRepository {
+class PlayerRepositoryImpl : PlayerRepository {
 
     private var playerState = STATE_DEFAULT
     private var isPlaying: Boolean = false
-    private val mediaPlayer = MediaPlayer()
+    private var mediaPlayer = MediaPlayer()
     private val mainThreadHandler = Handler(Looper.getMainLooper())
     private lateinit var runnable : Runnable
 
 
 
     override fun preparePlayer(expression: String) {
+        mediaPlayer = MediaPlayer()
         mediaPlayer.setDataSource(expression)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener  {

@@ -62,18 +62,17 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
     }
 
     override fun writeStorage(track: List<Track>) {
-        storage.writeStorage(track.map {
-            TracksList(
-                it.trackName,
-                it.artistName,
-                it.trackTimeMin,
-                it.artworkUrl100,
-                it.collectionName,
-                it.releaseDate,
-                it.primaryGenreName,
-                it.country,
-                it.previewUrl
-            )            })
+        storage.writeStorage(track.map {             TracksList(
+            it.trackName,
+            it.artistName,
+            it.trackTimeMin,
+            it.artworkUrl100,
+            it.collectionName,
+            it.releaseDate,
+            it.primaryGenreName,
+            it.country,
+            it.previewUrl
+        )      })
     }
 
     override fun clear() {

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.FrameLayout
+import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -36,8 +37,8 @@ class SearchFragment : Fragment() {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
+    private var isBindingInitialized = false
 
-    private lateinit var searchEditText: EditText
     private val viewModel by viewModel<TracksSearchViewModel>()
     private lateinit var binding: FragmentSearchBinding
     private val handler = Handler(Looper.getMainLooper())
@@ -46,15 +47,9 @@ class SearchFragment : Fragment() {
         object : ItemClickListener {
             override fun onTrackClick(track: Track) {
                 if (clickDebounce()) {
+                    viewModel.addTrackToHistory(track)
                     val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
                     findNavController().navigate(action)
-                    /*
-                    viewModel.addTrackToHistory(track)
-                    val intent = Intent(requireContext(), PlayerActivity::class.java)
-                    intent.putExtra(TRACK, track)
-                    startActivity(intent)
-
-                     */
                 }
             }
         }
@@ -64,15 +59,9 @@ class SearchFragment : Fragment() {
         object : ItemClickListener {
             override fun onTrackClick(track: Track) {
                 if (clickDebounce()) {
+                    viewModel.addTrackToHistory(track)
                     val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
                     findNavController().navigate(action)
-                    /*
-                    viewModel.addTrackToHistory(track)
-                    val intent = Intent(requireContext(), PlayerActivity::class.java)
-                    intent.putExtra(TRACK, track)
-                    startActivity(intent)
-
-                     */
                 }
             }
         }
@@ -84,11 +73,20 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
+        isBindingInitialized = true
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (binding.searchEditText.hasFocus()) {
+                binding.searchEditText.clearFocus()
+            } else {
+                requireActivity().onBackPressed()
+            }
+    }
 
         viewModel.historyVisibility.observe(viewLifecycleOwner) { isVisible ->
             binding.historyClearButton.isVisible = isVisible
@@ -97,25 +95,24 @@ class SearchFragment : Fragment() {
         }
 
         setupOnLickListeners()
-        searchEditText = binding.searchEditText
         binding.trackHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.trackHistoryRecyclerView.adapter = historyAdapter
         binding.trackRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.trackRecyclerView.adapter = adapter
-        searchEditText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && searchEditText.text.isEmpty()) {
+        binding.searchEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && binding.searchEditText.text.isEmpty()) {
                 setHistoryRecyclerView()
             }
         }
 
 
-        searchEditText.doAfterTextChanged {
-            if (searchEditText.hasFocus() && searchEditText.text.toString()?.isEmpty() == true) {
+        binding.searchEditText.doAfterTextChanged {
+            if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString().isBlank() ) {
             setHistoryRecyclerView()
                 binding.clearSearchImage.visibility = View.GONE
 
-            } else {
-            viewModel.searchDebounce(searchEditText.text.toString())
+            } else if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString().isNotEmpty()){
+            viewModel.searchDebounce(binding.searchEditText.text.toString())
                 binding.clearSearchImage.visibility = View.VISIBLE
             }
         }
@@ -123,12 +120,12 @@ class SearchFragment : Fragment() {
 
         if (savedInstanceState != null) {
             val text = savedInstanceState.getString(SEARCH_TEXT)
-            searchEditText.setText(text)
+            binding.searchEditText.setText(text)
         }
 
-        searchEditText.setOnEditorActionListener { _, actionId, _ ->
+        binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.searchDebounce(searchEditText.text.toString())
+                viewModel.searchDebounce(binding.searchEditText.text.toString())
             }
             false
         }
@@ -140,13 +137,14 @@ class SearchFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_TEXT, searchEditText.text.toString())
+        if(isBindingInitialized)
+        outState.putString(SEARCH_TEXT, binding.searchEditText.text.toString())
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         val text = savedInstanceState?.getString(SEARCH_TEXT)
-        searchEditText.setText(text)
+        binding.searchEditText.setText(text)
     }
 
 
@@ -179,17 +177,10 @@ class SearchFragment : Fragment() {
         }
     }
 
-/*
-    override fun onBackPressed() {
-        if (searchEditText.hasFocus()) {
-            searchEditText.clearFocus()
-        }
-        else {
-            super.onBackPressed()
-        }
-    }
 
- */
+
+
+
 
     private fun clickDebounce() : Boolean {
         val current = isClickAllowed
@@ -245,9 +236,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupOnLickListeners(){
-        binding.updateBt.setOnClickListener {viewModel.searchDebounce(searchEditText.text.toString())}
+        binding.updateBt.setOnClickListener {viewModel.searchDebounce(binding.searchEditText.text.toString())}
         binding.historyClearButton.setOnClickListener {viewModel.historyClearClick()}
-        binding.clearSearchImage.setOnClickListener { searchEditText.setText("")
+        binding.clearSearchImage.setOnClickListener { binding.searchEditText.setText("")
         setHistoryRecyclerView()}
     }
 }

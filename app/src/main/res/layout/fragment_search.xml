@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,9 +25,9 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="36dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:orientation="horizontal">
@@ -36,7 +35,7 @@
         <EditText
             android:id="@+id/search_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
+            android:layout_height="match_parent"
             android:background="@drawable/grey_shape"
             android:drawableStart="@drawable/search"
             android:drawableTint="?attr/colorPrimaryVariant"
@@ -50,13 +49,14 @@
 
         <ImageView
             android:id="@+id/clear_search_image"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
+            android:layout_gravity="center_vertical|end"
             android:src="@drawable/clear"
+            android:layout_marginEnd="5dp"
             android:padding="8dp"
-            android:visibility="gone"/>
-    </LinearLayout>
+            android:visibility="invisible"/>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

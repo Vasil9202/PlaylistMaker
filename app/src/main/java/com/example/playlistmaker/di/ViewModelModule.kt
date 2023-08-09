@@ -13,14 +13,14 @@ val viewModelModule = module {
         TracksSearchViewModel(get())
     }
 
-    viewModel {
+    viewModel() {
         PlayerActivityViewModel(get())
     }
 
-
-    viewModel {
-        SettingsViewModel(androidApplication())
+    viewModel() {
+        SettingsViewModel(get())
     }
+
 
 
 

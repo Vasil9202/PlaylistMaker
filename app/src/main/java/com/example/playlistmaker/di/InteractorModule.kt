@@ -4,6 +4,9 @@ import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.impl.PlayerInteractorImpl
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.impl.TracksInteractorImpl
+import com.example.playlistmaker.domain.settings.ThemeInteractor
+import com.example.playlistmaker.domain.settings.impl.ThemeInteractorImpl
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 val interactorModule = module {
@@ -14,5 +17,9 @@ val interactorModule = module {
 
     single<PlayerInteractor> {
         PlayerInteractorImpl(get())
+    }
+
+    single<ThemeInteractor> {
+        ThemeInteractorImpl(get())
     }
 }

@@ -23,7 +23,7 @@
             android:name=".ui.media_lib.fragment.MediaLibraryFragment"
             android:exported="false" />
         <activity
-            android:name=".ui.search.fragment.SearchActivity"
+            android:name=".ui.search.fragment.SearchFragment"
             android:exported="false" />
         <activity
             android:name=".ui.settings.fragment.SettingsFragment"

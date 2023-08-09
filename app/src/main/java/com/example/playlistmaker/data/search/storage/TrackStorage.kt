@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.search.storage
 
 import com.example.playlistmaker.data.search.storage.model.TracksList
+import com.example.playlistmaker.domain.model.Track
 
 interface TrackStorage {
 
