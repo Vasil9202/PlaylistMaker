@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.search.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
@@ -20,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.ui.search.ItemClickListener
 import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.ui.search.TrackHistoryAdapter
@@ -29,44 +26,37 @@ import com.example.playlistmaker.ui.search.view_model.TracksSearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-const val TRACK = "Track"
-
 class SearchFragment : Fragment() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
-    private var isBindingInitialized = false
 
+    private var isBindingInitialized = false
     private val viewModel by viewModel<TracksSearchViewModel>()
     private lateinit var binding: FragmentSearchBinding
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
-    private val adapter = TrackAdapter(
-        object : ItemClickListener {
-            override fun onTrackClick(track: Track) {
-                if (clickDebounce()) {
-                    viewModel.addTrackToHistory(track)
-                    val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
-                    findNavController().navigate(action)
-                }
+    private val adapter = TrackAdapter(object : ItemClickListener {
+        override fun onTrackClick(track: Track) {
+            if (clickDebounce()) {
+                viewModel.addTrackToHistory(track)
+                val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
+                findNavController().navigate(action)
             }
         }
-    )
+    })
 
-    private val historyAdapter = TrackHistoryAdapter(
-        object : ItemClickListener {
-            override fun onTrackClick(track: Track) {
-                if (clickDebounce()) {
-                    viewModel.addTrackToHistory(track)
-                    val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
-                    findNavController().navigate(action)
-                }
+    private val historyAdapter = TrackHistoryAdapter(object : ItemClickListener {
+        override fun onTrackClick(track: Track) {
+            if (clickDebounce()) {
+                viewModel.addTrackToHistory(track)
+                val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
+                findNavController().navigate(action)
             }
         }
-    )
-
+    })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,7 +76,7 @@ class SearchFragment : Fragment() {
             } else {
                 requireActivity().onBackPressed()
             }
-    }
+        }
 
         viewModel.historyVisibility.observe(viewLifecycleOwner) { isVisible ->
             binding.historyClearButton.isVisible = isVisible
@@ -105,18 +95,20 @@ class SearchFragment : Fragment() {
             }
         }
 
-
         binding.searchEditText.doAfterTextChanged {
-            if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString().isBlank() ) {
-            setHistoryRecyclerView()
+            if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString()
+                    .isBlank()
+            ) {
+                setHistoryRecyclerView()
                 binding.clearSearchImage.visibility = View.GONE
 
-            } else if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString().isNotEmpty()){
-            viewModel.searchDebounce(binding.searchEditText.text.toString())
+            } else if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString()
+                    .isNotEmpty()
+            ) {
+                viewModel.searchDebounce(binding.searchEditText.text.toString())
                 binding.clearSearchImage.visibility = View.VISIBLE
             }
         }
-
 
         if (savedInstanceState != null) {
             val text = savedInstanceState.getString(SEARCH_TEXT)
@@ -137,8 +129,10 @@ class SearchFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if(isBindingInitialized)
-        outState.putString(SEARCH_TEXT, binding.searchEditText.text.toString())
+        if (isBindingInitialized) outState.putString(
+            SEARCH_TEXT,
+            binding.searchEditText.text.toString()
+        )
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -150,39 +144,40 @@ class SearchFragment : Fragment() {
 
     fun setHistoryRecyclerView() {
         binding.trackRecyclerView.visibility = View.GONE
-        if(viewModel.getSearchHistoryStorageList().toList().isNotEmpty()){
+        if (viewModel.getSearchHistoryStorageList().toList().isNotEmpty()) {
             binding.trackHistoryRecyclerView.visibility = View.VISIBLE
             binding.historyText.visibility = View.VISIBLE
-        historyAdapter.tracks.clear()
-        historyAdapter.tracks.addAll(viewModel.getSearchHistoryStorageList().toList())
-        historyAdapter.notifyDataSetChanged()
-        val marginTop = resources.getDimensionPixelSize(R.dimen.DP85)
-        val clearHistoryLayoutParams = binding.historyClearButton.layoutParams as ViewGroup.MarginLayoutParams
-        val lastItemPosition = binding.trackHistoryRecyclerView.adapter?.itemCount?.minus(1) ?: 0
-        if (lastItemPosition >= 0) {
-            binding.historyClearButton.visibility = View.VISIBLE
-            binding.trackHistoryRecyclerView.post {                                                                 //Changing clearButton position
-                val lastItemView = binding.trackHistoryRecyclerView.layoutManager?.findViewByPosition(lastItemPosition)
-                val layoutParams = binding.historyClearButton.layoutParams as FrameLayout.LayoutParams
-                if(lastItemView != null){
-                    layoutParams.gravity = Gravity.CENTER or Gravity.TOP
-                    clearHistoryLayoutParams.topMargin = lastItemView.bottom + marginTop
-                    binding.historyClearButton.layoutParams = layoutParams
-                }else{
-                    layoutParams.gravity = Gravity.CENTER or Gravity.BOTTOM
-                    binding.historyClearButton.layoutParams = layoutParams
+            historyAdapter.tracks.clear()
+            historyAdapter.tracks.addAll(viewModel.getSearchHistoryStorageList().toList())
+            historyAdapter.notifyDataSetChanged()
+            val marginTop = resources.getDimensionPixelSize(R.dimen.DP85)
+            val clearHistoryLayoutParams =
+                binding.historyClearButton.layoutParams as ViewGroup.MarginLayoutParams
+            val lastItemPosition =
+                binding.trackHistoryRecyclerView.adapter?.itemCount?.minus(1) ?: 0
+            if (lastItemPosition >= 0) {
+                binding.historyClearButton.visibility = View.VISIBLE
+                binding.trackHistoryRecyclerView.post {                                                                 //Changing clearButton position
+                    val lastItemView =
+                        binding.trackHistoryRecyclerView.layoutManager?.findViewByPosition(
+                            lastItemPosition
+                        )
+                    val layoutParams =
+                        binding.historyClearButton.layoutParams as FrameLayout.LayoutParams
+                    if (lastItemView != null) {
+                        layoutParams.gravity = Gravity.CENTER or Gravity.TOP
+                        clearHistoryLayoutParams.topMargin = lastItemView.bottom + marginTop
+                        binding.historyClearButton.layoutParams = layoutParams
+                    } else {
+                        layoutParams.gravity = Gravity.CENTER or Gravity.BOTTOM
+                        binding.historyClearButton.layoutParams = layoutParams
+                    }
                 }
             }
         }
-        }
     }
 
-
-
-
-
-
-    private fun clickDebounce() : Boolean {
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -190,7 +185,6 @@ class SearchFragment : Fragment() {
         }
         return current
     }
-
 
     private fun render(state: TracksState) {
         when (state) {
@@ -235,10 +229,12 @@ class SearchFragment : Fragment() {
         binding.trackRecyclerView.visibility = View.VISIBLE
     }
 
-    private fun setupOnLickListeners(){
-        binding.updateBt.setOnClickListener {viewModel.searchDebounce(binding.searchEditText.text.toString())}
-        binding.historyClearButton.setOnClickListener {viewModel.historyClearClick()}
-        binding.clearSearchImage.setOnClickListener { binding.searchEditText.setText("")
-        setHistoryRecyclerView()}
+    private fun setupOnLickListeners() {
+        binding.updateBt.setOnClickListener { viewModel.searchDebounce(binding.searchEditText.text.toString()) }
+        binding.historyClearButton.setOnClickListener { viewModel.historyClearClick() }
+        binding.clearSearchImage.setOnClickListener {
+            binding.searchEditText.setText("")
+            setHistoryRecyclerView()
+        }
     }
 }

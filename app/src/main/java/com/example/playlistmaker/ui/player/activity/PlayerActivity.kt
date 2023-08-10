@@ -9,7 +9,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerActivityViewModel
-import com.example.playlistmaker.ui.search.fragment.TRACK
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
@@ -20,7 +19,6 @@ class PlayerActivity : AppCompatActivity() {
     private val args: PlayerActivityArgs by navArgs()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,30 +26,34 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.getPreparePlayer().observe(this){finish ->
+        track = args.trackArg ?: Track(
+            "", "", "", "",
+            "", "", "", "", ""
+        )
+
+        viewModel.preparePlayer(track)
+        viewModel.completePlayer()
+        viewModel.setTrackTimeRunnable()
+
+        viewModel.getPreparePlayer().observe(this) { finish ->
             binding.playButton.isEnabled = finish
             binding.playButton.setImageResource(R.drawable.play);
         }
-        viewModel.getPlayerButtonIsPlay().observe(this){ isPlay ->
-            if(isPlay) binding.playButton.setImageResource(R.drawable.play)
+        viewModel.getPlayerButtonIsPlay().observe(this) { isPlay ->
+            if (isPlay) binding.playButton.setImageResource(R.drawable.play)
             else binding.playButton.setImageResource(R.drawable.pause)
         }
 
-        viewModel.getCurrentTrackTimePosition().observe(this){ currentTrackTimePosition ->
+        viewModel.getCurrentTrackTimePosition().observe(this) { currentTrackTimePosition ->
             binding.currentTime.text = currentTrackTimePosition
         }
 
-        track= args.trackArg ?: Track("","","","",
-            "","","","","")
 
         binding.buttonBack.setOnClickListener {
             finish()
         }
 
         downloadData()
-
-        viewModel.preparePlayer(track)
-        viewModel.setTrackTimeRunnable()
 
         binding.playButton.setOnClickListener {
             viewModel.playbackControl()
@@ -61,14 +63,15 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         binding.playButton.setImageResource(R.drawable.play);
-        viewModel.pausePlayer()    }
+        viewModel.pausePlayer()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.releasePlayer()
     }
 
-    private fun downloadData(){
+    private fun downloadData() {
         Glide.with(this)
             .load(track.getCoverArtwork())
             .centerCrop()

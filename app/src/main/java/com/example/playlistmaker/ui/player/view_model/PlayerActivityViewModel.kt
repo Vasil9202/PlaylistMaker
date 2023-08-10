@@ -21,14 +21,23 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
 
     fun preparePlayer(track: Track) {
          interact.preparePlayer(track.previewUrl)
-         interact.completePlayer()
          preparePlayer.postValue(true)
     }
 
+    fun completePlayer() {
+        interact.completePlayer { preparePlayer.postValue(true)
+        currentTrackTimePosition.postValue(DEFAULT_TRACK_TIME_POSITION)}
+    }
+
     fun playbackControl() {
-        interact.playBackControl()
-        if(playerButtonIsPlay.value != null){
-         playerButtonIsPlay.postValue(!playerButtonIsPlay.value!!)}
+        val playerState = interact.playBackControl()
+
+        if(playerState == STATE_PLAYING){
+         playerButtonIsPlay.postValue(false)
+        }
+        else if(playerState == STATE_PAUSED){
+            playerButtonIsPlay.postValue(true)
+    }
     }
 
     fun setTrackTimeRunnable(){
@@ -49,5 +58,7 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
         private const val ONE_SECOND_IN_MILL = 1000
         private const val ONE_MINUTE_IN_SEC = 60
         private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
     }
 }

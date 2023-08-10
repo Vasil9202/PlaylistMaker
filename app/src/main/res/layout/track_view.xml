@@ -68,7 +68,7 @@
             android:textSize="13sp"/>
     </RelativeLayout>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/forward"
         android:layout_width="@dimen/DP24"
         android:layout_height="@dimen/DP24"

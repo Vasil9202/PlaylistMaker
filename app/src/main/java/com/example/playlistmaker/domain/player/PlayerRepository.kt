@@ -4,7 +4,7 @@ interface PlayerRepository {
 
     fun preparePlayer(expression: String)
 
-    fun completePlayer()
+    fun completePlayer(changeViewButton: () -> Unit)
 
     fun getCurrentPosition() : Int
 
@@ -14,7 +14,7 @@ interface PlayerRepository {
 
     fun pausePlayer()
 
-    fun playBackControl()
+    fun playBackControl() : Int
     fun trackTimeRunnable(setTimeView: () -> Unit)
 
 }

@@ -9,7 +9,6 @@ import com.example.playlistmaker.domain.player.PlayerRepository
 class PlayerRepositoryImpl : PlayerRepository {
 
     private var playerState = STATE_DEFAULT
-    private var isPlaying: Boolean = false
     private var mediaPlayer = MediaPlayer()
     private val mainThreadHandler = Handler(Looper.getMainLooper())
     private lateinit var runnable : Runnable
@@ -25,28 +24,27 @@ class PlayerRepositoryImpl : PlayerRepository {
         }
     }
 
-    override fun completePlayer() {
+    override fun completePlayer(changeViewButton: () -> Unit)  {
         mediaPlayer.setOnCompletionListener {
+            changeViewButton()
             playerState = STATE_PREPARED
             mainThreadHandler.removeCallbacks(runnable)
         }
     }
 
     override fun startPlayer() {
-        isPlaying = true
-        playerState = STATE_PLAYING
         mediaPlayer.start()
+        playerState = STATE_PLAYING
         mainThreadHandler.post(runnable)
 
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
-        isPlaying = false
         playerState = STATE_PAUSED
     }
 
-    override fun playBackControl() {
+    override fun playBackControl() : Int{
         when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
@@ -55,13 +53,14 @@ class PlayerRepositoryImpl : PlayerRepository {
                 startPlayer()
             }
         }
+        return playerState
     }
 
     override fun trackTimeRunnable(setTimeView: () -> Unit) {
         runnable = Runnable {
-            if (isPlaying) {
-                setTimeView()
+            if (playerState == STATE_PLAYING) {
                 mainThreadHandler.postDelayed(runnable, DELAY)
+                setTimeView()
             }
         }
     }
@@ -80,9 +79,6 @@ class PlayerRepositoryImpl : PlayerRepository {
         const val STATE_PLAYING = 2
         const val STATE_PAUSED = 3
         const val DELAY = 300L
-        const val DEFAULT_TRACK_TIME_POSITION = "0:00"
-        const val ONE_SECOND_IN_MILL = 1000
-        const val ONE_MINUTE_IN_SEC = 60
     }
 
 

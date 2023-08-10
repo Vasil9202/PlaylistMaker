@@ -4,7 +4,7 @@ interface PlayerInteractor {
 
     fun preparePlayer(trackURL: String)
 
-    fun completePlayer()
+    fun completePlayer(changeViewButton: () -> Unit)
 
     fun startPlayer()
 
@@ -14,7 +14,7 @@ interface PlayerInteractor {
 
     fun release()
 
-    fun playBackControl()
+    fun playBackControl()  : Int
 
     fun trackTimeRunnable(setTimeView: () -> Unit)
 

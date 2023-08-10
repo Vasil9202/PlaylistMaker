@@ -9,8 +9,8 @@ class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerIn
         repository.preparePlayer(trackURL)
     }
 
-    override fun completePlayer() {
-        repository.completePlayer()
+    override fun completePlayer(changeViewButton: () -> Unit)  {
+        repository.completePlayer(changeViewButton)
     }
 
     override fun startPlayer() {
@@ -31,25 +31,12 @@ class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerIn
         repository.release()
     }
 
-    override fun playBackControl() {
-        repository.playBackControl()
+    override fun playBackControl()  : Int{
+        return repository.playBackControl()
     }
 
     override fun trackTimeRunnable(setTimeView: () -> Unit) {
         repository.trackTimeRunnable(setTimeView)
-    }
-
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val DELAY = 300L
-        private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
-        private const val ONE_SECOND_IN_MILL = 1000
-        private const val ONE_MINUTE_IN_SEC = 60
-        private var PLAYER_STATE = STATE_DEFAULT
-        private var PLAYER_PLAY = false
     }
 
 }
