@@ -7,12 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.ui.search.TracksState
 
 
-class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
+class TracksSearchViewModel(
+    private val tracksInteractor: TracksInteractor
 ) : ViewModel() {
 
 
@@ -22,15 +23,12 @@ class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
     }
 
 
-
     private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<TracksState>()
     fun observeState(): LiveData<TracksState> = stateLiveData
 
     private var latestSearchText: String? = null
-
-
 
 
     val historyVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -104,12 +102,12 @@ class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
         stateLiveData.postValue(state)
     }
 
-    fun historyClearClick(){
+    fun historyClearClick() {
         tracksInteractor.clear()
         historyVisibility.postValue(false)
     }
 
-    fun addTrackToHistory(track: Track){
+    fun addTrackToHistory(track: Track) {
         val historyList = ArrayList<Track>()
         historyList.clear()
         historyList.addAll(tracksInteractor.readStorage())

@@ -20,40 +20,48 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     fun getCurrentTrackTimePosition(): LiveData<String> = currentTrackTimePosition
 
     fun preparePlayer(track: Track) {
-         interact.preparePlayer(track.previewUrl)
-         preparePlayer.postValue(true)
+        interact.preparePlayer(track.previewUrl)
+        preparePlayer.postValue(true)
     }
 
     fun completePlayer() {
-        interact.completePlayer { preparePlayer.postValue(true)
-        currentTrackTimePosition.postValue(DEFAULT_TRACK_TIME_POSITION)}
+        interact.completePlayer {
+            preparePlayer.postValue(true)
+            currentTrackTimePosition.postValue(DEFAULT_TRACK_TIME_POSITION)
+        }
     }
 
     fun playbackControl() {
         val playerState = interact.playBackControl()
 
-        if(playerState == STATE_PLAYING){
-         playerButtonIsPlay.postValue(false)
-        }
-        else if(playerState == STATE_PAUSED){
+        if (playerState == STATE_PLAYING) {
+            playerButtonIsPlay.postValue(false)
+        } else if (playerState == STATE_PAUSED) {
             playerButtonIsPlay.postValue(true)
-    }
+        }
     }
 
-    fun setTrackTimeRunnable(){
+    fun setTrackTimeRunnable() {
         interact.trackTimeRunnable {
             val seconds = interact.getCurrentPosition() / ONE_SECOND_IN_MILL
-            currentTrackTimePosition.postValue(String.format("%d:%02d", seconds / ONE_MINUTE_IN_SEC, seconds % ONE_MINUTE_IN_SEC))
+            currentTrackTimePosition.postValue(
+                String.format(
+                    "%d:%02d",
+                    seconds / ONE_MINUTE_IN_SEC,
+                    seconds % ONE_MINUTE_IN_SEC
+                )
+            )
         }
     }
 
-    fun pausePlayer(){
+    fun pausePlayer() {
         interact.pausePlayer()
     }
 
-    fun releasePlayer(){
+    fun releasePlayer() {
         interact.release()
     }
+
     companion object {
         private const val ONE_SECOND_IN_MILL = 1000
         private const val ONE_MINUTE_IN_SEC = 60

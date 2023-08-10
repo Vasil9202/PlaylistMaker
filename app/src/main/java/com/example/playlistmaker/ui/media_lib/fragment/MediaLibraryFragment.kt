@@ -19,8 +19,10 @@ class MediaLibraryFragment : Fragment() {
 
 
         fun createArgs(tracks: String, playlists: String): Bundle =
-            bundleOf(ARGS_FEATURED_TRACKS to tracks,
-                ARGS_PLAYLISTS to playlists)
+            bundleOf(
+                ARGS_FEATURED_TRACKS to tracks,
+                ARGS_PLAYLISTS to playlists
+            )
     }
 
 
@@ -28,25 +30,33 @@ class MediaLibraryFragment : Fragment() {
 
     private lateinit var tabMediator: TabLayoutMediator
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentMediaLibraryBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val featuredTracks = ""
         val playlists = ""
 
-        binding.mediaLibViewPager.adapter = MediaLibraryViewPagerAdapter(childFragmentManager,
-            lifecycle, featuredTracks, playlists)
+        binding.mediaLibViewPager.adapter = MediaLibraryViewPagerAdapter(
+            childFragmentManager,
+            lifecycle, featuredTracks, playlists
+        )
 
-        tabMediator = TabLayoutMediator(binding.mediaLibTab, binding.mediaLibViewPager) { tab, position ->
-            when(position) {
-                0 -> tab.text = getString(R.string.featured_tracks)
-                1 -> tab.text = getString(R.string.playlists)
+        tabMediator =
+            TabLayoutMediator(binding.mediaLibTab, binding.mediaLibViewPager) { tab, position ->
+                when (position) {
+                    0 -> tab.text = getString(R.string.featured_tracks)
+                    1 -> tab.text = getString(R.string.playlists)
+                }
             }
-        }
         tabMediator.attach()
     }
 

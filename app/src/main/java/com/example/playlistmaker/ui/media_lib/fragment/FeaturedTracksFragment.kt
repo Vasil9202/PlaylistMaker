@@ -21,8 +21,10 @@ class FeaturedTracksFragment : Fragment() {
 
     private var binding: FragmentFeaturedTracksBinding? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentFeaturedTracksBinding.inflate(inflater, container, false)
         return binding?.root
     }

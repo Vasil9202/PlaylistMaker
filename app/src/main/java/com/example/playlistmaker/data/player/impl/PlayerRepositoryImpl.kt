@@ -11,20 +11,18 @@ class PlayerRepositoryImpl : PlayerRepository {
     private var playerState = STATE_DEFAULT
     private var mediaPlayer = MediaPlayer()
     private val mainThreadHandler = Handler(Looper.getMainLooper())
-    private lateinit var runnable : Runnable
-
-
+    private lateinit var runnable: Runnable
 
     override fun preparePlayer(expression: String) {
         mediaPlayer = MediaPlayer()
         mediaPlayer.setDataSource(expression)
         mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener  {
+        mediaPlayer.setOnPreparedListener {
             playerState = STATE_PREPARED
         }
     }
 
-    override fun completePlayer(changeViewButton: () -> Unit)  {
+    override fun completePlayer(changeViewButton: () -> Unit) {
         mediaPlayer.setOnCompletionListener {
             changeViewButton()
             playerState = STATE_PREPARED
@@ -44,11 +42,12 @@ class PlayerRepositoryImpl : PlayerRepository {
         playerState = STATE_PAUSED
     }
 
-    override fun playBackControl() : Int{
+    override fun playBackControl(): Int {
         when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
             }
+
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
             }
@@ -65,7 +64,7 @@ class PlayerRepositoryImpl : PlayerRepository {
         }
     }
 
-    override fun getCurrentPosition() : Int{
+    override fun getCurrentPosition(): Int {
         return mediaPlayer.currentPosition
     }
 

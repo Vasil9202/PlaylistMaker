@@ -19,8 +19,10 @@ class SettingsFragment : Fragment() {
     private val viewModel by viewModel<SettingsViewModel>()
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -39,11 +41,12 @@ class SettingsFragment : Fragment() {
 
         binding.shareApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.android_course))
-                intent.putExtra(
-                    Intent.EXTRA_TEXT,getString(R.string.android_dev_page))
-                startActivity(Intent.createChooser(intent, getString(R.string.send_link_via)))
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.android_course))
+            intent.putExtra(
+                Intent.EXTRA_TEXT, getString(R.string.android_dev_page)
+            )
+            startActivity(Intent.createChooser(intent, getString(R.string.send_link_via)))
         }
 
         binding.writeSupport.setOnClickListener {
