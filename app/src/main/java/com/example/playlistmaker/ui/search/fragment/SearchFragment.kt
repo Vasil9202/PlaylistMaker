@@ -196,6 +196,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showLoading() {
+        if(binding.searchEditText.text.isBlank()){return}
         binding.historyClearButton.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
         binding.findNothingImg.visibility = View.GONE
@@ -222,6 +223,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showContent(contentTracks: List<Track>) {
+        if(binding.searchEditText.text.isBlank()){return}
         binding.progressBar.visibility = View.GONE
         adapter.tracks.clear()
         adapter.tracks.addAll(contentTracks)

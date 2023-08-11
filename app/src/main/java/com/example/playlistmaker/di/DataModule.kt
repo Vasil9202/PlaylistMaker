@@ -30,7 +30,7 @@ val dataModule = module {
     }
 
     single<NetworkClient> {
-        RetrofitNetworkClient()
+        RetrofitNetworkClient(androidContext())
     }
 
     single<CurrentThemeMode> {

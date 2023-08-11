@@ -28,9 +28,6 @@ class TracksSearchViewModel(
     private val stateLiveData = MutableLiveData<TracksState>()
     fun observeState(): LiveData<TracksState> = stateLiveData
 
-    private var latestSearchText: String? = null
-
-
     val historyVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
 
 
@@ -39,11 +36,10 @@ class TracksSearchViewModel(
     }
 
     fun searchDebounce(changedText: String?) {
-        if (changedText == null || latestSearchText == changedText) {
+        if (changedText.isNullOrEmpty() || changedText.isBlank()) {
             return
         }
 
-        this.latestSearchText = changedText
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
 
         val searchRunnable = Runnable { searchRequest(changedText) }
