@@ -27,6 +27,7 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     fun completePlayer() {
         interact.completePlayer {
             preparePlayer.postValue(true)
+            currentTrackTimePosition.postValue(DEFAULT_TRACK_TIME_POSITION)
         }
     }
 
