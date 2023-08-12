@@ -4,6 +4,8 @@ import android.content.SharedPreferences
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import com.example.playlistmaker.data.search.dto.TrackSearchResponse
 import com.example.playlistmaker.data.search.network.NetworkClient
+import com.example.playlistmaker.data.search.storage.TrackStorage
+import com.example.playlistmaker.data.search.storage.model.TracksList
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.util.Resource
@@ -11,14 +13,11 @@ import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-const val TRACK_KEY = "track_key"
-const val SEARCH_HISTORY = "history_search"
+
 class TracksRepositoryImpl(private val networkClient: NetworkClient,
-                           private val sharedPreferences: SharedPreferences,
-                           private val gson: Gson) :
+                           private val storage: TrackStorage) :
     TracksRepository {
 
-    //private val sharedPreferences = context.getSharedPreferences(SEARCH_HISTORY, Context.MODE_PRIVATE)
 
     override fun searchTracks(expression: String): Resource<List<Track>> {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
@@ -48,18 +47,35 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
 
 
     override fun readStorage(): List<Track> {
-        val json = sharedPreferences.getString(TRACK_KEY, null) ?: return emptyList()
-        return gson.fromJson(json, Array<Track>::class.java).toList()
+        return storage.readStorage().map {
+            Track(
+                it.trackName,
+                it.artistName,
+                it.trackTimeMin,
+                it.artworkUrl100,
+                it.collectionName,
+                it.releaseDate,
+                it.primaryGenreName,
+                it.country,
+                it.previewUrl
+            )             }
     }
 
     override fun writeStorage(track: List<Track>) {
-        val json = Gson().toJson(track)
-        sharedPreferences.edit()
-            .putString(TRACK_KEY, json)
-            .apply()
+        storage.writeStorage(track.map {             TracksList(
+            it.trackName,
+            it.artistName,
+            it.trackTimeMin,
+            it.artworkUrl100,
+            it.collectionName,
+            it.releaseDate,
+            it.primaryGenreName,
+            it.country,
+            it.previewUrl
+        )      })
     }
 
     override fun clear() {
-        sharedPreferences.edit().clear().apply()
+        storage.clear()
     }
 }

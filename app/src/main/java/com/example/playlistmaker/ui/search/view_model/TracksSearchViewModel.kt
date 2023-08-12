@@ -7,12 +7,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.ui.search.TracksState
 
 
-class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
+class TracksSearchViewModel(
+    private val tracksInteractor: TracksInteractor
 ) : ViewModel() {
 
 
@@ -22,16 +23,10 @@ class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
     }
 
 
-
     private val handler = Handler(Looper.getMainLooper())
 
     private val stateLiveData = MutableLiveData<TracksState>()
     fun observeState(): LiveData<TracksState> = stateLiveData
-
-    private var latestSearchText: String? = null
-
-
-
 
     val historyVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -41,11 +36,10 @@ class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
     }
 
     fun searchDebounce(changedText: String?) {
-        if (changedText == null || latestSearchText == changedText) {
+        if (changedText.isNullOrEmpty() || changedText.isBlank()) {
             return
         }
 
-        this.latestSearchText = changedText
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
 
         val searchRunnable = Runnable { searchRequest(changedText) }
@@ -64,9 +58,9 @@ class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
 
             tracksInteractor.searchTracks(newSearchText, object : TracksInteractor.TracksConsumer {
                 override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                    val movies = mutableListOf<Track>()
+                    val tracks = mutableListOf<Track>()
                     if (foundTracks != null) {
-                        movies.addAll(foundTracks)
+                        tracks.addAll(foundTracks)
                     }
 
                     when {
@@ -78,7 +72,7 @@ class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
                             )
                         }
 
-                        movies.isEmpty() -> {
+                        tracks.isEmpty() -> {
                             renderState(
                                 TracksState.Empty(
                                     message = R.string.find_nothing.toString(),
@@ -89,7 +83,7 @@ class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
                         else -> {
                             renderState(
                                 TracksState.Content(
-                                    movies = movies,
+                                    movies = tracks,
                                 )
                             )
                         }
@@ -104,12 +98,12 @@ class TracksSearchViewModel(private val tracksInteractor: TracksInteractor
         stateLiveData.postValue(state)
     }
 
-    fun historyClearClick(){
+    fun historyClearClick() {
         tracksInteractor.clear()
         historyVisibility.postValue(false)
     }
 
-    fun addTrackToHistory(track: Track){
+    fun addTrackToHistory(track: Track) {
         val historyList = ArrayList<Track>()
         historyList.clear()
         historyList.addAll(tracksInteractor.readStorage())

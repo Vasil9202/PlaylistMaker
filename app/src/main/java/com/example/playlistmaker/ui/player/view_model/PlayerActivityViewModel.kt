@@ -20,34 +20,53 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     fun getCurrentTrackTimePosition(): LiveData<String> = currentTrackTimePosition
 
     fun preparePlayer(track: Track) {
-         interact.preparePlayer(track.previewUrl)
-         interact.completePlayer()
-         preparePlayer.postValue(true)
+        interact.preparePlayer(track.previewUrl)
+        preparePlayer.postValue(true)
     }
 
-    fun playbackControl() {
-        interact.playBackControl()
-        if(playerButtonIsPlay.value != null){
-         playerButtonIsPlay.postValue(!playerButtonIsPlay.value!!)}
-    }
-
-    fun setTrackTimeRunnable(){
-        interact.trackTimeRunnable {
-            val seconds = interact.getCurrentPosition() / ONE_SECOND_IN_MILL
-            currentTrackTimePosition.postValue(String.format("%d:%02d", seconds / ONE_MINUTE_IN_SEC, seconds % ONE_MINUTE_IN_SEC))
+    fun completePlayer() {
+        interact.completePlayer {
+            preparePlayer.postValue(true)
+            currentTrackTimePosition.postValue(DEFAULT_TRACK_TIME_POSITION)
         }
     }
 
-    fun pausePlayer(){
+    fun playbackControl() {
+        val playerState = interact.playBackControl()
+
+        if (playerState == STATE_PLAYING) {
+            playerButtonIsPlay.postValue(false)
+        } else if (playerState == STATE_PAUSED) {
+            playerButtonIsPlay.postValue(true)
+        }
+    }
+
+    fun setTrackTimeRunnable() {
+        interact.trackTimeRunnable {
+            val seconds = interact.getCurrentPosition() / ONE_SECOND_IN_MILL
+            currentTrackTimePosition.postValue(
+                String.format(
+                    "%d:%02d",
+                    seconds / ONE_MINUTE_IN_SEC,
+                    seconds % ONE_MINUTE_IN_SEC
+                )
+            )
+        }
+    }
+
+    fun pausePlayer() {
         interact.pausePlayer()
     }
 
-    fun releasePlayer(){
+    fun releasePlayer() {
         interact.release()
     }
+
     companion object {
         private const val ONE_SECOND_IN_MILL = 1000
         private const val ONE_MINUTE_IN_SEC = 60
         private const val DEFAULT_TRACK_TIME_POSITION = "0:00"
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
     }
 }

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.media_lib.activity
+package com.example.playlistmaker.ui.media_lib.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -21,8 +21,10 @@ class FeaturedTracksFragment : Fragment() {
 
     private var binding: FragmentFeaturedTracksBinding? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentFeaturedTracksBinding.inflate(inflater, container, false)
         return binding?.root
     }

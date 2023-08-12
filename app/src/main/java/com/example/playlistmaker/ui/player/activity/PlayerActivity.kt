@@ -2,28 +2,21 @@ package com.example.playlistmaker.ui.player.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
-import com.example.playlistmaker.di.dataModule
-import com.example.playlistmaker.di.interactorModule
-import com.example.playlistmaker.di.repositoryModule
-import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerActivityViewModel
-import com.example.playlistmaker.ui.search.activity.TRACK
-import com.example.playlistmaker.ui.search.view_model.TracksSearchViewModel
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.startKoin
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var track: Track
     private lateinit var binding: ActivityPlayerBinding
     private val viewModel by viewModel<PlayerActivityViewModel>()
+    private val args: PlayerActivityArgs by navArgs()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,31 +26,34 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.getPreparePlayer().observe(this){finish ->
+        track = args.trackArg ?: Track(
+            "", "", "", "",
+            "", "", "", "", ""
+        )
+
+        viewModel.preparePlayer(track)
+        viewModel.completePlayer()
+        viewModel.setTrackTimeRunnable()
+
+        viewModel.getPreparePlayer().observe(this) { finish ->
             binding.playButton.isEnabled = finish
             binding.playButton.setImageResource(R.drawable.play);
         }
-        viewModel.getPlayerButtonIsPlay().observe(this){ isPlay ->
-            if(isPlay) binding.playButton.setImageResource(R.drawable.play)
+        viewModel.getPlayerButtonIsPlay().observe(this) { isPlay ->
+            if (isPlay) binding.playButton.setImageResource(R.drawable.play)
             else binding.playButton.setImageResource(R.drawable.pause)
         }
 
-        viewModel.getCurrentTrackTimePosition().observe(this){ currentTrackTimePosition ->
+        viewModel.getCurrentTrackTimePosition().observe(this) { currentTrackTimePosition ->
             binding.currentTime.text = currentTrackTimePosition
         }
 
-
-        track = intent.getParcelableExtra(TRACK) ?: Track("","","","",
-            "","","","","")
 
         binding.buttonBack.setOnClickListener {
             finish()
         }
 
         downloadData()
-
-        viewModel.preparePlayer(track)
-        viewModel.setTrackTimeRunnable()
 
         binding.playButton.setOnClickListener {
             viewModel.playbackControl()
@@ -67,14 +63,20 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         binding.playButton.setImageResource(R.drawable.play);
-        viewModel.pausePlayer()    }
+        viewModel.pausePlayer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.releasePlayer()
     }
 
-    private fun downloadData(){
+    private fun downloadData() {
         Glide.with(this)
             .load(track.getCoverArtwork())
             .centerCrop()

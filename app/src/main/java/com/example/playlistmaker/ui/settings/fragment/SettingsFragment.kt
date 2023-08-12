@@ -1,29 +1,36 @@
-package com.example.playlistmaker.ui.settings.activity
+package com.example.playlistmaker.ui.settings.fragment
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.ui.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
 
-    private lateinit var binding: ActivitySettingsBinding
+    private lateinit var binding: FragmentSettingsBinding
     private val viewModel by viewModel<SettingsViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        viewModel.isDarkModeEnable().observe(this) { isEnable ->
+        viewModel.isDarkModeEnable().observe(viewLifecycleOwner) { isEnable ->
             binding.themeSwitcher.isChecked = isEnable
         }
 
@@ -32,17 +39,14 @@ class SettingsActivity : AppCompatActivity() {
         }
 
 
-        binding.buttonBack.setOnClickListener {
-            finish()
-        }
-
         binding.shareApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.android_course))
-                intent.putExtra(
-                    Intent.EXTRA_TEXT,getString(R.string.android_dev_page))
-                startActivity(Intent.createChooser(intent, getString(R.string.send_link_via)))
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.android_course))
+            intent.putExtra(
+                Intent.EXTRA_TEXT, getString(R.string.android_dev_page)
+            )
+            startActivity(Intent.createChooser(intent, getString(R.string.send_link_via)))
         }
 
         binding.writeSupport.setOnClickListener {
@@ -60,8 +64,5 @@ class SettingsActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
-
-
-
     }
 }

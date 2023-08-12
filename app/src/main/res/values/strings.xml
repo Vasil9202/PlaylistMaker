@@ -18,7 +18,7 @@
     <string name="send_link_via">Отправить ссылку через</string>
     <string name="offer_page">https://yandex.ru/legal/practicum_offer/</string>
     <string name="find_nothing">Ничего не нашлось</string>
-    <string name="net_error">Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="net_error">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="your_search">Вы искали</string>
     <string name="duration">Длительность</string>
     <string name="album">Альбом</string>
