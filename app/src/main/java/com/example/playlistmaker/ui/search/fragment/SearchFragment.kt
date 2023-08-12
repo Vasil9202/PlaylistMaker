@@ -99,6 +99,7 @@ class SearchFragment : Fragment() {
             if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString()
                     .isBlank()
             ) {
+                errorViewOff()
                 setHistoryRecyclerView()
                 binding.clearSearchImage.visibility = View.GONE
 
@@ -196,7 +197,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun showLoading() {
-        if(binding.searchEditText.text.isBlank()){return}
+        if (binding.searchEditText.text.isBlank()) {
+            return
+        }
         binding.historyClearButton.visibility = View.GONE
         binding.progressBar.visibility = View.VISIBLE
         binding.findNothingImg.visibility = View.GONE
@@ -223,7 +226,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun showContent(contentTracks: List<Track>) {
-        if(binding.searchEditText.text.isBlank()){return}
+        if (binding.searchEditText.text.isBlank()) {
+            return
+        }
         binding.progressBar.visibility = View.GONE
         adapter.tracks.clear()
         adapter.tracks.addAll(contentTracks)
@@ -232,11 +237,20 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupOnLickListeners() {
-        binding.updateBt.setOnClickListener { viewModel.searchDebounce(binding.searchEditText.text.toString()) }
+        binding.updateBt.setOnClickListener {
+            viewModel.searchDebounce(binding.searchEditText.text.toString())
+        }
         binding.historyClearButton.setOnClickListener { viewModel.historyClearClick() }
         binding.clearSearchImage.setOnClickListener {
             binding.searchEditText.setText("")
             setHistoryRecyclerView()
         }
+    }
+
+    private fun errorViewOff() {
+        binding.netErrorImg.visibility = View.GONE
+        binding.netErrorText.visibility = View.GONE
+        binding.findNothingImg.visibility = View.GONE
+        binding.findNothingText.visibility = View.GONE
     }
 }

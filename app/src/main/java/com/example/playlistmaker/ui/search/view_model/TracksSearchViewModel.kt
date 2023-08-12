@@ -58,9 +58,9 @@ class TracksSearchViewModel(
 
             tracksInteractor.searchTracks(newSearchText, object : TracksInteractor.TracksConsumer {
                 override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                    val movies = mutableListOf<Track>()
+                    val tracks = mutableListOf<Track>()
                     if (foundTracks != null) {
-                        movies.addAll(foundTracks)
+                        tracks.addAll(foundTracks)
                     }
 
                     when {
@@ -72,7 +72,7 @@ class TracksSearchViewModel(
                             )
                         }
 
-                        movies.isEmpty() -> {
+                        tracks.isEmpty() -> {
                             renderState(
                                 TracksState.Empty(
                                     message = R.string.find_nothing.toString(),
@@ -83,7 +83,7 @@ class TracksSearchViewModel(
                         else -> {
                             renderState(
                                 TracksState.Content(
-                                    movies = movies,
+                                    movies = tracks,
                                 )
                             )
                         }

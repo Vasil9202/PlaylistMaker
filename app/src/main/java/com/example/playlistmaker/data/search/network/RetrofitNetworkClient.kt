@@ -3,10 +3,13 @@ package com.example.playlistmaker.data.search.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.Log
 import com.example.playlistmaker.data.search.dto.Response
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
+import java.util.concurrent.TimeoutException
 
 class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
@@ -23,14 +26,21 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
         if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
         }
-        if (dto is TrackSearchRequest) {
-            val resp = itunes.search(dto.expression).execute()
-
-            val body = resp.body() ?: Response()
-
-            return body.apply { resultCode = resp.code() }
-        } else {
+        if (dto !is TrackSearchRequest) {
             return Response().apply { resultCode = 400 }
+        }
+
+        try{
+            val response = itunes.search(dto.expression).execute()
+            val body = response.body()
+            return if (body != null) {
+                body.apply { resultCode = response.code() }
+            } else {
+                Response().apply { resultCode = response.code() }
+            }
+        }catch (e : Exception){
+            val body = null
+           return Response().apply { resultCode = -2 }
         }
     }
 
