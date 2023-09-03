@@ -39,7 +39,6 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
                 Response().apply { resultCode = response.code() }
             }
         }catch (e : Exception){
-            val body = null
            return Response().apply { resultCode = -2 }
         }
     }
