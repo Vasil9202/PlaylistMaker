@@ -6,6 +6,8 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import com.example.playlistmaker.data.search.dto.Response
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
@@ -22,7 +24,7 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     private val itunes = retrofit.create(ITunesApiService::class.java)
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
         }
@@ -30,16 +32,13 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
             return Response().apply { resultCode = 400 }
         }
 
-        try{
-            val response = itunes.search(dto.expression).execute()
-            val body = response.body()
-            return if (body != null) {
-                body.apply { resultCode = response.code() }
-            } else {
-                Response().apply { resultCode = response.code() }
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = itunes.search(dto.expression)
+                response.apply { resultCode = 200 }
+            } catch (e: Throwable) {
+                Response().apply { resultCode = 500 }
             }
-        }catch (e : Exception){
-           return Response().apply { resultCode = -2 }
         }
     }
 

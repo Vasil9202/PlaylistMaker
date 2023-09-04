@@ -31,22 +31,7 @@ class PlayerActivity : AppCompatActivity() {
             "", "", "", "", ""
         )
 
-        viewModel.preparePlayer(track)
-        viewModel.completePlayer()
-        viewModel.setTrackTimeRunnable()
-
-        viewModel.getPreparePlayer().observe(this) { finish ->
-            binding.playButton.isEnabled = finish
-            binding.playButton.setImageResource(R.drawable.play);
-        }
-        viewModel.getPlayerButtonIsPlay().observe(this) { isPlay ->
-            if (isPlay) binding.playButton.setImageResource(R.drawable.play)
-            else binding.playButton.setImageResource(R.drawable.pause)
-        }
-
-        viewModel.getCurrentTrackTimePosition().observe(this) { currentTrackTimePosition ->
-            binding.currentTime.text = currentTrackTimePosition
-        }
+        viewModel.initMediaPlayer(track)
 
 
         binding.buttonBack.setOnClickListener {
@@ -55,8 +40,18 @@ class PlayerActivity : AppCompatActivity() {
 
         downloadData()
 
+
         binding.playButton.setOnClickListener {
-            viewModel.playbackControl()
+            viewModel.onPlayButtonClicked()
+        }
+
+        viewModel.observePlayerState().observe(this) {
+            binding.playButton.isEnabled = it.isPlayButtonEnabled
+            if(it.buttonText == "PLAY")
+                binding.playButton.setImageResource(R.drawable.play);
+            else if(it.buttonText == "PAUSE")
+                binding.playButton.setImageResource(R.drawable.pause)
+            binding.currentTime.text = it.progress
         }
     }
 

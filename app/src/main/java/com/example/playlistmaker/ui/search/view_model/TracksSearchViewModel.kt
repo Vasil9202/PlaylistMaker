@@ -48,43 +48,34 @@ class TracksSearchViewModel(
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
+
             renderState(TracksState.Loading)
 
-            tracksInteractor.searchTracks(newSearchText, object : TracksInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                    val tracks = mutableListOf<Track>()
-                    if (foundTracks != null) {
-                        tracks.addAll(foundTracks)
+            viewModelScope.launch {
+                tracksInteractor
+                    .searchTracks(newSearchText)
+                    .collect { pair ->
+                        processResult(pair.first, pair.second)
                     }
+            }
+        }
+    }
 
-                    when {
-                        errorMessage != null -> {
-                            renderState(
-                                TracksState.Error(
-                                    errorMessage = R.string.net_error.toString()
-                                )
-                            )
-                        }
-
-                        tracks.isEmpty() -> {
-                            renderState(
-                                TracksState.Empty(
-                                    message = R.string.find_nothing.toString(),
-                                )
-                            )
-                        }
-
-                        else -> {
-                            renderState(
-                                TracksState.Content(
-                                    movies = tracks,
-                                )
-                            )
-                        }
-                    }
-
-                }
-            })
+    private fun processResult(foundTracks: List<Track>?, errorMessage: String?) {
+        val tracks = mutableListOf<Track>()
+        if (foundTracks != null) {
+            tracks.addAll(foundTracks)
+        }
+        when {
+            errorMessage != null -> {
+                renderState(TracksState.Error(errorMessage = R.string.net_error.toString()))
+            }
+            tracks.isEmpty() -> {
+                renderState(TracksState.Empty(message = R.string.find_nothing.toString()))
+            }
+            else -> {
+                renderState(TracksState.Content(movies = tracks))
+            }
         }
     }
 

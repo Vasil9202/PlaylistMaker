@@ -10,6 +10,8 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.util.Resource
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -19,31 +21,39 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
     TracksRepository {
 
 
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
             -1 -> {
-                Resource.Error("Проверьте подключение к интернету")
+                emit(Resource.Error("Проверьте подключение к интернету"))
             }
+
             200 -> {
-                Resource.Success((response as TrackSearchResponse).results.map {
-                    Track(
-                        it.trackName,
-                        it.artistName,
-                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(it.trackTimeMillis.toLong()),
-                        it.artworkUrl100,
-                        it.collectionName,
-                        it.releaseDate,
-                        it.primaryGenreName,
-                        it.country,
-                        it.previewUrl
-                    )            })
+                with(response as TrackSearchResponse) {
+                    val data = results.map {
+                        Track(
+                            it.trackName,
+                            it.artistName,
+                            SimpleDateFormat(
+                                "mm:ss",
+                                Locale.getDefault()
+                            ).format(it.trackTimeMillis.toLong()),
+                            it.artworkUrl100,
+                            it.collectionName,
+                            it.releaseDate,
+                            it.primaryGenreName,
+                            it.country,
+                            it.previewUrl
+                        )
+                    }
+                    emit(Resource.Success(data))
+                }
             }
-            else -> {
-                Resource.Error("Ошибка сервера")
+                else -> {
+                    emit(Resource.Error("Ошибка сервера"))
+                }
             }
         }
-    }
 
 
     override fun readStorage(): List<Track> {
