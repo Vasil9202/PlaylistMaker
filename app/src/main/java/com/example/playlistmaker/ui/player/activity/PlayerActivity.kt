@@ -11,6 +11,8 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerActivityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+const val PLAY = "PLAY"
+const val PAUSE = "PAUSE"
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var track: Track
@@ -40,16 +42,15 @@ class PlayerActivity : AppCompatActivity() {
 
         downloadData()
 
-
         binding.playButton.setOnClickListener {
             viewModel.onPlayButtonClicked()
         }
 
         viewModel.observePlayerState().observe(this) {
             binding.playButton.isEnabled = it.isPlayButtonEnabled
-            if(it.buttonText == "PLAY")
+            if(it.buttonText == PLAY)
                 binding.playButton.setImageResource(R.drawable.play);
-            else if(it.buttonText == "PAUSE")
+            else if(it.buttonText == PAUSE)
                 binding.playButton.setImageResource(R.drawable.pause)
             binding.currentTime.text = it.progress
         }

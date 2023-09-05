@@ -110,7 +110,7 @@ class SearchFragment : Fragment() {
             } else if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString()
                     .isNotEmpty()
             ) {
-                viewModel.searchDebounce(binding.searchEditText.text.toString())
+                viewModel.searchDebounce(binding.searchEditText.text.toString(),false)
                 binding.clearSearchImage.visibility = View.VISIBLE
             }
         }
@@ -122,7 +122,7 @@ class SearchFragment : Fragment() {
 
         binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.searchDebounce(binding.searchEditText.text.toString())
+                viewModel.searchDebounce(binding.searchEditText.text.toString(),false)
             }
             false
         }
@@ -224,6 +224,10 @@ class SearchFragment : Fragment() {
         binding.netErrorImg.visibility = View.VISIBLE
         binding.netErrorText.visibility = View.VISIBLE
         binding.updateBt.visibility = View.VISIBLE
+        binding.trackRecyclerView.visibility = View.GONE
+        binding.trackHistoryRecyclerView.visibility = View.GONE
+        binding.historyClearButton.visibility = View.GONE
+        binding.historyText.visibility = View.GONE
     }
 
     private fun showEmpty(emptyMessage: String) {
@@ -245,7 +249,7 @@ class SearchFragment : Fragment() {
 
     private fun setupOnLickListeners() {
         binding.updateBt.setOnClickListener {
-            viewModel.searchDebounce(binding.searchEditText.text.toString())
+            viewModel.searchDebounce(binding.searchEditText.text.toString(),true)
         }
         binding.historyClearButton.setOnClickListener { viewModel.historyClearClick() }
         binding.clearSearchImage.setOnClickListener {

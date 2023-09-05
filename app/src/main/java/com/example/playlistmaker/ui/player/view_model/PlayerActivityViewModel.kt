@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.player.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +13,10 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+const val DELAY_300MS = 300L
+const val TIME_FORMAT = "mm:ss"
+const val DEFAULT_TIME = "00:00"
+
 class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewModel() {
 
 
@@ -25,7 +28,7 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     private fun startTimer() {
         timerJob = viewModelScope.launch {
             while (interact.isPlaying()) {
-                delay(300L)
+                delay(DELAY_300MS)
                 if(interact.isPlaying()){
                 playerState.postValue(PlayerState.Playing(getCurrentPlayerPosition()))
             }}
@@ -33,7 +36,7 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     }
 
     private fun getCurrentPlayerPosition(): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(interact.getCurrentPosition()) ?: "00:00"
+        return SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(interact.getCurrentPosition()) ?: DEFAULT_TIME
     }
 
     fun initMediaPlayer(track: Track) {

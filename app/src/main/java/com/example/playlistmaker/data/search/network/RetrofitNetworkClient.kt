@@ -6,7 +6,12 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import com.example.playlistmaker.data.search.dto.Response
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,14 +37,20 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
             return Response().apply { resultCode = 400 }
         }
 
-        return withContext(Dispatchers.IO) {
+        return flow {
             try {
-                val response = itunes.search(dto.expression)
-                response.apply { resultCode = 200 }
-            } catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
+                emit(if (itunes.search(dto.expression).results.isEmpty())
+                    Response().apply { resultCode = -2 }
+                else itunes.search(dto.expression).apply { resultCode = 200 })
+            }
+            catch (_: CancellationException){
+            }
+            catch (e: Throwable) {
+                emit(Response().apply { resultCode = 500 })
             }
         }
+            .flowOn(Dispatchers.IO)
+            .first()
     }
 
     private fun isConnected(): Boolean {

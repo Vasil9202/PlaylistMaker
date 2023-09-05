@@ -33,8 +33,8 @@ class TracksSearchViewModel(
 
     val historyVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    fun searchDebounce(changedText: String) {
-        if (latestSearchText == changedText) {
+    fun searchDebounce(changedText: String, updateBt: Boolean) {
+        if (latestSearchText == changedText && !updateBt) {
             return
         }
         latestSearchText = changedText
@@ -67,10 +67,10 @@ class TracksSearchViewModel(
             tracks.addAll(foundTracks)
         }
         when {
-            errorMessage != null -> {
+            errorMessage == R.string.net_error.toString() -> {
                 renderState(TracksState.Error(errorMessage = R.string.net_error.toString()))
             }
-            tracks.isEmpty() -> {
+            errorMessage == R.string.find_nothing.toString() -> {
                 renderState(TracksState.Empty(message = R.string.find_nothing.toString()))
             }
             else -> {

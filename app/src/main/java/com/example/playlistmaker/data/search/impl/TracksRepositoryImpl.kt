@@ -1,6 +1,7 @@
 package com.example.playlistmaker.data.search.impl
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.R
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import com.example.playlistmaker.data.search.dto.TrackSearchResponse
 import com.example.playlistmaker.data.search.network.NetworkClient
@@ -25,7 +26,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
         val response = networkClient.doRequest(TrackSearchRequest(expression))
         when (response.resultCode) {
             -1 -> {
-                emit(Resource.Error("Проверьте подключение к интернету"))
+                emit(Resource.Error(R.string.net_error.toString()))
             }
 
             200 -> {
@@ -40,7 +41,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                             ).format(it.trackTimeMillis.toLong()),
                             it.artworkUrl100,
                             it.collectionName,
-                            it.releaseDate,
+                            it.releaseDate?: "",
                             it.primaryGenreName,
                             it.country,
                             it.previewUrl
@@ -49,8 +50,11 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                     emit(Resource.Success(data))
                 }
             }
+            -2 -> {
+                emit(Resource.Error(R.string.find_nothing.toString()))
+            }
                 else -> {
-                    emit(Resource.Error("Ошибка сервера"))
+                    emit(Resource.Error(R.string.net_error.toString()))
                 }
             }
         }
