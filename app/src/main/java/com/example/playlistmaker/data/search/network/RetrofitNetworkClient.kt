@@ -36,21 +36,18 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
         if (dto !is TrackSearchRequest) {
             return Response().apply { resultCode = 400 }
         }
-
-        return flow {
-            try {
-                emit(if (itunes.search(dto.expression).results.isEmpty())
-                    Response().apply { resultCode = -2 }
-                else itunes.search(dto.expression).apply { resultCode = 200 })
+        try {
+            val searchResult = itunes.search(dto.expression)
+            return if (searchResult.results.isEmpty()) {
+                Response().apply { resultCode = -2 }
+            } else {
+                searchResult.apply { resultCode = 200 }
             }
-            catch (_: CancellationException){
-            }
-            catch (e: Throwable) {
-                emit(Response().apply { resultCode = 500 })
-            }
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Throwable) {
+            return Response().apply { resultCode = 500 }
         }
-            .flowOn(Dispatchers.IO)
-            .first()
     }
 
     private fun isConnected(): Boolean {

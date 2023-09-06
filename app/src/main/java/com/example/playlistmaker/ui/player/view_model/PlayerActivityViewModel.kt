@@ -13,9 +13,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-const val DELAY_300MS = 300L
-const val TIME_FORMAT = "mm:ss"
-const val DEFAULT_TIME = "00:00"
+
 
 class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewModel() {
 
@@ -72,5 +70,10 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     fun releasePlayer() {
         interact.release()
         playerState.value = PlayerState.Default()
+    }
+    companion object{
+        private const val DELAY_300MS = 300L
+        private const val TIME_FORMAT = "mm:ss"
+        private const val DEFAULT_TIME = "00:00"
     }
 }

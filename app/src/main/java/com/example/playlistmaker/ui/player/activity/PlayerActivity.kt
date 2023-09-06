@@ -11,8 +11,7 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.ui.player.view_model.PlayerActivityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val PLAY = "PLAY"
-const val PAUSE = "PAUSE"
+
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var track: Track
@@ -89,5 +88,8 @@ class PlayerActivity : AppCompatActivity() {
         binding.trackCountry.text = track.country
     }
 
-
+companion object{
+    private  const val PLAY = "PLAY"
+    private const val PAUSE = "PAUSE"
+}
 }

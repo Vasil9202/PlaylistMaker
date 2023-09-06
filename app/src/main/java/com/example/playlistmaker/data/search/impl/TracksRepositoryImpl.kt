@@ -11,8 +11,10 @@ import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.util.Resource
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -41,7 +43,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                             ).format(it.trackTimeMillis.toLong()),
                             it.artworkUrl100,
                             it.collectionName,
-                            it.releaseDate?: "",
+                            it.releaseDate.orEmpty(),
                             it.primaryGenreName,
                             it.country,
                             it.previewUrl
@@ -57,7 +59,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                     emit(Resource.Error(R.string.net_error.toString()))
                 }
             }
-        }
+        }.flowOn(Dispatchers.IO)
 
 
     override fun readStorage(): List<Track> {
