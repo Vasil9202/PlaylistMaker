@@ -1,8 +1,5 @@
 package com.example.playlistmaker.ui.search.view_model
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -74,7 +71,7 @@ class TracksSearchViewModel(
                 renderState(TracksState.Empty(message = R.string.find_nothing.toString()))
             }
             else -> {
-                renderState(TracksState.Content(movies = tracks))
+                renderState(TracksState.Content(tracks = tracks))
             }
         }
     }
@@ -90,9 +87,8 @@ class TracksSearchViewModel(
 
     fun addTrackToHistory(track: Track) {
         val historyList = ArrayList<Track>()
-        historyList.clear()
         historyList.addAll(tracksInteractor.readStorage())
-        historyList.remove(track)
+        historyList.removeIf{it.trackId == track.trackId}
         historyList.add(0, track)
         if (historyList.size > 10) {
             historyList.removeAt(10)
@@ -101,6 +97,14 @@ class TracksSearchViewModel(
     }
 
     fun getSearchHistoryStorageList(): List<Track> {
+        val list = tracksInteractor.readStorage()
+        isTracksFavourite(list)
         return tracksInteractor.readStorage()
+    }
+
+    fun isTracksFavourite(tracks: List<Track>){
+        viewModelScope.launch {
+            tracksInteractor.isTracksFavourite(tracks)
+        }
     }
 }

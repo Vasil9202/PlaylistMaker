@@ -12,4 +12,9 @@ interface TracksRepository {
     fun readStorage(): List<Track>
 
     fun clear()
-}
+
+    suspend fun isTracksFavourite(list: List<Track>)
+
+    suspend fun getFavouriteTracks(): List<Track>
+
+    }

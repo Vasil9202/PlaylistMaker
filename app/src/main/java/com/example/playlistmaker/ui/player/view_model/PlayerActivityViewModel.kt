@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player.view_model
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,7 +20,10 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
 
 
     private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
+
+    private val isFavorite  = MutableLiveData<Boolean>(false)
     fun observePlayerState(): LiveData<PlayerState> = playerState
+    fun onFavoriteState(): LiveData<Boolean> = isFavorite
 
     private var timerJob: Job? = null
 
@@ -38,6 +42,7 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     }
 
     fun initMediaPlayer(track: Track) {
+        isFavorite.postValue(track.isFavorite)
         interact.initMediaPlayer(track.previewUrl){
             playerState.postValue(PlayerState.Prepared())
         }
@@ -70,6 +75,23 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     fun releasePlayer() {
         interact.release()
         playerState.value = PlayerState.Default()
+    }
+
+    fun onFavoriteClicked(track: Track){
+        viewModelScope.launch {
+        if(track.isFavorite){
+            track.isFavorite = false
+            interact.deleteTrackFromFavourite(track)
+            isFavorite.postValue(false)
+            Log.i("facClick","172")
+
+        }
+        else{
+            track.isFavorite = true
+            interact.addTrackToFavourite(track)
+            isFavorite.postValue(true)
+            Log.i("facClick","112")
+        }}
     }
     companion object{
         private const val DELAY_300MS = 300L

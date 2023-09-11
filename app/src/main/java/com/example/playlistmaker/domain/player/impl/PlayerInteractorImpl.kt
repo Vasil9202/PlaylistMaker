@@ -1,7 +1,10 @@
 package com.example.playlistmaker.domain.player.impl
 
+import com.example.playlistmaker.data.search.dto.TrackDto
+import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.domain.player.PlayerRepository
+import kotlinx.coroutines.flow.Flow
 
 class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerInteractor {
 
@@ -30,5 +33,14 @@ class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerIn
     override fun isPlaying(): Boolean {
         return repository.isPlaying()
     }
+
+    override suspend fun addTrackToFavourite(track: Track) {
+        repository.addTrackToFavourite(track)
+    }
+
+    override suspend fun deleteTrackFromFavourite(track: Track) {
+        repository.deleteTrackFromFavourite(track)
+    }
+
 
 }

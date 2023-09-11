@@ -1,8 +1,6 @@
 package com.example.playlistmaker.ui.search.fragment
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +37,6 @@ class SearchFragment : Fragment() {
     private var isBindingInitialized = false
     private val viewModel by viewModel<TracksSearchViewModel>()
     private lateinit var binding: FragmentSearchBinding
-    private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
     private val adapter = TrackAdapter(object : ItemClickListener {
         override fun onTrackClick(track: Track) {
@@ -110,7 +107,7 @@ class SearchFragment : Fragment() {
             } else if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString()
                     .isNotEmpty()
             ) {
-                viewModel.searchDebounce(binding.searchEditText.text.toString(),false)
+                viewModel.searchDebounce(binding.searchEditText.text.toString(), false)
                 binding.clearSearchImage.visibility = View.VISIBLE
             }
         }
@@ -122,7 +119,7 @@ class SearchFragment : Fragment() {
 
         binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.searchDebounce(binding.searchEditText.text.toString(),false)
+                viewModel.searchDebounce(binding.searchEditText.text.toString(), false)
             }
             false
         }
@@ -138,6 +135,12 @@ class SearchFragment : Fragment() {
             SEARCH_TEXT,
             binding.searchEditText.text.toString()
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.isTracksFavourite(adapter.tracks)
+        viewModel.isTracksFavourite(historyAdapter.tracks)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -196,7 +199,7 @@ class SearchFragment : Fragment() {
 
     private fun render(state: TracksState) {
         when (state) {
-            is TracksState.Content -> showContent(state.movies)
+            is TracksState.Content -> showContent(state.tracks)
             is TracksState.Empty -> showEmpty(state.message)
             is TracksState.Error -> showError(state.errorMessage)
             is TracksState.Loading -> showLoading()
@@ -249,7 +252,7 @@ class SearchFragment : Fragment() {
 
     private fun setupOnLickListeners() {
         binding.updateBt.setOnClickListener {
-            viewModel.searchDebounce(binding.searchEditText.text.toString(),true)
+            viewModel.searchDebounce(binding.searchEditText.text.toString(), true)
         }
         binding.historyClearButton.setOnClickListener { viewModel.historyClearClick() }
         binding.clearSearchImage.setOnClickListener {

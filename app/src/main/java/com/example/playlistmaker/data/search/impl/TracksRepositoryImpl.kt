@@ -1,7 +1,9 @@
 package com.example.playlistmaker.data.search.impl
 
-import android.content.SharedPreferences
+import android.util.Log
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.converters.TrackDbConvertor
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import com.example.playlistmaker.data.search.dto.TrackSearchResponse
 import com.example.playlistmaker.data.search.network.NetworkClient
@@ -10,17 +12,17 @@ import com.example.playlistmaker.data.search.storage.model.TracksList
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.TracksRepository
 import com.example.playlistmaker.util.Resource
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient,
-                           private val storage: TrackStorage) :
+                           private val storage: TrackStorage,
+                           private val appDatabase: AppDatabase,
+                           private val trackDbConvertor: TrackDbConvertor
+) :
     TracksRepository {
 
 
@@ -33,14 +35,13 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
 
             200 -> {
                 with(response as TrackSearchResponse) {
+                    Log.i("Up123",results.toString())
                     val data = results.map {
                         Track(
+                            it.trackId,
                             it.trackName,
                             it.artistName,
-                            SimpleDateFormat(
-                                "mm:ss",
-                                Locale.getDefault()
-                            ).format(it.trackTimeMillis.toLong()),
+                            it.trackTimeMin(),
                             it.artworkUrl100,
                             it.collectionName,
                             it.releaseDate.orEmpty(),
@@ -49,6 +50,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                             it.previewUrl
                         )
                     }
+                    isTracksFavourite(data)
                     emit(Resource.Success(data))
                 }
             }
@@ -65,6 +67,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
     override fun readStorage(): List<Track> {
         return storage.readStorage().map {
             Track(
+                it.trackId,
                 it.trackName,
                 it.artistName,
                 it.trackTimeMin,
@@ -79,6 +82,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
 
     override fun writeStorage(track: List<Track>) {
         storage.writeStorage(track.map {             TracksList(
+            it.trackId,
             it.trackName,
             it.artistName,
             it.trackTimeMin,
@@ -93,5 +97,15 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
 
     override fun clear() {
         storage.clear()
+    }
+
+     override suspend fun isTracksFavourite(list: List<Track>){
+            list.map { obj ->
+                obj.isFavorite = appDatabase.trackDao().getTracksId().contains(obj.trackId)
+            }
+    }
+
+    override suspend fun getFavouriteTracks(): List<Track>{
+        return appDatabase.trackDao().getTracks().map { trackDbConvertor.map(it) }
     }
 }

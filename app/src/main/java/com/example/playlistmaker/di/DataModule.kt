@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
-import android.content.Context
+import androidx.room.Room
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.search.network.ITunesApiService
 import com.example.playlistmaker.data.search.network.NetworkClient
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
@@ -9,7 +10,6 @@ import com.example.playlistmaker.data.search.storage.sharedprefs.TrackStorageImp
 import com.example.playlistmaker.data.settings.storage.CurrentThemeMode
 import com.example.playlistmaker.data.settings.storage.sharedprefs.CurrentThemeModeImpl
 import com.google.gson.Gson
-import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -35,6 +35,11 @@ val dataModule = module {
 
     single<CurrentThemeMode> {
         CurrentThemeModeImpl(androidContext())
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
     }
 
 }

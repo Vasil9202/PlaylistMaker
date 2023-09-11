@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.playlistmaker.ui.media_lib.fragment.FeaturedTracksFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/track_recyclerView"
@@ -22,7 +24,7 @@
             android:layout_marginEnd="120dp"
             android:layout_gravity="center_horizontal"
             android:theme="@style/errorImage"
-            android:visibility="visible"
+            android:visibility="gone"
             />
 
         <TextView
@@ -37,6 +39,6 @@
             android:layout_marginStart="@dimen/DP24"
             android:layout_marginEnd="@dimen/DP24"
             android:layout_gravity="center_horizontal|top"
-            android:visibility="visible"
+            android:visibility="gone"
             />
     </FrameLayout>
