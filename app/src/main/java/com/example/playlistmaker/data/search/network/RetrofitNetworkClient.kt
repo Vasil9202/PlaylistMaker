@@ -6,6 +6,13 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import com.example.playlistmaker.data.search.dto.Response
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
@@ -22,25 +29,24 @@ class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     private val itunes = retrofit.create(ITunesApiService::class.java)
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
         }
         if (dto !is TrackSearchRequest) {
             return Response().apply { resultCode = 400 }
         }
-
-        try{
-            val response = itunes.search(dto.expression).execute()
-            val body = response.body()
-            return if (body != null) {
-                body.apply { resultCode = response.code() }
+        try {
+            val searchResult = itunes.search(dto.expression)
+            return if (searchResult.results.isEmpty()) {
+                Response().apply { resultCode = -2 }
             } else {
-                Response().apply { resultCode = response.code() }
+                searchResult.apply { resultCode = 200 }
             }
-        }catch (e : Exception){
-            val body = null
-           return Response().apply { resultCode = -2 }
+        } catch (ce: CancellationException) {
+            throw ce
+        } catch (e: Throwable) {
+            return Response().apply { resultCode = 500 }
         }
     }
 

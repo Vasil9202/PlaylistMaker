@@ -8,60 +8,31 @@ import com.example.playlistmaker.domain.player.PlayerRepository
 
 class PlayerRepositoryImpl : PlayerRepository {
 
-    private var playerState = STATE_DEFAULT
     private var mediaPlayer = MediaPlayer()
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
-    private lateinit var runnable: Runnable
 
-    override fun preparePlayer(expression: String) {
+
+    override fun initMediaPlayer(expression: String, playerState: () -> Unit) {
         mediaPlayer = MediaPlayer()
         mediaPlayer.setDataSource(expression)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
+            playerState()
         }
-    }
-
-    override fun completePlayer(changeViewButton: () -> Unit) {
         mediaPlayer.setOnCompletionListener {
-            changeViewButton()
-            playerState = STATE_PREPARED
-            mainThreadHandler.removeCallbacks(runnable)
+            playerState()
         }
     }
 
     override fun startPlayer() {
         mediaPlayer.start()
-        playerState = STATE_PLAYING
-        mainThreadHandler.post(runnable)
-
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
-        playerState = STATE_PAUSED
     }
 
-    override fun playBackControl(): Int {
-        when (playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
-        return playerState
-    }
-
-    override fun trackTimeRunnable(setTimeView: () -> Unit) {
-        runnable = Runnable {
-            if (playerState == STATE_PLAYING) {
-                mainThreadHandler.postDelayed(runnable, DELAY)
-                setTimeView()
-            }
-        }
+    override fun isPlaying(): Boolean {
+        return mediaPlayer.isPlaying
     }
 
     override fun getCurrentPosition(): Int {
@@ -69,15 +40,8 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     override fun release() {
+        mediaPlayer.stop()
         mediaPlayer.release()
-    }
-
-    companion object {
-        const val STATE_DEFAULT = 0
-        const val STATE_PREPARED = 1
-        const val STATE_PLAYING = 2
-        const val STATE_PAUSED = 3
-        const val DELAY = 300L
     }
 
 

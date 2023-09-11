@@ -13,6 +13,7 @@ import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
@@ -23,6 +24,8 @@ import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.ui.search.TrackHistoryAdapter
 import com.example.playlistmaker.ui.search.TracksState
 import com.example.playlistmaker.ui.search.view_model.TracksSearchViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -47,6 +50,7 @@ class SearchFragment : Fragment() {
             }
         }
     })
+
 
     private val historyAdapter = TrackHistoryAdapter(object : ItemClickListener {
         override fun onTrackClick(track: Track) {
@@ -106,7 +110,7 @@ class SearchFragment : Fragment() {
             } else if (binding.searchEditText.hasFocus() && binding.searchEditText.text.toString()
                     .isNotEmpty()
             ) {
-                viewModel.searchDebounce(binding.searchEditText.text.toString())
+                viewModel.searchDebounce(binding.searchEditText.text.toString(),false)
                 binding.clearSearchImage.visibility = View.VISIBLE
             }
         }
@@ -118,7 +122,7 @@ class SearchFragment : Fragment() {
 
         binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.searchDebounce(binding.searchEditText.text.toString())
+                viewModel.searchDebounce(binding.searchEditText.text.toString(),false)
             }
             false
         }
@@ -182,7 +186,10 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
@@ -217,6 +224,10 @@ class SearchFragment : Fragment() {
         binding.netErrorImg.visibility = View.VISIBLE
         binding.netErrorText.visibility = View.VISIBLE
         binding.updateBt.visibility = View.VISIBLE
+        binding.trackRecyclerView.visibility = View.GONE
+        binding.trackHistoryRecyclerView.visibility = View.GONE
+        binding.historyClearButton.visibility = View.GONE
+        binding.historyText.visibility = View.GONE
     }
 
     private fun showEmpty(emptyMessage: String) {
@@ -238,7 +249,7 @@ class SearchFragment : Fragment() {
 
     private fun setupOnLickListeners() {
         binding.updateBt.setOnClickListener {
-            viewModel.searchDebounce(binding.searchEditText.text.toString())
+            viewModel.searchDebounce(binding.searchEditText.text.toString(),true)
         }
         binding.historyClearButton.setOnClickListener { viewModel.historyClearClick() }
         binding.clearSearchImage.setOnClickListener {

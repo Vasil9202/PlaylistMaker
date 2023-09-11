@@ -6,10 +6,14 @@ import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.ui.search.TracksState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class TracksSearchViewModel(
@@ -19,78 +23,59 @@ class TracksSearchViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private val SEARCH_REQUEST_TOKEN = Any()
     }
+    private var latestSearchText: String? = null
 
-
-    private val handler = Handler(Looper.getMainLooper())
+    private var searchJob: Job? = null
 
     private val stateLiveData = MutableLiveData<TracksState>()
     fun observeState(): LiveData<TracksState> = stateLiveData
 
     val historyVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
 
-
-    override fun onCleared() {
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
-
-    fun searchDebounce(changedText: String?) {
-        if (changedText.isNullOrEmpty() || changedText.isBlank()) {
+    fun searchDebounce(changedText: String, updateBt: Boolean) {
+        if (latestSearchText == changedText && !updateBt) {
             return
         }
+        latestSearchText = changedText
 
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-
-        val searchRunnable = Runnable { searchRequest(changedText) }
-
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime,
-        )
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchRequest(changedText)
+        }
     }
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
+
             renderState(TracksState.Loading)
 
-            tracksInteractor.searchTracks(newSearchText, object : TracksInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                    val tracks = mutableListOf<Track>()
-                    if (foundTracks != null) {
-                        tracks.addAll(foundTracks)
+            viewModelScope.launch {
+                tracksInteractor
+                    .searchTracks(newSearchText)
+                    .collect { pair ->
+                        processResult(pair.first, pair.second)
                     }
+            }
+        }
+    }
 
-                    when {
-                        errorMessage != null -> {
-                            renderState(
-                                TracksState.Error(
-                                    errorMessage = R.string.net_error.toString()
-                                )
-                            )
-                        }
-
-                        tracks.isEmpty() -> {
-                            renderState(
-                                TracksState.Empty(
-                                    message = R.string.find_nothing.toString(),
-                                )
-                            )
-                        }
-
-                        else -> {
-                            renderState(
-                                TracksState.Content(
-                                    movies = tracks,
-                                )
-                            )
-                        }
-                    }
-
-                }
-            })
+    private fun processResult(foundTracks: List<Track>?, errorMessage: String?) {
+        val tracks = mutableListOf<Track>()
+        if (foundTracks != null) {
+            tracks.addAll(foundTracks)
+        }
+        when {
+            errorMessage == R.string.net_error.toString() -> {
+                renderState(TracksState.Error(errorMessage = R.string.net_error.toString()))
+            }
+            errorMessage == R.string.find_nothing.toString() -> {
+                renderState(TracksState.Empty(message = R.string.find_nothing.toString()))
+            }
+            else -> {
+                renderState(TracksState.Content(movies = tracks))
+            }
         }
     }
 

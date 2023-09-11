@@ -5,12 +5,8 @@ import com.example.playlistmaker.domain.player.PlayerRepository
 
 class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerInteractor {
 
-    override fun preparePlayer(trackURL: String){
-        repository.preparePlayer(trackURL)
-    }
-
-    override fun completePlayer(changeViewButton: () -> Unit)  {
-        repository.completePlayer(changeViewButton)
+    override fun initMediaPlayer(trackURL: String, playerState: () -> Unit){
+        repository.initMediaPlayer(trackURL,playerState)
     }
 
     override fun startPlayer() {
@@ -31,12 +27,8 @@ class PlayerInteractorImpl (private val repository: PlayerRepository) : PlayerIn
         repository.release()
     }
 
-    override fun playBackControl()  : Int{
-        return repository.playBackControl()
-    }
-
-    override fun trackTimeRunnable(setTimeView: () -> Unit) {
-        repository.trackTimeRunnable(setTimeView)
+    override fun isPlaying(): Boolean {
+        return repository.isPlaying()
     }
 
 }

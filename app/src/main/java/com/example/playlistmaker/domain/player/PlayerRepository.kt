@@ -2,11 +2,11 @@ package com.example.playlistmaker.domain.player
 
 interface PlayerRepository {
 
-    fun preparePlayer(expression: String)
-
-    fun completePlayer(changeViewButton: () -> Unit)
+    fun initMediaPlayer(expression: String, playerState: () -> Unit)
 
     fun getCurrentPosition() : Int
+
+    fun isPlaying() : Boolean
 
     fun release()
 
@@ -14,7 +14,5 @@ interface PlayerRepository {
 
     fun pausePlayer()
 
-    fun playBackControl() : Int
-    fun trackTimeRunnable(setTimeView: () -> Unit)
 
 }
