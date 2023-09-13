@@ -1,8 +1,7 @@
 package com.example.playlistmaker.data.search.impl
 
-import android.util.Log
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.converters.TrackDbConvertor
+import com.example.playlistmaker.data.converters.TrackDbMapper
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import com.example.playlistmaker.data.search.dto.TrackSearchResponse
@@ -16,12 +15,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient,
-                           private val storage: TrackStorage,
-                           private val appDatabase: AppDatabase,
-                           private val trackDbConvertor: TrackDbConvertor
+class TracksRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val storage: TrackStorage,
+    private val appDatabase: AppDatabase,
+    private val trackDbMapper: TrackDbMapper
 ) :
     TracksRepository {
 
@@ -35,7 +36,6 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
 
             200 -> {
                 with(response as TrackSearchResponse) {
-                    Log.i("Up123",results.toString())
                     val data = results.map {
                         Track(
                             it.trackId,
@@ -54,14 +54,16 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                     emit(Resource.Success(data))
                 }
             }
+
             -2 -> {
                 emit(Resource.Error(R.string.find_nothing.toString()))
             }
-                else -> {
-                    emit(Resource.Error(R.string.net_error.toString()))
-                }
+
+            else -> {
+                emit(Resource.Error(R.string.net_error.toString()))
             }
-        }.flowOn(Dispatchers.IO)
+        }
+    }.flowOn(Dispatchers.IO)
 
 
     override fun readStorage(): List<Track> {
@@ -77,35 +79,38 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                 it.primaryGenreName,
                 it.country,
                 it.previewUrl
-            )             }
+            )
+        }
     }
 
     override fun writeStorage(track: List<Track>) {
-        storage.writeStorage(track.map {             TracksList(
-            it.trackId,
-            it.trackName,
-            it.artistName,
-            it.trackTimeMin,
-            it.artworkUrl100,
-            it.collectionName,
-            it.releaseDate,
-            it.primaryGenreName,
-            it.country,
-            it.previewUrl
-        )      })
+        storage.writeStorage(track.map {
+            TracksList(
+                it.trackId,
+                it.trackName,
+                it.artistName,
+                it.trackTimeMin,
+                it.artworkUrl100,
+                it.collectionName,
+                it.releaseDate,
+                it.primaryGenreName,
+                it.country,
+                it.previewUrl
+            )
+        })
     }
 
     override fun clear() {
         storage.clear()
     }
 
-     override suspend fun isTracksFavourite(list: List<Track>){
-            list.map { obj ->
-                obj.isFavorite = appDatabase.trackDao().getTracksId().contains(obj.trackId)
-            }
+    override suspend fun isTracksFavourite(list: List<Track>) {
+        withContext(Dispatchers.IO){ list.map { obj ->
+            obj.isFavorite = appDatabase.trackDao().getTracksId().contains(obj.trackId)}
+        }
     }
 
-    override suspend fun getFavouriteTracks(): List<Track>{
-        return appDatabase.trackDao().getTracks().map { trackDbConvertor.map(it) }
+    override suspend fun getFavouriteTracks(): List<Track> {
+        return withContext(Dispatchers.IO){ appDatabase.trackDao().getTracks().map { trackDbMapper.map(it) }}
     }
 }

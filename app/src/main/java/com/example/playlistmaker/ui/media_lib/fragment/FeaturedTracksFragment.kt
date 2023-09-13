@@ -54,17 +54,11 @@ class FeaturedTracksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.trackRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.trackRecyclerView.adapter = adapter
+        viewModel.isFavouriteTracksEmpty().observe(viewLifecycleOwner){
+           if(it){ emptyFeatureTracks()}
+        }
         viewModel.getFavouriteTracks().observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
                 showContent(it)
-            } else {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    delay(CLICK_DEBOUNCE_DELAY)
-                    if (adapter.tracks.isEmpty()) {
-                        emptyFeatureTracks()
-                    }
-                }
-            }
         }
     }
 
@@ -94,6 +88,7 @@ class FeaturedTracksFragment : Fragment() {
     }
 
     private fun showContent(contentTracks: List<Track>) {
+
         adapter.tracks.clear()
         adapter.tracks.addAll(contentTracks)
         adapter.notifyDataSetChanged()
@@ -102,6 +97,7 @@ class FeaturedTracksFragment : Fragment() {
             findNothingImg.visibility = View.GONE
             trackRecyclerView.visibility = View.VISIBLE
         }
+
 
     }
 }

@@ -26,9 +26,7 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        track = args.trackArg ?: Track(
-            "", "", "", "", "", "", "", "", "", ""
-        )
+        track = args.trackArg ?: EMPTY_TRACK
 
         viewModel.initMediaPlayer(track)
 
@@ -49,17 +47,19 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.observePlayerState().observe(this) {
             binding.playButton.isEnabled = it.isPlayButtonEnabled
-            if (it.buttonText == PLAY) binding.playButton.setImageResource(R.drawable.play);
-            else if (it.buttonText == PAUSE) binding.playButton.setImageResource(R.drawable.pause)
+            if (it.buttonText == PLAY) {
+                binding.playButton.setImageResource(R.drawable.play)
+            } else if (it.buttonText == PAUSE) {
+                binding.playButton.setImageResource(R.drawable.pause)
+            }
             binding.currentTime.text = it.progress
         }
 
-        viewModel.onFavoriteState().observe(this) {
-            if (it) {
+        viewModel.onFavoriteState().observe(this) { isFavourite ->
+            if (isFavourite) {
                 binding.likeButton.setImageResource(R.drawable.like_on)
             } else {
-                binding.likeButton.setImageResource(R.drawable.like)
-
+                binding.likeButton.setImageResource(R.drawable.like_off)
             }
         }
     }
@@ -81,7 +81,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun downloadData() {
-        Glide.with(this).load(track.getCoverArtwork()).centerCrop()
+        Glide.with(this)
+            .load(track.getCoverArtwork()).centerCrop()
             .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.DP8)))
             .placeholder(R.drawable.cover).into(binding.placeholder)
 
@@ -100,5 +101,9 @@ class PlayerActivity : AppCompatActivity() {
     companion object {
         private const val PLAY = "PLAY"
         private const val PAUSE = "PAUSE"
+        private val EMPTY_TRACK = Track(
+            "", "", "", "", "", "", "", "", "", ""
+        )
+
     }
 }
