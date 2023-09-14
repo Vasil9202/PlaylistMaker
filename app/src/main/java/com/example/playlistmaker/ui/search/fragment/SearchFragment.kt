@@ -262,6 +262,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun errorViewOff() {
+        binding.progressBar.visibility = View.GONE
         binding.netErrorImg.visibility = View.GONE
         binding.netErrorText.visibility = View.GONE
         binding.findNothingImg.visibility = View.GONE

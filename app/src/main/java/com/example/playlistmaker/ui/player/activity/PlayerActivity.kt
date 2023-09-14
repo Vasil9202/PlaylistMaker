@@ -82,9 +82,11 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun downloadData() {
         Glide.with(this)
-            .load(track.getCoverArtwork()).centerCrop()
+            .load(track.getCoverArtwork())
+            .centerCrop()
             .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.DP8)))
-            .placeholder(R.drawable.cover).into(binding.placeholder)
+            .placeholder(R.drawable.cover)
+            .into(binding.placeholder)
 
         if (track.isFavorite) {
             binding.likeButton.setImageResource(R.drawable.like_on)

@@ -99,7 +99,7 @@ class TracksSearchViewModel(
     fun getSearchHistoryStorageList(): List<Track> {
         val list = tracksInteractor.readStorage()
         isTracksFavourite(list)
-        return tracksInteractor.readStorage()
+        return list
     }
 
     fun isTracksFavourite(tracks: List<Track>){

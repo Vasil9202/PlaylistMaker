@@ -42,12 +42,11 @@ class FeaturedTracksFragment : Fragment() {
         }
     })
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentFeaturedTracksBinding.inflate(inflater, container, false)
-        return binding?.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,18 +54,21 @@ class FeaturedTracksFragment : Fragment() {
         binding.trackRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.trackRecyclerView.adapter = adapter
         viewModel.isFavouriteTracksEmpty().observe(viewLifecycleOwner){
-           if(it){ emptyFeatureTracks()}
+           isEmptyFeatureTracks(it)
         }
         viewModel.getFavouriteTracks().observe(viewLifecycleOwner) {
-                showContent(it)
+               if(it.isNotEmpty()){showContent(it)}
         }
     }
 
-    private fun emptyFeatureTracks() {
-        binding.apply {
-            trackRecyclerView.visibility = View.GONE
-            emptyMediaLib.visibility = View.VISIBLE
-            findNothingImg.visibility = View.VISIBLE
+    private fun isEmptyFeatureTracks(isEmpty: Boolean) {
+        if(isEmpty){
+            binding.trackRecyclerView.visibility = View.GONE
+            binding.emptyMediaLib.visibility = View.VISIBLE
+            binding.findNothingImg.visibility = View.VISIBLE
+        }else{
+            binding.emptyMediaLib.visibility = View.GONE
+            binding.findNothingImg.visibility = View.GONE
         }
     }
 
@@ -75,6 +77,10 @@ class FeaturedTracksFragment : Fragment() {
         viewModel.updateFavouriteTracks()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.statusViewOff()
+    }
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -88,16 +94,9 @@ class FeaturedTracksFragment : Fragment() {
     }
 
     private fun showContent(contentTracks: List<Track>) {
-
         adapter.tracks.clear()
         adapter.tracks.addAll(contentTracks)
         adapter.notifyDataSetChanged()
-        binding.apply {
-            emptyMediaLib.visibility = View.GONE
-            findNothingImg.visibility = View.GONE
-            trackRecyclerView.visibility = View.VISIBLE
-        }
-
-
+        binding.trackRecyclerView.visibility = View.VISIBLE
     }
 }
