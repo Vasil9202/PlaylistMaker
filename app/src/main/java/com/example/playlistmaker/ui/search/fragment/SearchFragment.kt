@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
     private val viewModel by viewModel<TracksSearchViewModel>()
     private lateinit var binding: FragmentSearchBinding
     private var isClickAllowed = true
-    private val adapter = TrackAdapter(object : ItemClickListener {
+    private val trackAdapter = TrackAdapter(object : ItemClickListener {
         override fun onTrackClick(track: Track) {
             if (clickDebounce()) {
                 viewModel.addTrackToHistory(track)
@@ -49,7 +49,7 @@ class SearchFragment : Fragment() {
     })
 
 
-    private val historyAdapter = TrackHistoryAdapter(object : ItemClickListener {
+    private val trackHistoryAdapter = TrackHistoryAdapter(object : ItemClickListener {
         override fun onTrackClick(track: Track) {
             if (clickDebounce()) {
                 viewModel.addTrackToHistory(track)
@@ -87,9 +87,9 @@ class SearchFragment : Fragment() {
 
         setupOnLickListeners()
         binding.trackHistoryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.trackHistoryRecyclerView.adapter = historyAdapter
+        binding.trackHistoryRecyclerView.adapter = trackHistoryAdapter
         binding.trackRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.trackRecyclerView.adapter = adapter
+        binding.trackRecyclerView.adapter = trackAdapter
         binding.searchEditText.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus && binding.searchEditText.text.isEmpty()) {
                 setHistoryRecyclerView()
@@ -139,8 +139,8 @@ class SearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.isTracksFavourite(adapter.tracks)
-        viewModel.isTracksFavourite(historyAdapter.tracks)
+        viewModel.isTracksFavourite(trackAdapter.tracks)
+        viewModel.isTracksFavourite(trackHistoryAdapter.tracks)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -155,9 +155,9 @@ class SearchFragment : Fragment() {
         if (viewModel.getSearchHistoryStorageList().toList().isNotEmpty()) {
             binding.trackHistoryRecyclerView.visibility = View.VISIBLE
             binding.historyText.visibility = View.VISIBLE
-            historyAdapter.tracks.clear()
-            historyAdapter.tracks.addAll(viewModel.getSearchHistoryStorageList().toList())
-            historyAdapter.notifyDataSetChanged()
+            trackHistoryAdapter.tracks.clear()
+            trackHistoryAdapter.tracks.addAll(viewModel.getSearchHistoryStorageList().toList())
+            trackHistoryAdapter.notifyDataSetChanged()
             val marginTop = resources.getDimensionPixelSize(R.dimen.DP85)
             val clearHistoryLayoutParams =
                 binding.historyClearButton.layoutParams as ViewGroup.MarginLayoutParams
@@ -244,9 +244,9 @@ class SearchFragment : Fragment() {
             return
         }
         binding.progressBar.visibility = View.GONE
-        adapter.tracks.clear()
-        adapter.tracks.addAll(contentTracks)
-        adapter.notifyDataSetChanged()
+        trackAdapter.tracks.clear()
+        trackAdapter.tracks.addAll(contentTracks)
+        trackAdapter.notifyDataSetChanged()
         binding.trackRecyclerView.visibility = View.VISIBLE
     }
 

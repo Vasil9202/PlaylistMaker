@@ -6,12 +6,7 @@
     android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/track_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        />
+
 
     <ImageButton
         android:id="@+id/new_playlist_button"
@@ -22,6 +17,14 @@
         android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlist_recyclerView"
+        android:layout_marginTop="76dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        />
+
     <ImageView
         android:id="@+id/find_nothing_img"
         android:layout_width="wrap_content"
@@ -31,7 +34,7 @@
         android:layout_marginEnd="120dp"
         android:layout_gravity="center_horizontal"
         android:theme="@style/errorImage"
-        android:visibility="visible"
+        android:visibility="gone"
         />
 
     <TextView
@@ -47,7 +50,9 @@
         android:layout_marginStart="@dimen/DP24"
         android:layout_marginEnd="@dimen/DP24"
         android:layout_gravity="center_horizontal|top"
-        android:visibility="visible"
+        android:visibility="gone"
         android:lineSpacingMultiplier="1"
         />
+
+
 </FrameLayout>

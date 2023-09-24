@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.db.PlaylistInteractor
+import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerInteractor
 import com.example.playlistmaker.util.PlayerState
@@ -12,38 +14,46 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.ArrayList
 import java.util.Locale
 
 
 
-class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewModel() {
+class PlayerActivityViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val playlistInteractor: PlaylistInteractor
+    ) : ViewModel() {
 
 
     private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
+
+    private val playlistState  = MutableLiveData<List<Playlist>>()
 
     private val isFavorite  = MutableLiveData<Boolean>(false)
     fun observePlayerState(): LiveData<PlayerState> = playerState
     fun onFavoriteState(): LiveData<Boolean> = isFavorite
 
+    fun observePlaylistState(): LiveData<List<Playlist>> = playlistState
+
     private var timerJob: Job? = null
 
     private fun startTimer() {
         timerJob = viewModelScope.launch {
-            while (interact.isPlaying()) {
+            while (playerInteractor.isPlaying()) {
                 delay(DELAY_300MS)
-                if(interact.isPlaying()){
+                if(playerInteractor.isPlaying()){
                 playerState.postValue(PlayerState.Playing(getCurrentPlayerPosition()))
             }}
         }
     }
 
     private fun getCurrentPlayerPosition(): String {
-        return SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(interact.getCurrentPosition()) ?: DEFAULT_TIME
+        return SimpleDateFormat(TIME_FORMAT, Locale.getDefault()).format(playerInteractor.getCurrentPosition()) ?: DEFAULT_TIME
     }
 
     fun initMediaPlayer(track: Track) {
         isFavorite.postValue(track.isFavorite)
-        interact.initMediaPlayer(track.previewUrl){
+        playerInteractor.initMediaPlayer(track.previewUrl){
             playerState.postValue(PlayerState.Prepared())
         }
     }
@@ -61,37 +71,49 @@ class PlayerActivityViewModel(private val interact: PlayerInteractor) : ViewMode
     }
 
     fun pausePlayer() {
-        interact.pausePlayer()
+        playerInteractor.pausePlayer()
         timerJob?.cancel()
         playerState.postValue(PlayerState.Paused(getCurrentPlayerPosition()))
     }
 
     private fun startPlayer() {
-        interact.startPlayer()
+        playerInteractor.startPlayer()
         playerState.postValue(PlayerState.Playing(getCurrentPlayerPosition()))
         startTimer()
     }
 
     fun releasePlayer() {
-        interact.release()
+        playerInteractor.release()
         playerState.value = PlayerState.Default()
+    }
+
+    fun getPlaylists(){
+        viewModelScope.launch {
+            playlistState.postValue(playlistInteractor.getAllPlaylists()) }
     }
 
     fun onFavoriteClicked(track: Track){
         viewModelScope.launch {
         if(track.isFavorite){
             track.isFavorite = false
-            interact.deleteTrackFromFavourite(track)
+            playerInteractor.deleteTrackFromFavourite(track)
             isFavorite.postValue(false)
-            Log.i("facClick","172")
-
         }
         else{
             track.isFavorite = true
-            interact.addTrackToFavourite(track)
+            playerInteractor.addTrackToFavourite(track)
             isFavorite.postValue(true)
-            Log.i("facClick","112")
         }}
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist, track: Track){
+        playlist.tracksIdList.add(track.trackId)
+        playlist.tracksCount = playlist.tracksCount + 1
+        viewModelScope.launch {
+            playlistInteractor.savePlaylist(playlist)
+            playlistInteractor.saveTrackToPlaylistTable(track)
+            playlistState.postValue(playlistInteractor.getAllPlaylists())
+        }
     }
     companion object{
         private const val DELAY_300MS = 300L
