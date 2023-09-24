@@ -45,7 +45,8 @@
             android:hint="@string/search"
             android:textColorHint="?attr/colorPrimaryVariant"
             android:imeOptions="actionDone"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            style="@style/MyEditTextStyle"/>
 
         <ImageView
             android:id="@+id/clear_search_image"

@@ -35,4 +35,13 @@ override fun writeStorage(track: List<Track>) {
     override fun clear() {
         repository.clear()
     }
+
+    override suspend fun isTracksFavourite(tracks: List<Track>){
+         repository.isTracksFavourite(tracks)
+    }
+
+    override suspend fun getFavouriteTracks(): List<Track> {
+        return repository.getFavouriteTracks()
+    }
+
 }

@@ -19,7 +19,11 @@
         android:id="@+id/mediaLibraryFragment"
         android:name="com.example.playlistmaker.ui.media_lib.fragment.MediaLibraryFragment"
         android:label="fragment_media_library"
-        tools:layout="@layout/fragment_media_library" />
+        tools:layout="@layout/fragment_media_library" >
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_playerActivity"
+            app:destination="@id/playerActivity" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.playlistmaker.ui.settings.fragment.SettingsFragment"
@@ -35,4 +39,10 @@
             app:argType="com.example.playlistmaker.domain.model.Track"
             app:nullable="true" />
     </activity>
+    <fragment
+        android:id="@+id/featuredTracksFragment"
+        android:name="com.example.playlistmaker.ui.media_lib.fragment.FeaturedTracksFragment"
+        android:label="FeaturedTracksFragment"
+        tools:layout="@layout/fragment_featured_tracks">
+    </fragment>
 </navigation>

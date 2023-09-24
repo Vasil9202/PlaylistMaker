@@ -8,7 +8,7 @@ sealed interface TracksState {
     object Loading : TracksState
 
     data class Content(
-        val movies: List<Track>
+        val tracks: List<Track>
     ) : TracksState
 
     data class Error(

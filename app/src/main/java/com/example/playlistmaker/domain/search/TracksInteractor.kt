@@ -11,4 +11,10 @@ interface TracksInteractor {
     fun readStorage(): List<Track>
 
     fun clear()
+
+    suspend fun isTracksFavourite(tracks: List<Track>)
+
+    suspend fun getFavouriteTracks(): List<Track>
+
+
 }

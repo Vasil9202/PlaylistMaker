@@ -72,4 +72,7 @@
         <item name="android:layout_marginEnd">@dimen/FS16DP</item>
         <item name="android:layout_marginBottom">@dimen/FS17DP</item>
     </style>
+    <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textCursorDrawable">@drawable/my_custom_cursor</item>
+    </style>
 </resources>

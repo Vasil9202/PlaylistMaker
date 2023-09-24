@@ -1,6 +1,10 @@
 package com.example.playlistmaker.data.search.dto
 
-data class TrackDto (
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+data class TrackDto(
+    val trackId: String,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String,
@@ -10,4 +14,8 @@ data class TrackDto (
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String
-)
+) {
+    fun trackTimeMin() : String{
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
+    }
+}

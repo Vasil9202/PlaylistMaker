@@ -23,14 +23,10 @@ class PlayerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        track = args.trackArg ?: Track(
-            "", "", "", "",
-            "", "", "", "", ""
-        )
+        track = args.trackArg ?: EMPTY_TRACK
 
         viewModel.initMediaPlayer(track)
 
@@ -45,13 +41,26 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.onPlayButtonClicked()
         }
 
+        binding.likeButton.setOnClickListener {
+            viewModel.onFavoriteClicked(track)
+        }
+
         viewModel.observePlayerState().observe(this) {
             binding.playButton.isEnabled = it.isPlayButtonEnabled
-            if(it.buttonText == PLAY)
-                binding.playButton.setImageResource(R.drawable.play);
-            else if(it.buttonText == PAUSE)
+            if (it.buttonText == PLAY) {
+                binding.playButton.setImageResource(R.drawable.play)
+            } else if (it.buttonText == PAUSE) {
                 binding.playButton.setImageResource(R.drawable.pause)
+            }
             binding.currentTime.text = it.progress
+        }
+
+        viewModel.onFavoriteState().observe(this) { isFavourite ->
+            if (isFavourite) {
+                binding.likeButton.setImageResource(R.drawable.like_on)
+            } else {
+                binding.likeButton.setImageResource(R.drawable.like_off)
+            }
         }
     }
 
@@ -79,6 +88,9 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.cover)
             .into(binding.placeholder)
 
+        if (track.isFavorite) {
+            binding.likeButton.setImageResource(R.drawable.like_on)
+        }
         binding.trackName.text = track.trackName
         binding.group.text = track.artistName
         binding.trackTime.text = track.trackTimeMin
@@ -88,8 +100,12 @@ class PlayerActivity : AppCompatActivity() {
         binding.trackCountry.text = track.country
     }
 
-companion object{
-    private  const val PLAY = "PLAY"
-    private const val PAUSE = "PAUSE"
-}
+    companion object {
+        private const val PLAY = "PLAY"
+        private const val PAUSE = "PAUSE"
+        private val EMPTY_TRACK = Track(
+            "", "", "", "", "", "", "", "", "", ""
+        )
+
+    }
 }
