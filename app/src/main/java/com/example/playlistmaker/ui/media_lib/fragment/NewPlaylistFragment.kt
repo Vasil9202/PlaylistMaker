@@ -66,24 +66,24 @@ class NewPlaylistFragment : Fragment() {
         binding.createButton.isEnabled = false
         label = ""
         setOnClickListeners()
-        binding.editDescription.doAfterTextChanged {
-            if (binding.editDescription.text.isNotEmpty()) {
-                binding.editDescription.setBackgroundResource(R.drawable.editted_rectangle)
-                binding.textDescription.visibility = View.VISIBLE
-            } else {
-                binding.editDescription.setBackgroundResource(R.drawable.edittext_rectangle)
-                binding.textDescription.visibility = View.GONE
+        binding.editDescription.doAfterTextChanged {text ->
+            if (text != null) {
+                if (text.isNotEmpty()) {
+                    binding.editDescription.setBackgroundResource(R.drawable.editted_rectangle)
+                } else {
+                    binding.editDescription.setBackgroundResource(R.drawable.edittext_rectangle)
+                }
             }
         }
 
-        binding.editName.doAfterTextChanged {
+        binding.editName.doAfterTextChanged {text ->
             binding.createButton.isEnabled = binding.editName.text.toString().isNotEmpty()
-            if (binding.editName.text.isNotEmpty()) {
-                binding.editName.setBackgroundResource(R.drawable.editted_rectangle)
-                binding.textName.visibility = View.VISIBLE
-            } else {
-                binding.editName.setBackgroundResource(R.drawable.edittext_rectangle)
-                binding.textName.visibility = View.GONE
+            if (text != null) {
+                if (text.isNotEmpty()) {
+                    binding.editName.setBackgroundResource(R.drawable.editted_rectangle)
+                } else {
+                    binding.editName.setBackgroundResource(R.drawable.edittext_rectangle)
+                }
             }
         }
 
@@ -132,7 +132,7 @@ class NewPlaylistFragment : Fragment() {
         if (!filePath.exists()) {
             filePath.mkdirs()
         }
-        val file = File(filePath, "labels.jpg")
+        val file = File(filePath, uri.path?.substringAfterLast("/") ?: "labels.jpg")
         label = file.absolutePath
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
@@ -143,11 +143,11 @@ class NewPlaylistFragment : Fragment() {
 
     private fun showDialog() {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Завершить создание плейлиста?") // Заголовок диалога
-            .setMessage("Все несохраненные данные будут потеряны") // Описание диалога
-            .setNegativeButton("Отмена") { dialog, which ->
+            .setTitle(R.string.isFinish) // Заголовок диалога
+            .setMessage(R.string.allDataLose) // Описание диалога
+            .setNegativeButton(R.string.cancel) { dialog, which ->
             }
-            .setPositiveButton("Завершить") { dialog, which -> // Добавляет кнопку «Да»
+            .setPositiveButton(R.string.finish) { dialog, which -> // Добавляет кнопку «Да»
                 if (fragment != null) {
                     requireActivity().supportFragmentManager.beginTransaction().remove(fragment!!)
                         .commit()

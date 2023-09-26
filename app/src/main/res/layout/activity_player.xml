@@ -232,16 +232,20 @@
             android:textColor="?attr/colorOnPrimary"
             android:textSize="19sp" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/new_playlist_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="133dp"
+            android:layout_height="36dp"
             android:layout_marginTop="28dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/new_playlist_bt"
-            android:background="?attr/colorSecondary"
+            android:fontFamily="@font/ystextmedium"
+            android:textAllCaps="false"
+            android:textSize="@dimen/FS14SP"
+            android:text="@string/new_playlist"
+            android:textColor="?attr/colorSecondary"
+            android:background="@drawable/add_playlist_bt_backgr"
             >
-        </ImageButton>
+        </androidx.appcompat.widget.AppCompatButton>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlists_recyclerView"
