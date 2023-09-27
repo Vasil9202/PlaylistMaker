@@ -19,7 +19,8 @@
             android:name=".ui.player.activity.PlayerActivity"
             android:exported="false"
             android:label="@string/title_activity_player"
-            android:theme="@style/Theme.PlaylistMaker" />
+            android:theme="@style/Theme.PlaylistMaker"
+            android:windowSoftInputMode="adjustNothing"/>
         <activity
             android:name=".ui.media_lib.fragment.MediaLibraryFragment"
             android:exported="false" />

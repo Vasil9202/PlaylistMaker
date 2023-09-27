@@ -2,7 +2,7 @@ package com.example.playlistmaker.data.favourite_tracks.impl
 
 import com.example.playlistmaker.data.converters.TrackDbMapper
 import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.data.db.entity.TrackEntity
+import com.example.playlistmaker.data.db.entity.FavouriteTrackEntity
 import com.example.playlistmaker.domain.db.FavouriteTrackRepository
 import com.example.playlistmaker.domain.model.Track
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,7 @@ class FavouriteTrackRepositoryImpl(
         emit(tracks)
     }.flowOn(Dispatchers.IO)
 
-    private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<Track> {
+    private fun convertFromTrackEntity(tracks: List<FavouriteTrackEntity>): List<Track> {
         return tracks.map { track -> trackDbMapper.map(track) }
     }
 }

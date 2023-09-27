@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="61dp"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/playlists_label_card"
+        android:layout_width="@dimen/DP45"
+        android:layout_height="@dimen/DP45"
+        android:layout_marginVertical="@dimen/DP8"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="13dp"
+        android:layout_alignParentStart="true"
+        app:cardCornerRadius="4dp"
+        >
+
+    <ImageView
+        android:id="@+id/playlists_label"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/image_shape2"
+        android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/playlists_name"
+        style="@style/trackViewFirstStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_toEndOf="@+id/playlists_label_card"
+        android:layout_marginStart="8dp"
+        android:text="Best songs 2021"
+        android:layout_marginEnd="8dp"
+        />
+
+
+        <TextView
+            android:id="@+id/playlists_track_count"
+            style="@style/trackViewSecondStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_toEndOf="@id/playlists_label_card"
+            android:gravity="left"
+            android:layout_below="@id/playlists_name"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="1dp"
+            android:drawablePadding="5dp"
+            android:text="98 треков"
+            android:textSize="13sp"
+            app:drawableTint="?attr/colorSecondaryContainer"/>
+</RelativeLayout>

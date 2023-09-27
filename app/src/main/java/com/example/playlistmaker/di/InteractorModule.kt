@@ -7,8 +7,9 @@ import com.example.playlistmaker.domain.search.TracksInteractor
 import com.example.playlistmaker.domain.search.impl.TracksInteractorImpl
 import com.example.playlistmaker.domain.settings.ThemeInteractor
 import com.example.playlistmaker.domain.settings.impl.ThemeInteractorImpl
-import com.example.playlistmaker.ui.db.FavouriteTrackInteractor
-import org.koin.android.ext.koin.androidApplication
+import com.example.playlistmaker.domain.db.FavouriteTrackInteractor
+import com.example.playlistmaker.domain.db.PlaylistInteractor
+import com.example.playlistmaker.domain.db.impl.PlaylistInteractorImpl
 import org.koin.dsl.module
 
 val interactorModule = module {
@@ -27,5 +28,9 @@ val interactorModule = module {
 
     single<FavouriteTrackInteractor> {
         FavouriteTrackInteractorImpl(get())
+    }
+
+    single<PlaylistInteractor> {
+        PlaylistInteractorImpl(get())
     }
 }

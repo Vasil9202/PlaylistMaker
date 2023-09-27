@@ -75,4 +75,13 @@
     <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
         <item name="android:textCursorDrawable">@drawable/my_custom_cursor</item>
     </style>
+    <style name="TextInputLayout" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="boxStrokeColor">#fff</item>
+    </style>
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">#fff</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
 </resources>

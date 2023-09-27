@@ -1,0 +1,7 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Прямоугольник, который будет фоном -->
+    <item android:drawable="@drawable/rounded_rectangle2" />
+
+    <!-- Изображение поверх фона -->
+    <item android:drawable="@drawable/playlist_placeholder" android:gravity="center" />
+</layer-list>
