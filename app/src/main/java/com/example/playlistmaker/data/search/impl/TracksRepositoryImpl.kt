@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.search.impl
 
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.converters.TrackDbMapper
+import com.example.playlistmaker.data.converters.FavouriteTrackDbMapper
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import com.example.playlistmaker.data.search.dto.TrackSearchResponse
@@ -22,7 +22,7 @@ class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
     private val storage: TrackStorage,
     private val appDatabase: AppDatabase,
-    private val trackDbMapper: TrackDbMapper
+    private val favouriteTrackDbMapper: FavouriteTrackDbMapper
 ) :
     TracksRepository {
 
@@ -42,6 +42,7 @@ class TracksRepositoryImpl(
                             it.trackName,
                             it.artistName,
                             it.trackTimeMin(),
+                            it.trackTimeMillis,
                             it.artworkUrl100,
                             it.collectionName,
                             it.releaseDate.orEmpty(),
@@ -73,6 +74,7 @@ class TracksRepositoryImpl(
                 it.trackName,
                 it.artistName,
                 it.trackTimeMin,
+                it.trackTimeMilliSec,
                 it.artworkUrl100,
                 it.collectionName,
                 it.releaseDate,
@@ -90,6 +92,7 @@ class TracksRepositoryImpl(
                 it.trackName,
                 it.artistName,
                 it.trackTimeMin,
+                it.trackTimeMilliSec,
                 it.artworkUrl100,
                 it.collectionName,
                 it.releaseDate,
@@ -106,11 +109,11 @@ class TracksRepositoryImpl(
 
     override suspend fun isTracksFavourite(list: List<Track>) {
         withContext(Dispatchers.IO){ list.map { obj ->
-            obj.isFavorite = appDatabase.trackDao().getTracksId().contains(obj.trackId)}
+            obj.isFavorite = appDatabase.favouriteTrackDao().getTracksId().contains(obj.trackId)}
         }
     }
 
     override suspend fun getFavouriteTracks(): List<Track> {
-        return withContext(Dispatchers.IO){ appDatabase.trackDao().getTracks().map { trackDbMapper.map(it) }}
+        return withContext(Dispatchers.IO){ appDatabase.favouriteTrackDao().getTracks().map { favouriteTrackDbMapper.map(it) }}
     }
 }

@@ -30,4 +30,14 @@ class PlaylistRepositoryImpl(
         withContext(Dispatchers.IO){appDatabase.playlistTrackDao().insertTrack(playlistTrackDbMapper.map(track))}
     }
 
+    override fun getPlaylistTracksByListId(tracksId: List<String>): Flow<List<Track>> = flow {
+        emit(appDatabase.playlistTrackDao().getTracks().filter { track -> tracksId.contains(track.trackId) }.map { playlistTrackEntity -> playlistTrackDbMapper.map(playlistTrackEntity) })
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun deletePlaylistTrack(track: Track) {
+        withContext(Dispatchers.IO){appDatabase.playlistTrackDao().deleteTrack(playlistTrackDbMapper.map(track))}
+    }
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        withContext(Dispatchers.IO){appDatabase.playlistDao().deletePlaylist(playlistDbMapper.map(playlist))}
+    }
 }

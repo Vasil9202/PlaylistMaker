@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentEditPlaylistBinding
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.example.playlistmaker.domain.model.Playlist
 import com.example.playlistmaker.ui.media_lib.view_model.PlaylistViewModel
@@ -32,15 +35,13 @@ private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
 
-class NewPlaylistFragment : Fragment() {
+class EditPlaylistFragment : Fragment() {
+    private lateinit var playlist: Playlist
+    private val args: ActivePlaylistFragmentArgs by navArgs()
     private var param1: String? = null
     private var param2: String? = null
-    private lateinit var binding: FragmentNewPlaylistBinding
+    private lateinit var binding: FragmentEditPlaylistBinding
     private val viewModel by activityViewModel<PlaylistViewModel>()
-    private lateinit var label: String
-    private var fragment: Fragment? = null
-    private var bottomNavigationView: BottomNavigationView? = null
-    private var communicator: FragmentCommunicator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,17 +55,14 @@ class NewPlaylistFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavigationView?.visibility = View.GONE
-        binding = FragmentNewPlaylistBinding.inflate(inflater, container, false)
-        fragment = requireActivity().supportFragmentManager.findFragmentByTag("NewPlaylistFrag")
+        binding = FragmentEditPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.createButton.isEnabled = false
-        label = ""
+        playlist = args.playlistArg ?: Playlist(name = "")
+        setFields()
         setOnClickListeners()
         binding.editDescription.doAfterTextChanged {text ->
             if (text != null) {
@@ -77,7 +75,7 @@ class NewPlaylistFragment : Fragment() {
         }
 
         binding.editName.doAfterTextChanged {text ->
-            binding.createButton.isEnabled = binding.editName.text.toString().isNotEmpty()
+            binding.saveButton.isEnabled = binding.editName.text.toString().isNotEmpty()
             if (text != null) {
                 if (text.isNotEmpty()) {
                     binding.editName.setBackgroundResource(R.drawable.editted_rectangle)
@@ -96,32 +94,10 @@ class NewPlaylistFragment : Fragment() {
                     Log.d("PhotoPicker", "No media selected")
                 }
             }
-
         //по нажатию на кнопку pickImage запускаем photo picker
         binding.addLabel.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        bottomNavigationView?.visibility = View.VISIBLE
-
-
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentCommunicator) {
-            communicator = context
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        communicator?.fragmentDetached()
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) {
@@ -131,7 +107,7 @@ class NewPlaylistFragment : Fragment() {
             filePath.mkdirs()
         }
         val file = File(filePath, uri.path?.substringAfterLast("/") ?: "labels.jpg")
-        label = file.absolutePath
+        playlist.placeholderPath = file.absolutePath
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
         BitmapFactory
@@ -139,78 +115,25 @@ class NewPlaylistFragment : Fragment() {
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
     }
 
-    private fun showDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.isFinish) // Заголовок диалога
-            .setMessage(R.string.allDataLose) // Описание диалога
-            .setNegativeButton(R.string.cancel) { dialog, which ->
-            }
-            .setPositiveButton(R.string.finish) { dialog, which -> // Добавляет кнопку «Да»
-                if (fragment != null) {
-                    requireActivity().supportFragmentManager.beginTransaction().remove(fragment!!)
-                        .commit()
-                } else {
-                    findNavController().navigateUp()
-                }
-            }
-            .show()
-    }
-
     private fun setOnClickListeners() {
         binding.buttonBack.setOnClickListener {
-            if (binding.editDescription.text.toString()
-                    .isNotEmpty() || binding.editName.text.toString().isNotEmpty()
-                || binding.addLabel.drawable != null
-            ) {
-                showDialog()
-            } else {
-                if (fragment != null) {
-                    requireActivity().supportFragmentManager.beginTransaction().remove(fragment!!)
-                        .commit()
-                } else {
                     findNavController().navigateUp()
-                }
-            }
         }
 
-        binding.createButton.setOnClickListener {
-            val newPlaylist = Playlist(
-                name = binding.editName.text.toString(),
-                description = binding.editDescription.text.toString(),
-                placeholderPath = label
-            )
-            viewModel.savePlaylist(newPlaylist)
-            viewModel.getAllPlaylists()
-            Toast.makeText(
-                requireContext(),
-                "Плейлист ${binding.editName.text} создан",
-                Toast.LENGTH_LONG
-            ).show()
-
-            if (fragment != null) {
-                requireActivity().supportFragmentManager.beginTransaction().remove(fragment!!)
-                    .commit()
-            } else {
+        binding.saveButton.setOnClickListener {
+            playlist.name = binding.editName.text.toString()
+            playlist.description = binding.editDescription.text.toString()
+            viewModel.editPlaylist(playlist)
                 findNavController().navigateUp()
-            }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (binding.editDescription.text.toString()
-                    .isNotEmpty() || binding.editName.text.toString().isNotEmpty()
-                || binding.addLabel.drawable != null
-            ) {
-                showDialog()
-            } else if (fragment != null) {
-                requireActivity().supportFragmentManager.beginTransaction().remove(fragment!!)
-                    .commit()
-            } else {
                 findNavController().navigateUp()
-            }
         }
     }
-}
-
-public interface FragmentCommunicator {
-    public fun fragmentDetached();
+    private fun setFields(){
+        binding.addLabel.setImageURI(Uri.parse(playlist.placeholderPath))
+        binding.editName.setText(playlist.name)
+        binding.editDescription.setText(playlist.description)
+    }
 }

@@ -195,7 +195,7 @@ class PlayerActivity : AppCompatActivity(), FragmentCommunicator {
         private const val PLAY = "PLAY"
         private const val PAUSE = "PAUSE"
         private val EMPTY_TRACK = Track(
-            "", "", "", "", "", "", "", "", "", ""
+            "", "", "", "", "", "", "", "", "", "",""
         )
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }

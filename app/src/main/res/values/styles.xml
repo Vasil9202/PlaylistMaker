@@ -84,4 +84,10 @@
         <item name="boxStrokeColor">#fff</item>
         <item name="boxStrokeWidth">2dp</item>
     </style>
+    <style name="TextBottomView">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/FS16SP</item>
+        <item name="android:fontFamily">@font/ystextregular</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
 </resources>
