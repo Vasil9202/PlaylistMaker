@@ -10,7 +10,6 @@ data class Track(
     val trackId: String,
     val trackName: String,
     val artistName: String,
-    val trackTimeMin: String,
     val trackTimeMilliSec: String,
     val artworkUrl100: String,
     val collectionName: String,
@@ -30,4 +29,8 @@ data class Track(
         }catch (e: Exception){
             return ""
         } }
+
+    fun trackTimeMinute() : String{
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMilliSec.toLong())
+    }
 }

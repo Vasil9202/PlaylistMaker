@@ -107,7 +107,7 @@ class PlayerActivity : AppCompatActivity(), FragmentCommunicator {
         }
         binding.trackName.text = track.trackName
         binding.group.text = track.artistName
-        binding.trackTime.text = track.trackTimeMin
+        binding.trackTime.text = track.trackTimeMinute()
         binding.trackAlbum.text = track.collectionName
         binding.trackYear.text = track.getReleaseYear()
         binding.trackGenre.text = track.primaryGenreName
@@ -195,7 +195,7 @@ class PlayerActivity : AppCompatActivity(), FragmentCommunicator {
         private const val PLAY = "PLAY"
         private const val PAUSE = "PAUSE"
         private val EMPTY_TRACK = Track(
-            "", "", "", "", "", "", "", "", "", "",""
+            "", "", "", "", "", "", "", "", "", ""
         )
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }

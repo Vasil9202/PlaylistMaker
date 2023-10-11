@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TrackViewHolder(parent: ViewGroup,
                       private val clickListener: ItemClickListener,
@@ -27,12 +29,12 @@ class TrackViewHolder(parent: ViewGroup,
         Glide.with(itemView)
             .load(model.artworkUrl100)
             .centerCrop()
-            .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.DP2)))
+            .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.dp_2)))
             .placeholder(R.drawable.placeholder)
             .into(artworkUrl100View)
         trackNameView.text = model.trackName
         artistNameView.text = model.artistName
-        trackTimeView.text = model.trackTimeMin
+        trackTimeView.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMilliSec.toLong())
         itemView.setOnClickListener { clickListener.onTrackClick(model) }
 
     }

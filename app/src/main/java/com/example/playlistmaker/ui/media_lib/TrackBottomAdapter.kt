@@ -4,11 +4,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.domain.model.Track
 
-class TrackBottomAdapter (private val clickListener: TrackBottomItemClickListener
+class TrackBottomAdapter (
+    private val clickListener: TrackBottomItemClickListener
 ) : RecyclerView.Adapter<TracksBottomViewHolder> () {
 
     var tracks = ArrayList<Track>()
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TracksBottomViewHolder {
         return TracksBottomViewHolder(parent,clickListener)

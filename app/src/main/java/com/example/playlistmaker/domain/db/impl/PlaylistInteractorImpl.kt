@@ -21,7 +21,7 @@ class PlaylistInteractorImpl (
         playlistRepository.saveTrackToPlaylistTable(track)
     }
 
-    override fun getPlaylistTracksByListId(tracksId: List<String>): Flow<List<Track>> {
+    override suspend fun getPlaylistTracksByListId(tracksId: List<String>): Flow<List<Track>> {
         return playlistRepository.getPlaylistTracksByListId(tracksId)
     }
 

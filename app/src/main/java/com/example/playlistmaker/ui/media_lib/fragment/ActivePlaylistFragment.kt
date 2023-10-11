@@ -27,6 +27,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -47,7 +48,6 @@ class ActivePlaylistFragment : Fragment() {
                     findNavController().navigate(action)
                 }
             }
-
             override fun onLongClickListener(track: Track): Boolean {
                 TrackShowDialog(track)
                 return true
@@ -125,25 +125,27 @@ class ActivePlaylistFragment : Fragment() {
         }
         return current
     }
-    fun setPlaylist(playlist: Playlist, tracks: List<Track>) {
+    fun setPlaylist(playlist: Playlist, tracks: List<Track>) = with(binding){
         if(playlist.placeholderPath.isNotEmpty()){
             binding.placeholder.setImageURI(Uri.parse(playlist.placeholderPath))
         }
-        binding.name.text = playlist.name
-        binding.description.text = playlist.description
-        binding.time.text = "${SimpleDateFormat(
-            "mm",
-            Locale.getDefault()
-        ).format(tracks.sumOf { it.trackTimeMilliSec.toInt() })} минут"
-        binding.count.text = "${tracks.size} треков"
+        name.text = playlist.name
+        description.text = playlist.description
+        time.text = StringBuilder().append(
+            SimpleDateFormat(
+                "mm",
+                Locale.getDefault()
+            ).format(tracks.sumOf { it.trackTimeMilliSec.toInt() })
+        ).append(" минут")
+        count.text = "${tracks.size} треков"
     }
 
     private fun TrackShowDialog(track: Track) {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage(R.string.track_delete) // Описание диалога
-            .setNegativeButton(R.string.no) { dialog, which ->
+            .setNegativeButton(R.string.no) { _, _ ->
             }
-            .setPositiveButton(R.string.yes) { dialog, which -> // Добавляет кнопку «Да»
+            .setPositiveButton(R.string.yes) { _, _ -> // Добавляет кнопку «Да»
                 viewModel.deleteTrack(playlist,track)
             }
             .show()
@@ -194,7 +196,8 @@ class ActivePlaylistFragment : Fragment() {
                 Intent.EXTRA_TEXT, "${playlist.name} \n ${playlist.description} \n" +
                         "${String.format("%02d", playlist.tracksCount)} треков \n" +
                         "${trackBottomAdapter.tracks.joinToString("\n") {track -> "${track.trackId}. " +
-                                "${track.artistName} - ${track.trackName} (${track.trackTimeMin})"}}"
+                                "${track.artistName} - ${track.trackName} " +
+                                "(${track.trackTimeMinute()})"}}"
             )
             startActivity(Intent.createChooser(intent, getString(R.string.send_link_via)))
         }

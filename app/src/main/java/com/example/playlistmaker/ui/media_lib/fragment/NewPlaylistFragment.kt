@@ -33,8 +33,6 @@ private const val ARG_PARAM2 = "param2"
 
 
 class NewPlaylistFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
     private lateinit var binding: FragmentNewPlaylistBinding
     private val viewModel by activityViewModel<PlaylistViewModel>()
     private lateinit var label: String
@@ -42,13 +40,7 @@ class NewPlaylistFragment : Fragment() {
     private var bottomNavigationView: BottomNavigationView? = null
     private var communicator: FragmentCommunicator? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,25 +58,9 @@ class NewPlaylistFragment : Fragment() {
         binding.createButton.isEnabled = false
         label = ""
         setOnClickListeners()
-        binding.editDescription.doAfterTextChanged {text ->
-            if (text != null) {
-                if (text.isNotEmpty()) {
-                    binding.editDescription.setBackgroundResource(R.drawable.editted_rectangle)
-                } else {
-                    binding.editDescription.setBackgroundResource(R.drawable.edittext_rectangle)
-                }
-            }
-        }
 
-        binding.editName.doAfterTextChanged {text ->
-            binding.createButton.isEnabled = binding.editName.text.toString().isNotEmpty()
-            if (text != null) {
-                if (text.isNotEmpty()) {
-                    binding.editName.setBackgroundResource(R.drawable.editted_rectangle)
-                } else {
-                    binding.editName.setBackgroundResource(R.drawable.edittext_rectangle)
-                }
-            }
+        binding.editName.doAfterTextChanged {
+            binding.createButton.isEnabled = binding.editName.text.toString().isNotBlank()
         }
 
         val pickMedia =

@@ -14,8 +14,4 @@ data class TrackDto(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String
-) {
-    fun trackTimeMin() : String{
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis.toLong())
-    }
-}
+)

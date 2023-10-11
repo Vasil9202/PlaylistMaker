@@ -22,14 +22,14 @@
 
         <ImageButton
             android:id="@+id/arrow_back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="4dp"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginTop="@dimen/dp_4"
+            android:layout_marginStart="@dimen/dp_4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/arrow_back3"
-            android:background="#00FFFFFF"/>
+            android:background="@color/transparent"/>
 
         <FrameLayout
             android:id="@+id/frameLayout"
@@ -60,7 +60,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/FS16DP"
         android:layout_marginTop="@dimen/DP8"
-        android:text="2022"
         android:textSize="18sp"
         android:fontFamily="@font/ystextregular"
         android:textColor="@color/black"
@@ -129,7 +128,7 @@
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="266dp"
+        app:behavior_peekHeight="100dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View

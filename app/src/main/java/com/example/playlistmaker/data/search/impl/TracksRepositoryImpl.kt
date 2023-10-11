@@ -41,7 +41,6 @@ class TracksRepositoryImpl(
                             it.trackId,
                             it.trackName,
                             it.artistName,
-                            it.trackTimeMin(),
                             it.trackTimeMillis,
                             it.artworkUrl100,
                             it.collectionName,
@@ -73,7 +72,6 @@ class TracksRepositoryImpl(
                 it.trackId,
                 it.trackName,
                 it.artistName,
-                it.trackTimeMin,
                 it.trackTimeMilliSec,
                 it.artworkUrl100,
                 it.collectionName,
@@ -91,7 +89,6 @@ class TracksRepositoryImpl(
                 it.trackId,
                 it.trackName,
                 it.artistName,
-                it.trackTimeMin,
                 it.trackTimeMilliSec,
                 it.artworkUrl100,
                 it.collectionName,
@@ -108,8 +105,8 @@ class TracksRepositoryImpl(
     }
 
     override suspend fun isTracksFavourite(list: List<Track>) {
-        withContext(Dispatchers.IO){ list.map { obj ->
-            obj.isFavorite = appDatabase.favouriteTrackDao().getTracksId().contains(obj.trackId)}
+        withContext(Dispatchers.IO){ list.map { trackList ->
+            trackList.isFavorite = appDatabase.favouriteTrackDao().getTracksId().contains(trackList.trackId)}
         }
     }
 
