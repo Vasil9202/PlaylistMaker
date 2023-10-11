@@ -2,7 +2,7 @@ package com.example.playlistmaker.di
 
 import com.example.playlistmaker.data.converters.PlaylistDbMapper
 import com.example.playlistmaker.data.converters.PlaylistTrackDbMapper
-import com.example.playlistmaker.data.converters.TrackDbMapper
+import com.example.playlistmaker.data.converters.FavouriteTrackDbMapper
 import com.example.playlistmaker.data.favourite_tracks.impl.FavouriteTrackRepositoryImpl
 import com.example.playlistmaker.data.player.impl.PlayerRepositoryImpl
 import com.example.playlistmaker.data.playlist.impl.PlaylistRepositoryImpl
@@ -30,7 +30,7 @@ val repositoryModule = module {
         PlayerRepositoryImpl(get(), get())
     }
 
-    factory { TrackDbMapper() }
+    factory { FavouriteTrackDbMapper() }
 
     factory { PlaylistDbMapper() }
 

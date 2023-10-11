@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.player.impl
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.data.converters.TrackDbMapper
+import com.example.playlistmaker.data.converters.FavouriteTrackDbMapper
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.player.PlayerRepository
@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 
 class PlayerRepositoryImpl(
     private val appDatabase: AppDatabase,
-    private val trackDbMapper: TrackDbMapper
+    private val favouriteTrackDbMapper: FavouriteTrackDbMapper
 ) : PlayerRepository {
 
     private var mediaPlayer = MediaPlayer()
@@ -50,10 +50,10 @@ class PlayerRepositoryImpl(
     }
 
     override suspend fun addTrackToFavourite(track: Track) {
-        withContext(Dispatchers.IO){appDatabase.trackDao().insertTrack(trackDbMapper.map(track))}
+        withContext(Dispatchers.IO){appDatabase.favouriteTrackDao().insertTrack(favouriteTrackDbMapper.map(track))}
     }
 
     override suspend fun deleteTrackFromFavourite(track: Track) {
-        withContext(Dispatchers.IO){appDatabase.trackDao().deleteTrack(trackDbMapper.map(track))}
+        withContext(Dispatchers.IO){appDatabase.favouriteTrackDao().deleteTrack(favouriteTrackDbMapper.map(track))}
     }
 }

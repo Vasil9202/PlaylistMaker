@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.media_lib.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.domain.model.Playlist
-import com.example.playlistmaker.ui.media_lib.PlaylistItemClickListener
 import com.example.playlistmaker.ui.media_lib.PlaylistAdapter
+import com.example.playlistmaker.ui.media_lib.PlaylistItemClickListener
 import com.example.playlistmaker.ui.media_lib.view_model.PlaylistViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,10 +35,10 @@ class PlaylistsFragment : Fragment() {
     private var isClickAllowed = true
     private val viewModel by viewModel<PlaylistViewModel>()
     private val playlistAdapter = PlaylistAdapter(object : PlaylistItemClickListener {
-        override fun onPlaylistClick(playlists: Playlist) {
+        override fun onPlaylistClick(playlist: Playlist) {
             if (clickDebounce()) {
-                //val action = SearchFragmentDirections.actionSearchFragmentToPlayerActivity(track)
-                //findNavController().navigate(action)
+                val action = MediaLibraryFragmentDirections.actionMediaLibraryFragmentToActivePlaylistFragment(playlist)
+                findNavController().navigate(action)
             }
         }
     })
@@ -47,7 +48,6 @@ class PlaylistsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
@@ -56,12 +56,14 @@ class PlaylistsFragment : Fragment() {
 
         viewModel.getAllPlaylists()
 
+        binding.playlistRecyclerView.layoutManager = GridLayoutManager(requireContext(), /*Количество столбцов*/ 2) //ориентация по умолчанию — вертикальная
+        binding.playlistRecyclerView.adapter = playlistAdapter
+
         viewModel.playlistsStatus().observe(viewLifecycleOwner){playlists ->
             if(playlists.isEmpty()){
                 playlistsEmpty()
             }else{
-                binding.playlistRecyclerView.layoutManager = GridLayoutManager(requireContext(), /*Количество столбцов*/ 2) //ориентация по умолчанию — вертикальная
-                binding.playlistRecyclerView.adapter = playlistAdapter
+                binding.playlistRecyclerView.visibility = View.VISIBLE
                 playlistAdapter.playlists.clear()
                 playlistAdapter.playlists.addAll(playlists)
                 playlistAdapter.notifyDataSetChanged()
@@ -77,10 +79,12 @@ class PlaylistsFragment : Fragment() {
                 MediaLibraryFragmentDirections.actionMediaLibraryFragmentToNewPlaylistFragment()
             findNavController().navigate(action)
         }
-
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -93,6 +97,7 @@ class PlaylistsFragment : Fragment() {
         return current
     }
     private fun playlistsEmpty(){
+        binding.playlistRecyclerView.visibility = View.GONE
         binding.findNothingImg.visibility = View.VISIBLE
         binding.findNothingText.visibility = View.VISIBLE
     }

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.model.Playlist
 
-class PlaylistsViewHolder(parent: ViewGroup,
+class PlaylistsBottomViewHolder(parent: ViewGroup,
                           private val clickListener: PlaylistBottomItemClickListener,
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.playlist_view_bottom_sheet, parent, false)) {
 

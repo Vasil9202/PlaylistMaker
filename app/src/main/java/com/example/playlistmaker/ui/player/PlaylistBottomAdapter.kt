@@ -5,16 +5,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.domain.model.Playlist
 
 class PlaylistBottomAdapter (private val clickListener: PlaylistBottomItemClickListener
-) : RecyclerView.Adapter<PlaylistsViewHolder> () {
+) : RecyclerView.Adapter<PlaylistsBottomViewHolder> () {
 
     var playlists = ArrayList<Playlist>()
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
-        return PlaylistsViewHolder(parent,clickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsBottomViewHolder {
+        return PlaylistsBottomViewHolder(parent,clickListener)
     }
 
-    override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PlaylistsBottomViewHolder, position: Int) {
         holder.bind(playlists.get(position))
     }
 
