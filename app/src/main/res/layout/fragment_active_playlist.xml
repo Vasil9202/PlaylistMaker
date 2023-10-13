@@ -221,7 +221,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="1dp"
                 android:drawablePadding="5dp"
-                android:text="98 треков"
                 android:textSize="13sp"
                 app:drawableTint="?attr/colorSecondaryContainer"/>
         </RelativeLayout>
